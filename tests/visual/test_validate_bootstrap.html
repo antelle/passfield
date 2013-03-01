@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Pass*Field Simple Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <script src="../../lib/jquery/jquery-1.9.1.min.js"></script>
+    <script src="../../lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../../lib/jquery-validation-1.11.0/dist/jquery.validate.min.js"></script>
+    <script src="../../passfield.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../lib/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../../passfield.css"/>
+    <script>
+        $(function() {
+            $("input[type=password]").passField({ allowEmpty: false });
+            $("form").submit(function(e) {
+                e.preventDefault();
+                $("form").validate({
+                    submitHandler: function() {
+                        alert("Validated OK");
+                    }
+                });
+            }).validate({
+                submitHandler: function() {
+                    alert("Validated OK");
+                }
+            });
+        })
+    </script>
+    <style>
+        div { margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <p>validate bootstrap</p>
+    <form class="form-inline">
+        <fieldset>
+            <div class="control-group"><input type="password" id="mypass" placeholder="your password" style="width: 300px;" passfield="true" /></div>
+            <div class="control-group"><input type="password" placeholder="pass" style="width: 100px;" passfield="true" /></div>
+            <div class="control-group"><input type="password" placeholder="your password" passfield="true" /></div>
+            <div class="control-group"><input type="password" placeholder="your password" style="width: 200px; height: 20px;" passfield="true" /></div>
+            <div class="control-group"><input type="password" placeholder="your password" style="width: 200px; height: 18px;" passfield="true" /></div>
+            <div class="control-group"><input type="password" placeholder="your password" style="width: 200px; height: 14px;" passfield="true" /></div>
+            <div class="control-group"><input type="password" placeholder="your password" style="width: 200px; height: 10px;" passfield="true" /></div>
+            <div class="control-group"><input type="password" placeholder="your password" style="width: 200px; line-height: 30px;" passfield="true" /></div>
+            <div class="control-group"><input type="password" placeholder="your password" style="width: 200px; padding: 7px;" passfield="true" /></div>
+            <div class="control-group"><input type="password" placeholder="your password" style="width: 30%; padding: 7px;" passfield="true" /></div>
+            <div class="control-group"><input type="password" placeholder="your password" style="width: 50%; padding: 7px;" passfield="true" /></div>
+            <div class="control-group"><input type="password" placeholder="your password" style="width: 70%; padding: 7px;" passfield="true" /></div>
+            <input type="submit" value="ok" passfield="true" />
+        </fieldset>
+    </form>
+</body>
+</html>

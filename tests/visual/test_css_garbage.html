@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Pass*Field Simple Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <script src="../../lib/jquery/jquery-1.9.1.min.js"></script>
+    <!--<script src="../../lib/bootstrap/js/bootstrap.min.js"></script>-->
+    <script src="../../lib/jquery-validation-1.11.0/dist/jquery.validate.min.js"></script>
+    <script src="../../passfield.js"></script>
+    <!--<link rel="stylesheet" type="text/css" href="../../lib/bootstrap/css/bootstrap.min.css"/>-->
+    <link rel="stylesheet" type="text/css" href="../../passfield.css"/>
+    <script>
+        $(function() {
+            $("input[type=password]").passField();
+        })
+    </script>
+    <style>
+/* this stylesheet is created by StrangeBanana (http://www.strangebanana.com)*/
+body
+{
+font-family: Georgia, serif;
+border-left-width: 0px; border-right-width: 0px; border-top-width: 0px; border-bottom-width: 0px;
+border-left-style: dotted; border-right-style: dotted; border-top-style: dotted; border-bottom-style: dotted;
+border-color: rgb(78,56,102);
+}
+
+#content
+{
+font-size: 114%;
+background-color: rgb(255,255,255);
+color: rgb(0,0,0);
+border-left-width: 3px; border-right-width: 3px; border-top-width: 2px; border-bottom-width: 2px;
+border-left-style: solid; border-right-style: solid; border-top-style: solid; border-bottom-style: solid;
+padding: 41px 41px 41px 41px;
+border-color: transparent;
+text-align: left;
+}
+
+#menu
+{
+background-color: rgb(255,255,255);
+color: rgb(121,3,249);
+font-family: Times New Roman, serif;
+font-style: italic;
+border-color: rgb(0,0,0);
+}
+
+a.menuitem
+{
+font-size: 128%;
+background-color: transparent;
+color: transparent;
+font-variant: normal;
+text-transform: none;
+font-weight: normal;
+margin-left: 19px; margin-right: 19px; margin-top: 19px; margin-bottom: 19px;
+border-left-width: 0px; border-right-width: 0px; border-top-width: 0px; border-bottom-width: 0px;
+border-left-style: none; border-right-style: none; border-top-style: none; border-bottom-style: none;
+border-color: rgb(0,0,0);
+text-align: center;
+}
+
+#logo, #logo a
+{
+display: none;
+font-size: 174%;
+background-color: rgb(255,255,255);
+color: rgb(141,113,171);
+font-family: Georgia, serif;
+font-style: normal;
+font-variant: normal;
+text-transform: none;
+font-weight: normal;
+text-indent: 50;
+padding: 15px 15px 15px 15px;
+border-color: rgb(0,0,0);
+text-align: left;
+}
+
+#trail, #trail a
+{
+font-size: 123%;
+background-color: rgb(0,0,0);
+color: rgb(140,99,183);
+font-style: normal;
+font-variant: normal;
+text-transform: none;
+font-weight: bold;
+border-left-width: 0px; border-right-width: 0px; border-top-width: 0px; border-bottom-width: 0px;
+border-left-style: none; border-right-style: none; border-top-style: none; border-bottom-style: none;
+padding: 0px 0px 0px 0px;
+border-color: rgb(255,255,255);
+text-align: right;
+}
+
+#content a
+{
+color: rgb(141,113,171);
+text-decoration: none;
+}
+
+#content a:hover, #content a:active
+{
+background-color: rgb(141,113,171);
+color: rgb(255,255,255);
+}
+
+h1, h2, h3, h4, h5, h6
+{
+font-family: Times New Roman, serif;
+font-style: normal;
+font-variant: normal;
+text-transform: none;
+font-weight: normal;
+}
+
+h1
+{
+font-size: 159%;
+}
+
+h2
+{
+font-size: 145%;
+}
+
+h3
+{
+font-size: 131%;
+}
+
+h4
+{
+font-size: 117%;
+}
+
+h5
+{
+font-size: 103%;
+}
+
+h6
+{
+font-size: 89%;
+}
+
+#menu a
+{
+text-decoration: none;
+}
+
+.menuitem:hover
+{
+}
+
+#trail a
+{
+text-decoration: none;
+}
+
+#logo a
+{
+text-decoration: none;
+}
+
+#trail a:hover
+{
+}
+
+/* layout */
+#menu       {width: 10%; position: relative; top: 0; left: 0; float: left; text-align: center;}
+.menuitem       {width: auto;}
+#content        {margin-left: 10%; width: auto}
+.menuitem       {display: block;}
+
+
+@media print
+{
+#menu       {display: none;}
+#content    {padding: 0px;}
+#content a  {text-decoration: underline;}
+}
+
+
+    </style>
+</head>
+<body>
+    <p>css garbage</p>
+      <div id="logo"><a title="Back to homepage (of course this link does not work, because it is only a sample)" href="nogo.aspx">Just Another Website</a> 
+    </div>
+    <div id="trail">
+    </div>
+        <div id="menu"><a class="menuitem" title="This is the menu (the links don't go anywhere)" href="generator.aspx">Home</a> <a class="menuitem" title="This is the menu (the links don't go anywhere)" href="generator.aspx">Contact
+            us</a> <a class="menuitem" title="This is the menu (the links don't go anywhere)" href="generator.aspx">Products</a> <a class="menuitem" title="This is the menu (the links don't go anywhere)" href="generator.aspx">About</a> <a class="menuitem" title="This is the menu (the links don't go anywhere)" href="generator.aspx">More
+            stuff</a> <a class="menuitem" title="This is the menu (the links don't go anywhere)" href="generator.aspx">Other</a> <a class="menuitem" title="This is the menu (the links don't go anywhere)" href="generator.aspx">Help</a> 
+        </div>
+        <div id="content">
+                
+
+    <div><input type="password" id="mypass" placeholder="your password" style="width: 300px;" /></div>
+    <div><input type="password" placeholder="pass" style="width: 100px;" /></div>
+    <div><input type="password" placeholder="your password" /></div>
+    <div><input type="password" placeholder="your password" style="width: 200px; height: 20px;" /></div>
+    <div><input type="password" placeholder="your password" style="width: 200px; height: 18px;" /></div>
+    <div><input type="password" placeholder="your password" style="width: 200px; height: 14px;" /></div>
+    <div><input type="password" placeholder="your password" style="width: 200px; height: 10px;" /></div>
+    <div><input type="password" placeholder="your password" style="width: 200px; line-height: 30px;" /></div>
+    <div><input type="password" placeholder="your password" style="width: 200px; padding: 7px;" /></div>
+    <div><input type="password" placeholder="your password" style="width: 30%; padding: 7px;" /></div>
+    <div><input type="password" placeholder="your password" style="width: 50%; padding: 7px;" /></div>
+    <div><input type="password" placeholder="your password" style="width: 70%; padding: 7px;" /></div>
+
+        </div>
+
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Pass*Field Simple Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <script src="../../lib/jquery/jquery-1.9.1.min.js"></script>
+    <!--<script src="../../lib/bootstrap/js/bootstrap.min.js"></script>-->
+    <script src="../../lib/jquery-validation-1.11.0/dist/jquery.validate.min.js"></script>
+    <script src="../../passfield.js"></script>
+    <!--<link rel="stylesheet" type="text/css" href="../../lib/bootstrap/css/bootstrap.min.css"/>-->
+    <link rel="stylesheet" type="text/css" href="../../passfield.css"/>
+    <script>
+        $(function() {
+            $("input[type=password]").passField();
+            //$("#pa1").passField();
+        })
+    </script>
+    <style>
+        div { margin: 5px 0; }
+        #abs {
+            border: 1px solid #eee;
+            position: absolute;
+            top: 100px;
+            left: 10px;
+            width: 300px;
+            height: 100px;
+        }
+        #fixed_in {
+            position: fixed;
+            top: 350px;
+            left: 50px;
+            border: 1px solid #ccc;
+            width: 300px;
+            height: 130px;
+        }
+        #fixed {
+            position: fixed;
+            top: 50px;
+            left: 240px;
+            border: 1px solid #c00;
+            width: 300px;
+            height: 100px;
+        }
+        #abs_in {
+            position: absolute;
+            border: 1px solid #e00;
+            position: absolute;
+            top: 150px;
+            left: -200px;
+            width: 300px;
+            height: 130px;
+        }
+        .bg {
+            color: #fcfcfc;
+        }
+    </style>
+</head>
+<body>
+    <p>fixed and abs</p>
+    <div id="abs">
+        <div><input id="pa1" type="password" placeholder="your password" style="width: 200px;" /></div>
+        <div><input id="pa2" type="password" placeholder="pass" style="width: 100px;" /></div>
+        <div><input id="pa3" type="password" placeholder="your password" /></div>
+        <div id="fixed_in">
+            <div><input id="paf1" type="password" placeholder="your password" style="width: 200px; height: 10px;" /></div>
+            <div><input id="paf2" type="password" placeholder="your password" style="width: 200px; line-height: 30px;" /></div>
+            <div><input id="paf3" type="password" placeholder="your password" style="width: 200px; padding: 7px;" /></div>
+        </div>
+    </div>
+    <div id="fixed">
+        <div><input id="pf1" type="password" placeholder="your password" style="width: 200px; height: 20px;" /></div>
+        <div><input id="pf2" type="password" placeholder="your password" style="width: 200px; height: 18px;" /></div>
+        <div><input id="pf3" type="password" placeholder="your password" style="width: 200px; height: 14px;" /></div>
+        <div id="abs_in">
+            <div><input id="pfa1" type="password" placeholder="your password" style="width: 30%; padding: 7px;" /></div>
+            <div><input id="pfa2" type="password" placeholder="your password" style="width: 50%; padding: 7px;" /></div>
+            <div><input id="pfa3" type="password" placeholder="your password" style="width: 70%; padding: 7px;" /></div>
+        </div>
+    </div>
+
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+    <p class="bg">some text</p>
+</body>
+</html>

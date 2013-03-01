@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Pass*Field Simple Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <script src="../../lib/jquery/jquery-1.9.1.min.js"></script>
+    <!--<script src="../../lib/bootstrap/js/bootstrap.min.js"></script>-->
+    <script src="../../lib/jquery-validation-1.11.0/dist/jquery.validate.min.js"></script>
+    <script src="../../passfield.js"></script>
+    <!--<link rel="stylesheet" type="text/css" href="../../lib/bootstrap/css/bootstrap.min.css"/>-->
+    <link rel="stylesheet" type="text/css" href="../../passfield.css"/>
+    <script>
+        $(function() {
+            $("input[type=password]").passField();
+        })
+    </script>
+    <style>
+        div { margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <p>float</p>
+    <div><input type="password" id="mypass" placeholder="your password" style="width: 300px; float: left;" /></div>
+    <div><input type="password" placeholder="pass" style="width: 100px; float: right;" /></div>
+    <div><input type="password" placeholder="your password" /></div>
+    <div><input type="password" placeholder="your password" style="width: 200px; height: 20px; float: none;" /></div>
+    <div><input type="password" placeholder="your password" style="width: 200px; height: 18px; clear: left;" /></div>
+    <div><input type="password" placeholder="your password" style="width: 200px; height: 14px; clear: right;" /></div>
+    <div><input type="password" placeholder="your password" style="width: 200px; height: 10px; clear: both;" /></div>
+    <div style="float: left;"><input type="password" placeholder="your password" style="width: 200px; line-height: 30px;" /></div>
+    <div style="float: right;"><input type="password" placeholder="your password" style="width: 200px; padding: 7px;" /></div>
+    <div><input type="password" placeholder="your password" style="width: 30%; padding: 7px; clear: both;" /></div>
+    <div><input type="password" placeholder="your password" style="width: 50%; padding: 7px; float: left;" /></div>
+    <div><input type="password" placeholder="your password" style="width: 70%; padding: 7px; float: right;" /></div>
+</body>
+</html>
