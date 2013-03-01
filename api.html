@@ -1,0 +1,321 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Pass*Field API</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <script src="lib/jquery/jquery-1.9.1.min.js"></script>
+    <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="lib/prettifyjs/prettify.js"></script>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/prettifyjs/prettify.css"/>
+    <link rel="stylesheet" type="text/css" href="css/site.css"/>
+    <style type="text/css">
+        #sidebar, #sidebar { width: 210px; background-color: white; border: 1px solid #eee; border-radius: 3px; }
+        #sidebar li:last-of-type a { border-bottom-left-radius: 3px; border-bottom-right-radius: 3px; }
+        #sidebar li.subnav a { padding-left: 35px; overflow: hidden; text-overflow: ellipsis; }
+        #sidebar.affix { position: fixed; top: 10px; }
+        @media (max-width: 979px) {
+            #sidebar, #sidebar.affix { position: static; width: auto; top: 0; }
+        }
+    </style>
+    <script>
+        $(function() { prettyPrint(); });
+    </script>
+</head>
+<body data-spy="scroll" data-target="#sidebar">
+    <div id="wrap">
+        <div class="navbar navbar-static-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <button type="button" class="btn btn-navbar collapsed" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="brand" href="index.html">Pass*Field</a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav">
+                            <li><a href="index.html">Overview</a></li>
+                            <li class="active"><a href="api.html">API documentation</a></li>
+                            <li><a href="demo.html">Live Demo</a></li>
+                            <li><a href="download.html">Downloads</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="span12">
+                    <h1>Pass*Field API</h1>
+                    <p>This page describes Pass*Field javascript API. This is a technical documentation. For simple configuration, please go to <a href="demo.html">live demo</a> page.</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span3">
+                    <div id="sidebar" data-spy="affix" data-offset-top="120">
+                        <ul class="nav nav-list">
+                            <li class="nav-header">API Index</li>
+                            <li class="active"><a href="#installation">Installation</a></li>
+                            <li><a href="#options">Options</a></li>
+                                <li class="subnav"><a href="#defaults">defaults</a></li>
+                                <li class="subnav"><a href="#pattern">pattern</a></li>
+                                <li class="subnav"><a href="#acceptRate">acceptRate</a></li>
+                                <li class="subnav"><a href="#allowEmpty">allowEmpty</a></li>
+                                <li class="subnav"><a href="#isMasked">isMasked</a></li>
+                                <li class="subnav"><a href="#showToggle">showToggle</a></li>
+                                <li class="subnav"><a href="#showGenerate">showGenerate</a></li>
+                                <li class="subnav"><a href="#showWarn">showWarn</a></li>
+                                <li class="subnav"><a href="#showTip">showTip</a></li>
+                                <li class="subnav"><a href="#strengthCheckTimeout">strengthCheckTimeout</a></li>
+                                <li class="subnav"><a href="#validationCallback">validationCallback</a></li>
+                                <li class="subnav"><a href="#blackList">blackList</a></li>
+                                <li class="subnav"><a href="#locale">locale</a></li>
+                                <li class="subnav"><a href="#localeMsg">localeMsg</a></li>
+                                <li class="subnav"><a href="#warnMsgClassName">warnMsgClassName</a></li>
+                                <li class="subnav"><a href="#errorWrapClassName">errorWrapClassName</a></li>
+                                <li class="subnav"><a href="#allowAnyChars">allowAnyChars</a></li>
+                                <li class="subnav"><a href="#chars">chars</a></li>
+                            <li><a href="#interface">Interface</a></li>
+                            <li><a href="#compatibility">Compatibility</a></li>
+                            <li><a href="#browsers">Browsers Support</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="span9">
+                    <h3 id="installation">Installation</h3>
+                    <p>To install Pass*Field, <a href="download.html">download</a> the code and include js and css in your markup:</p>
+                    <pre class="prettyprint language-html">&lt;script src="passfield.js"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" href="passfield.css"/&gt;</pre>
+                    <p>Add the password field (note the <code><a href="#placeholder">placeholder</a></code> attribute: it will work on old IE versions too):</p>
+                    <pre class="prettyprint language-html">&lt;div class="control-group"&gt;
+    &lt;input type="password" id="mypass" placeholder="your password" /&gt;
+&lt;/div&gt;</pre>
+                    <p>Initialize the field with jQuery:</p>
+                    <pre class="prettyprint language-js">$("#mypass").passField({ /*options*/ });</pre>
+                    <p>Or, if you are not using jQuery, here's the code for raw javascript:</p>
+                    <pre class="prettyprint language-js">var passField = new PassField.Field("mypass", { /*options*/ });</pre>
+                    <p><span class="label label-info">Make sure</span> that your path to the images (“rand” icon) is correct: if you put them in different folder, check your CSS file and change the path if it differs.</p>
+
+                    <h3 id="options">Options</h3>
+                    <p>Options is a javascript object that is passed in initialization function. You can try different options setup on the <a href="demo.html">live demo</a> page.</p>
+
+                    <h5 id="defaults">defaults</h5>
+                    <p>You can pass empty object or skip it at all - missing options will be taken from defaults. To see the defaults, you can eigther inspect js files, or view them on the <a href="demo.html">live demo</a> page: when you just load it without changing anything, defaults are applied. Also, defaults are stored in <code>PassField.Config.defaults</code> object.</p>
+
+                    <h5><code id="pattern">pattern</code></h5>
+                    <p>is used to calculare password strength and also for password generation. Example patterns:</p>
+                    <ul>
+                        <li><em>abc123</em> &ndash; good password must contain letters and numbers and be 6 characters long;</li>
+                        <li><em>aA</em> &ndash; it must contain letters and UPPERcase letters and be 2 characters long;</li>
+                        <li><em>ab$3</em> &ndash; it must contain letters, digits and symbols and be 4 characters long.</li>
+                    </ul>
+                    <p>There are 4 groups of characters: letters, UPPERcase letters, digits, symbols. Everything that is neigher letter, nor digit is considered to be a symbol (see <code><a href="#chars">chars</a></code> and <code><a href="#allowAnyChars">allowAnyChars</a></code> parameters for more info).</p>
+
+                    <h5><code id="acceptRate">acceptRate</code></h5>
+                    <p>Pass*Field uses its own algorighm to calculate password strength (you can get calculated strength value in <code><a href="#validationCallback">validationCallback</a></code>). Password strength is a value in range <code>0..1</code> (1 is strong). Factors taken into attention when strength is calculated:</p>
+                    <ul>
+                        <li><em>length</em> &ndash; length percentage is calculated and subtracted from strength (e.g. password “123” has strength 0.75 with pattern “1234”);</li>
+                        <li><em>symbols usage</em> &ndash; password “a1” consists of letters and digits; password “a1%” contains also symbols. If a pattern contains character type but password does not, password strength is decreased. So, if we have pattern “abc123”, password “abc” will be weak but password “b2” is strong (by this parameter). The number of characters of each type does not matter;</li>
+                        <li><em>black-list</em> &ndash; there's a list of commonly used passwords. If the password belongs to this list, its strength is considered to be 0 (e.g. password “querty”). Pass*Field has this list built-in but you can specify additional passwords in <code><a href="#blackList">blackList</a></code> parameter.</li>
+                    </ul>
+                    <p><span class="label label-info">Please note:</span> default value for this parameter is 0.8; this means that a password with length a bit less than one of the pattern is considered ok. If this is not what you wish, you can change this rate to achieve more or less strict password checking. Passwords are always generated with rating = 1.</p>
+                    <p>If you need more info, please refer to <code>calculateStrengthAndValidate</code> function.</p>
+
+                    <h5><code id="allowEmpty">allowEmpty</code></h5>
+                    <p>
+                        defines whether validation error will be shown if the password field is left blank.
+                    </p>
+
+                    <h5><code id="isMasked">isMasked</code></h5>
+                    <p>
+                        Password will be initially masked if <code>isMasked</code> is true; otherwise it will be shown as cleartext.
+                    </p>
+
+                    <h5><code id="showToggle">showToggle</code></h5>
+                    <p>
+                        enables user to toggle password masking with “&bull;&bull;&bull;/abc” button. If you disable masking but enable generation, the field will switch to cleartext mode when the user generates a password; there will be no way back.
+                    </p>
+
+                    <h5><code id="showGenerate">showGenerate</code></h5>
+                    <p>
+                        adds <span id="help-gen-btn"></span> button for random password generation. When the user clicks this button, password will be automatically shown in cleartext.
+                    </p>
+
+                    <h5><code id="showWarn">showWarn</code></h5>
+                    <p>
+                        Warning (<span class="text-error">red</span> text to the right of the field) is only shown if <code>showWarn</code> option is set to true. Otherwise it's your responsibility to show warnings. For example, you may want to implement custom validation UI &ndash; in this case you should disable this option and add custom validation controls.
+                    </p>
+
+                    <h5><code id="showTip">showTip</code></h5>
+                    <p>
+                        enables help balloon with tips how to create a strong password. Tips are visible only when the field is focused. If password generation is enabled, user will see the explanation, how to generate a password. Here's an example of such tip (balloon below the field): 
+                    </p>
+                    <p><img src="img/scr/weak.png" style="width: 280px;" /></p>
+
+                    <h5><code id="strengthCheckTimeout">strengthCheckTimeout</code></h5>
+                    <p>
+                        Passwords are checked not immediately but after a small timeout: <code>strengthCheckTimeout</code> milliseconds. This ensures that if the user is typing a password, he will not see the warning until he has stopped typing. The user is less annoyed in such way (you are unlikely to change this parameter but if there's anything special, you can).
+                    </p>
+
+                    <h5><code id="validationCallback">validationCallback</code></h5>
+                    <p>
+                        Each time Pass*Field validates password strength, it calls <code>validationCallback</code> function (if any). If you wish, you can override measured strength and messages by returning your custom result from this function (but this is not required: you can just skip return). Example of implementation:
+                    </p>
+                    <pre class="prettyprint language-js">/**
+  * @param {Object} el - DOM element with password (this is your input).
+  * @param {String} validateResult - validation result object.
+  * @param {Number|Object} validateResult.strength -
+  *     calculated password strength [0..1] (null if the password is not valid).
+  * @param {String[]} validateResult.messages -
+  *     messages with found violations (from localization settings).
+  * @return - used to show warnings or errors
+  */
+function validatePassword(inputEl, validateResult) {
+    // your code here
+
+    // you can safely skip return: the following is used only to override check result
+    // here's how return strength warning:
+    return { strength: 0.5, messages: ["your message here"] };
+    // and in this case password will be considered invalid:
+    return { strength: null, messages: ["your message here"] };
+}
+$("#mypass").passField({ validationCallback: validatePassword });</pre>
+                    <p>If you return empty (or null) <code>messages</code>, you can only increase strength (compared to the strength returned from internal validation). If the strength is decreased without any message, the result will be disregarded: there's no need to show “unknown error” to the user, such behavior is very confusing. So if you don't specify a message, the only thing you can do is make Pass*Field think that invalid password is valid (by increasing returned strength). In other words, if you force to set decreased strength, please explain why the password is invalid or weak.</p>
+
+                    <h5><code id="blackList">blackList</code></h5>
+                    <p>
+                        You can specify list of unwanted passwords in <code>blackList</code> parameter. By default, the list of top passwords is provided but can add additional items here. The user will see a warning that it's not the best idea to use this password:
+                    </p>
+                    <p><img src="img/scr/blacklist.png" style="width: 282px;" /></p>
+                    <p>Optionally, to disable the global blacklist (built-in list of top passwords), insert the following code before initizalizing Pass*Field:</p>
+                    <pre class="prettyprint language-js">PassField.Config.blackList = [];</pre>
+
+                    <h5><code id="locale">locale</code></h5>
+                    <p>
+                        All messages used in Pass*Field are defined in locales. You can select locale using <code>locale</code> parameter (this is <a href="http://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a> Alpha-2 code, e.g. “en”). By default (if you pass null or empty) the locale is read from browser settings but you can specify certain locale here. If the locale is not found, neutral language (English) will be used. Currently supported languages: en, de, fr, it, ru, ua, es, el.
+                    </p>
+
+                    <h5><code id="localeMsg">localeMsg</code></h5>
+                    <p>
+                        You can specify different i18n messages. To see the full list, please refer to <code>PassField.Config.locales.en.msg</code> &ndash; the meaning of the messages is self-descriptive. If you pass only several of messages here, missing messages will be taken from the used locale.
+                    </p>
+
+                    <h5><code id="warnMsgClassName">warnMsgClassName</code></h5>
+                    <p>
+                        is a name of the CSS class added to warning element. By default, Bootstrap <code>help-inline</code> class is used. This class is not prefixed. Pass empty string if you don't need this feature.
+                    </p>
+
+                    <h5><code id="errorWrapClassName">errorWrapClassName</code></h5>
+                    <p>
+                        is a name of the CSS class added to wrapping element if validation error occurs. By default, Bootstrap <code>error</code> class is used. This class is not prefixed. Pass empty string if you don't need this feature.
+                    </p>
+
+                    <h5><code id="allowAnyChars">allowAnyChars</code></h5>
+                    <p>controls whether the it is allowed to enter characters that are neigher letters, nor digits, nor symbols (see <code><a href="#chars">chars</a></code> parameter for more info).</p>
+
+                    <h5><code id="chars">chars</code></h5>
+                    <p>
+                        is used to override default lists of character types which are:
+                    </p>
+                    <pre class="prettyprint language-js">chars: {
+    digits: "1234567890",
+    letters: "abcdefghijklmnopqrstuvwxyz",
+    letters_up: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    symbols: "@#$%^&*()-_=+[]{};:<>/?!"
+}</pre>
+                    <p>E.g. you may want to treat other unicode letters as letters (and not as symbols), so you should add these letters in such way:</p>
+                    <pre class="prettyprint language-js">chars: {
+    letters: "abcdefghijklmnopqrstuvwxyzäöü",
+    letters_up: "ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜ"
+}</pre>
+                    <p>Characters from these lists are also used for password generation.</p>
+
+                    <h3 id="interface">Interface</h3>
+                    <p>After Pass*Field is created, you might want access it. Here's how:</p>
+
+                    <h5><code id="toggleMasking">toggleMasking</code></h5>
+                    <p>Toggles between masked and cleartext mode.</p>
+                    <pre class="prettyprint language-js">$("#mypass").toggleMasking(); // toggle mode
+$("#mypass").toggleMasking(true); // switch to masked mode
+$("#mypass").toggleMasking(true); // switch to cleartext mode
+
+passField.toggleMasking(); // toggle mode (raw javascript - args are the same)</pre>
+
+                    <h5><code id="setPass">setPass</code></h5>
+                    <p>This method is used to set the password field value:</p>
+                    <pre class="prettyprint language-js">$("#mypass").setPass("pass"); // jQuery
+passField.setPass("pass"); // raw javascript</pre>
+
+                    <h5><code id="val">val</code></h5>
+                    <p>To get the password field value, you can use standard methods for getting input values:</p>
+                    <pre class="prettyprint language-js">val = $("#mypass").val(); // jQuery
+val = document.getElementById("mypass").value; // raw javascript</pre>
+                    <p><span class="label label-info">Warning:</span> you should avoid using <code>$.val(...)</code> for setting password value; please use <code><a href="#setPass">setPass</a></code> instead.</p>
+
+                    <h5><code id="validatePass">validatePass</code></h5>
+                    <p>immediately validates the password and returns boolean validation result:</p><pre class="prettyprint language-js">isValid = $("#mypass").validatePass(); // jQuery
+isValid = document.getElementById("mypass").validatePass(); // raw javascript</pre>
+
+                    <h5><code id="getPassValidationMessage">getPassValidationMessage</code></h5>
+                    <p>returns validation error (<code>null</code> if there's no error) generated during the last validation:</p><pre class="prettyprint language-js">msg = $("#mypass").getPassValidationMessage(); // jQuery
+msg = document.getElementById("mypass").getPassValidationMessage(); // raw javascript</pre>
+
+                    <h5><code id="placeholder">placeholder</code></h5>
+                    <p>Placeholder is set in HTML:</p>
+                    <pre class="prettyprint language-html">&lt;input type="password" id="mypass" placeholder="your password" /&gt;</pre>
+                    <p>If the browser is old and doesn't support placeholders feature, fake placeholder is used.</p>
+                    <p>If you are using shim libraries that enable placeholders, this may cause problems. To resolve the issue, you can either exclude the password field from simulation of placeholders (in your shim library), or use <code>data-placeholder</code> attribute instead.</p>
+                    <p><span class="label label-info">Please note:</span> placeholder is not localized automatically because it's a part of your markup. As in other markup on the webpage, it's your responsibility to set the placeholder text based on the user locale. Here's how the placeholder text is set on the demo page (of course, if you wish, you can use it too; ensure that <code>placeholder</code> attribute is set before Pass*Field initialization):</p>
+                    <pre class="prettyprint language-js">var locale = settings &amp;&amp; settings.locale || navigator.language &amp;&amp; navigator.language.replace(/\-.*/g, "") || "en";
+var placeholder = (PassField.Config.locales[locale] || PassField.Config.locales["en"]).msg.pass;
+$("#mypass").attr("placeholder", placeholder);</pre>
+
+                    <h3 id="compatibility">Compatibility</h3>
+                    <p>Pass*Field does not require any framework to run. However it's tested with popular javascript and CSS frameworks.</p>
+                    <h5 id="jquery">jQuery</h5>
+                    <p>If jQuery is present, you can make use of jQuery plugin, it will be installed automatically. jQuery is an option, not a requirement.</p>
+                    <h5>jQuery.Validation</h5>
+                    <p>If you use jQuery.Validation plugin, please see a setup guide on <a href="validation.html">jQuery.Validation</a> page.</p>
+                    <h5 id="bootstrap">Twitter Bootstrap</h5>
+                    <p>Pass*Field supports Twitter Bootstrap styles. If you use this framework, you will not need any additional CSS work for “native” loook and feel. For better styles match, use this markup:</p>
+                    <pre class="prettyprint language-html">&lt;form class="form-inline"&gt;
+    &lt;div class="control-group"&gt;
+        &lt;input type="password" id="mypass" placeholder="your password" /&gt;
+    &lt;/div&gt;
+&lt;/form&gt;</pre>
+                    <h5 id="fr-other">Other</h5>
+                    <p>CSS classes and IDs generated by Pass*Field are prefixed (with <code>a_pf-</code> prefix), so it's unlikely there will be any conflicts. If the field is still looking wierd, you can customize classes in <code>passfield.css</code> or change CSS that affects Pass*Field appearance, or write me about a possible bug (if you think it's a bug). Also there are some non-prefixed classes (for Bootstrap); you can change them using options.</p>
+
+                    <h3 id="browsers">Browsers Support</h3>
+                    <h5>Desktop</h5>
+                    <p>
+                        Pass*Field is tested on all modern browsers (Safari, Chrome, Firefox, Opera, Internet Explorer) under Mac OS X, Windows and Ubuntu. IE is supported in full starting from version 7. IE6 users will not be able to access some features: triangle border in tooltip, visibility on <code>:hover</code> and images transparency &ndash; everything else is working (hovewer, you could find pngfix and hoverfix to resolve last two issues; if you support IE6 users on your website, most probably you already have them installed).
+                    </p>
+                    <p>
+                        IE10 provides “reveal password” button but it lacks some features: you can neither copy the password, nor show the password in cleartext by default. Also there's no such button in mainstream browsers: only IE has it. That is why there's no option to leave it: this button will be hidden and replaced with “toggle password” button.
+                    </p>
+                    <h5>Mobile</h5>
+                    <p>
+                        I've tested the script under Safari and Chrome under iOS and Android, and it runs smoothly. Other browsers should be ok too.
+                    </p>
+
+                    <p style="height: 50px;"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        <div class="container">
+            <div class="row">
+                <div class="span12 muted clearfix">
+                    <p class="pull-left">Pass*Field is created by <a href="http://antelle.net">Antelle</a></p>
+                    <div class="pull-right" id="logo-muted"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

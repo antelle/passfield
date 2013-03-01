@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Pass*Field jQuery.Validation Example</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <script src="lib/jquery/jquery-1.9.1.min.js"></script>
+    <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="lib/prettifyjs/prettify.js"></script>
+    <script src="lib/jquery-validation-1.11.0/dist/jquery.validate.min.js"></script>
+    <script src="lib/passfield/passfield.min.js"></script>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/prettifyjs/prettify.css"/>
+    <link rel="stylesheet" type="text/css" href="css/site.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/passfield/passfield.min.css"/>
+    <style type="text/css">
+        .container .row .span4 { height: 200px; }
+        #commentForm label { width: 10em; float: left; }
+        #commentForm label.error { color: red; float: none; display: inline-block; padding-left: .5em; vertical-align: top; width: 500px; }
+        #commentForm em { font-weight: bold; padding-right: 1em; vertical-align: top; }
+    </style>
+    <script>
+        $(function() {
+            $("#cpass").passField({ showWarn: false, showTip: false, allowEmpty: false });
+            $("#commentForm").submit(function(e) {
+                e.preventDefault();
+                $("#commentForm").validate({
+                    submitHandler: function() {
+                        alert("Validated OK");
+                    }
+                });
+            }).validate();
+            prettyPrint();
+        });
+    </script>
+</head>
+<body>
+    <div id="wrap">
+        <div class="navbar navbar-static-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <button type="button" class="btn btn-navbar collapsed" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="brand" href="index.html">Pass*Field</a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav">
+                            <li><a href="index.html">Overview</a></li>
+                            <li><a href="api.html">API documentation</a></li>
+                            <li><a href="demo.html">Live Demo</a></li>
+                            <li><a href="download.html">Downloads</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="span12">
+                    <h1>Pass*Field jQuery.Validation Example</h1>
+                    <form class="form form-horizontal" id="commentForm" method="get" action="" novalidate="novalidate">
+                        <fieldset>
+                            <p>A simple comment form with submit validation and default messages</p>
+                            <p>
+                                <label for="cname">Name</label>
+                                <em>*</em><input type="text" id="cname" name="name" size="25" class="required" minlength="2">
+                            </p>
+                            <p>
+                                <label for="cpass">Your password</label>
+                                <em>*</em><input type="password" id="cpass" name="pass" size="25" placeholder="your password" passfield="true">
+                            </p>
+                            <p>
+                                <label for="cemail">E-Mail</label>
+                                <em>*</em><input type="text" id="cemail" name="email" size="25" class="required email">
+                            </p>
+                            <p>
+                                <label for="curl">URL</label>
+                                <em>&nbsp; </em><input type="text" id="curl" name="url" size="25" class="url" value="">
+                            </p>
+                            <p>
+                                <label for="ccomment">Your comment</label>
+                                <em>*</em><textarea id="ccomment" name="comment" cols="22" class="required"></textarea>
+                            </p>
+                            <p>
+                                <input class="btn" type="submit" value="Validate">
+                            </p>
+                        </fieldset>
+                    </form>
+
+                    <h3>Setup guide for jQuery.Validation</h3>
+                    <p>To show validation messages correctly, you should configure Pass*Field in specific way:</p>
+
+                    <h6>HTML</h6>
+                    <p>Add <code>passfield</code> attribute to the password field. Don't use other jQuery.Validation options (like <code>minlength</code>):</p>
+                    <pre class="prettyprint language-html">&lt;input type="password" id="mypass" placeholder="your password" passfield="true" /&gt;</pre>
+                    <p>Pay attention to the correct order of included libraries:</p>
+                    <pre class="prettyprint language-html">&lt;script src="jquery.js"&gt;&lt;/script&gt;
+&lt;script src="jquery.validate.js"&gt;&lt;/script&gt;
+&lt;script src="passfield.js"&gt;&lt;/script&gt;</pre>
+
+                    <h6>javascript</h6>
+                    <p>Note the following parameter in <code>passField</code> call (nothing special with other parameters, you can set them as you need):</p>
+                    <pre class="prettyprint language-js">$("#mypass").passField({
+    showWarn: false // warning will be added by jQuery.Validate
+});</pre>
+                </div>
+            </div>
+        </div>
+        <div id="spacer"></div>
+    </div>
+    <div id="footer">
+        <div class="container">
+            <div class="row">
+                <div class="span12 muted clearfix">
+                    <p class="pull-left">Pass*Field is created by <a href="http://antelle.net">Antelle</a></p>
+                    <div class="pull-right" id="logo-muted"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

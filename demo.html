@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Pass*Field Live Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <script src="lib/jquery/jquery-1.9.1.min.js"></script>
+    <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="lib/prettifyjs/prettify.js"></script>
+    <script src="lib/passfield/passfield.min.js"></script>
+    <script src="js/demo.js"></script>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/prettifyjs/prettify.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/passfield/passfield.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/demo.css"/>
+    <link rel="stylesheet" type="text/css" href="css/site.css"/>
+</head>
+<body>
+    <div id="wrap">
+        <div class="navbar navbar-static-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <button type="button" class="btn btn-navbar collapsed" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="brand" href="index.html">Pass*Field</a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav">
+                            <li><a href="index.html">Overview</a></li>
+                            <li><a href="api.html">API documentation</a></li>
+                            <li class="active"><a href="demo.html">Live Demo</a></li>
+                            <li><a href="download.html">Downloads</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="span12">
+                    <h1>Pass*Field Live Demo</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span5">
+                    <h3>Live Example</h3>
+                    <p>Please enter your password in the field below:</p>
+                    <form class="form-inline" id="mypass-frm">
+                        <div id="mypass-wrap" class="control-group"><input type="password" id="mypass" placeholder="your password" style="width: 210px;" /></div>
+                    </form>
+                    <p>To try different Pass*Field options, you can play with some settings on the right.</p>
+                    <p>Here's the code to embed Pass*Field with these settings on your page:</p>
+                    <ul class="nav nav-pills" id="nav-code">
+                        <li data-code="js-jq" class="active"><a href="#">JS (jQuery)</a></li>
+                        <li data-code="js-nojq"><a href="#">JS (no jQuery)</a></li>
+                        <li data-code="html"><a href="#">HTML</a></li>
+                    </ul>
+                    <div id="pre-code">
+                        <pre id="pre-code-js-jq" data-code="js-jq" class="prettyprint language-js"></pre>
+                        <pre id="pre-code-js-nojq" data-code="js-nojq" class="prettyprint language-js"></pre>
+                        <pre id="pre-code-html" data-code="html" class="prettyprint language-html"></pre>
+                    </div>
+                    <p>Click <a href="download.html">here</a> to download all necessary files.</p>
+                </div>
+                <div class="span7" id="col-right">
+                    <h3>Settings</h3>
+                    <p>Settings to generate code for the field you see on the left:</p>
+                    <div class="form-horizontal" id="frm-settings">
+                        <div class="control-group"><input type="text" id="s-pattern" /><label for="s-pattern" class="help-inline" rel="tooltip">password pattern</label></div>
+                        <div class="control-group"><input type="number" min="0" max="1" step="0.1" id="s-acceptRate" /><label for="s-acceptRate" class="help-inline"rel="tooltip">password strength threshold</label></div>
+                        <div class="control-group"><input type="checkbox" id="s-allowEmpty" /><label for="s-allowEmpty" class="help-inline"rel="tooltip">allow empty password</label></div>
+                        <div class="control-group"><input type="checkbox" id="s-allowAnyChars" /><label for="s-allowAnyChars" class="help-inline"rel="tooltip">allow any characters</label></div>
+                        <div class="control-group"><input type="checkbox" id="s-isMasked" /><label for="s-isMasked" class="help-inline"rel="tooltip">is password masked by default</label></div>
+                        <div class="control-group"><input type="checkbox" id="s-showToggle" /><label for="s-showToggle" class="help-inline"rel="tooltip">show toggle password masking button</label></div>
+                        <div class="control-group"><input type="checkbox" id="s-showGenerate" /><label for="s-showGenerate" class="help-inline"rel="tooltip">show Generate button</label></div>
+                        <div class="control-group"><input type="checkbox" id="s-showWarn" /><label for="s-showWarn" class="help-inline"rel="tooltip">show validation error for weak passwords</label></div>
+                        <div class="control-group"><input type="checkbox" id="s-showTip" /><label for="s-showTip" class="help-inline"rel="tooltip">show help balloon for weak passwords</label></div>
+                        <div class="control-group"><input type="number" min="0" max="10000" step="500" id="s-strengthCheckTimeout" /><label for="s-strengthCheckTimeout" class="help-inline"rel="tooltip">timeout for auto strength check (ms)</label></div>
+                        <div class="control-group"><input type="text" id="s-blackList" /><label for="s-blackList" class="help-inline"rel="tooltip">banned passwords (separate by comma)</label></div>
+                        <div class="control-group"><input type="text" id="s-locale" /><label for="s-locale" class="help-inline"rel="tooltip">locale (empty to auto-detect)</label></div>
+                        <p>Other features are described in <a href="api.html">API documentation</a></p>
+                        <ul>
+                            <li>validation options</li>
+                            <li>custom locale messages</li>
+                            <li>custom CSS classes</li>
+                            <li>character types</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="spacer"></div>
+    </div>
+    <div id="footer">
+        <div class="container">
+            <div class="row">
+                <div class="span12 muted clearfix">
+                    <p class="pull-left">Pass*Field is created by <a href="http://antelle.net">Antelle</a></p>
+                    <div class="pull-right" id="logo-muted"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

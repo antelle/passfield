@@ -1,0 +1,80 @@
+html, body {
+    height: 100%;
+}
+#wrap {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -51px;
+}
+#spacer {
+    height: 51px;
+}
+#footer {
+    height: 50px;
+    border-top: 1px solid #eee;
+}
+#footer p {
+    margin-top: 20px;
+}
+@media (max-width: 767px) {
+    #footer {
+        margin-left: -20px;
+        margin-right: -20px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
+body {
+    background: #fdfdfd url(../img/patterns/grey/grey.png);
+}
+#wrap input[type=text], #wrap input[type=password], #wrap input[type=number] {
+    outline: none;
+}
+#help-gen-btn {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background: #fdfdfd url(../rand.png) center -1px no-repeat;
+    vertical-align: bottom;
+    margin: 0 1px 2px 1px;
+}
+#logo-muted {
+    width: 33px;
+    height: 33px;
+    background: transparent url(../img/logo-muted.png) center center no-repeat;
+    margin-top: 12px;
+}
+
+@media (max-width: 499px) {
+    #wrap .navbar.navbar-static-top .container a.brand { display: block; }
+}
+@media (min-width: 500px) {
+    #wrap .navbar.navbar-static-top .container a.brand { display: none; }
+}
+@media (max-width: 767px) {
+    #wrap .navbar-static-top .container, .navbar-fixed-top .container, .navbar-fixed-bottom .container {
+        width: auto;
+    }
+}
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and (   min--moz-device-pixel-ratio: 2),
+only screen and (     -o-min-device-pixel-ratio: 2/1),
+only screen and (        min-device-pixel-ratio: 2),
+only screen and (                min-resolution: 192dpi),
+only screen and (                min-resolution: 2dppx) {
+    body {
+        background: #fdfdfd url(../img/patterns/grey/grey_@2X.png);
+        background-size: 256px;
+    }
+    #help-gen-btn {
+        background: #fdfdfd url(../rand@2x.png);
+        background-size: 16px
+    }
+    #logo-muted {
+        background: transparent url(../img/logo-muted@2x.png);
+        background-size: 32px;
+    }
+}
+

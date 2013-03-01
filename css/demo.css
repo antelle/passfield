@@ -1,0 +1,26 @@
+#frm-settings .control-group {
+    margin-bottom: 3px;
+}
+#frm-settings input[type=text], #frm-settings input[type=number] {
+    width: 100px;
+}
+#help-gen-btn {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background: url(../rand.png) center -2px no-repeat;
+    vertical-align: middle;
+    margin-top: 2px;
+}
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and (   min--moz-device-pixel-ratio: 2),
+only screen and (     -o-min-device-pixel-ratio: 2/1),
+only screen and (        min-device-pixel-ratio: 2),
+only screen and (                min-resolution: 192dpi),
+only screen and (                min-resolution: 2dppx) {
+    #help-gen-btn {
+        background-image: url(../rand@2x.png);
+        background-size: 16px
+    }
+}
+#mypass-wrap { margin-bottom: 20px; }
