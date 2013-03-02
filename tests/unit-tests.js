@@ -11,11 +11,13 @@ $(function() {
         passFieldObj,
         clearInput, passInput,
         btnGen, btnMask,
-        msgWarn, tip,
+        msgWarn, tip, fakePlaceholder,
         anotherInput,
         isMasked,
         errorWrapClassName,
-        valResult;
+        valResult,
+        supportsPlaceholders,
+        ieVersion;
 
     var ELEMENTS_PREFIX = "a_pf-";
     var STRONG_PASS = "aE4fW4#&";
@@ -203,6 +205,18 @@ $(function() {
         equal(getWarnMsg(), null, "pass error is removed");
         equal(valResult.strength, 1, "strength is set");
     });
+    test("zero strength", function() {
+        prepare({ acceptRate: 0, allowAnyChars: false, allowEmpty: false });
+        runBasicWorkFlow();
+        ok(passInput.setPass("qwerty").validatePass(), "pass iss valid");
+        equal(getWarnMsg(), null, "no error is generated for blacklisted pass");
+        ok(!passInput.setPass("").validatePass(), "pass is not valid");
+        equal(getWarnMsg(), "Password is required.", "error is shown for empty pass");
+        ok(!passInput.setPass("åß∂").validatePass(), "pass is not valid");
+        equal(getWarnMsg(), "Password contains bad characters: “åß∂”.", "error is shown for bad symbols");
+        ok(passInput.setPass("1").validatePass(), "pass is valid");
+        equal(getWarnMsg(), null, "no error is generated for simple pass");
+    });
     test("custom validation", function() {
         var valReturn = null;
         prepare({ validationCallback: function(el, res) { valResult = res; return valReturn; } });
@@ -360,11 +374,14 @@ $(function() {
         }, testOptions);
         isMasked = !options || options.isMasked === undefined ? true : options.isMasked;
         errorWrapClassName = !options || options.errorWrapClassName === undefined ? "error" : options.errorWrapClassName;
+        ieVersion = getVersionIE();
 
         fixture = $("#qunit-fixture");
         wrap = $("<div/>").attr(testOptions.wrapAttr).appendTo(fixture);
         passInput = $("<input type='password'/>").attr(testOptions.inputAttr).appendTo(wrap);
         anotherInput = $("<input/>").appendTo(fixture);
+        supportsPlaceholders = "placeholder" in anotherInput[0];
+        ok(supportsPlaceholders || ieVersion > 0 && ieVersion < 10, "maxLength is present or this is IE9");
         if (testOptions.isJquery) {
             passInput.passField(options);
             passFieldObj = passInput.data("PassField.Field");
@@ -380,12 +397,15 @@ $(function() {
         checkBtnMask(options, testOptions.inputAttr);
         checkMsgWarn(options);
         checkTip(options);
+        checkPlaceholder(testOptions.inputAttr);
     }
 
     // ========================== initial checks ==========================
 
     function checkWrap(wrapAttr, inputAttr) {
-        equal(wrap.attr("class"), addPrefix("wrap") + (inputAttr && inputAttr.hasOwnProperty("autofocus") ? " " + addPrefix("focused") : ""), "wrap class assigned to wrap");
+        equal(wrap.attr("class"), addPrefix("wrap") +
+            (ieVersion == 6 ? " a_pf-ie6" : "") + (ieVersion == 7 ? " a_pf-ie7" : "") +
+            (inputAttr && inputAttr.hasOwnProperty("autofocus") ? " " + addPrefix("focused") : ""), "wrap class assigned to wrap");
         if (!wrapAttr.id)
             ok(!wrap.attr("id"), "wrap has not been assigned any id");
     }
@@ -393,8 +413,8 @@ $(function() {
     function checkPassInput(inputAttr) {
         equal($("input[type=password]", wrap).length, 1, "password input found");
         equal(passInput.attr("class"), addPrefix("txt-pass"), "class assigned to pass input");
-        //if (inputAttr.placeholder) // TODO: IE
-        //    equal(passInput.attr("placeholder"), inputAttr.placeholder, "placeholder assigned to pass input");
+        if (inputAttr.placeholder && supportsPlaceholders)
+            equal(passInput.attr("placeholder"), inputAttr.placeholder, "placeholder assigned to pass input");
         if (inputAttr.maxlength)
             equal(passInput.attr("maxlength"), inputAttr.maxlength, "maxlength assigned to pass input");
         ok(passInput.attr("id"), "pass input has id");
@@ -404,8 +424,8 @@ $(function() {
         clearInput = $("input[type=text]", wrap);
         equal(clearInput.length, 1, "clear input found");
         equal(clearInput.attr("class"), addPrefix("txt-clear"), "class assigned to clear input");
-        //if (inputAttr.placeholder) // TODO: IE
-        //    equal(clearInput.attr("placeholder"), inputAttr.placeholder, "placeholder assigned to clear input");
+        if (inputAttr.placeholder && supportsPlaceholders)
+            equal(clearInput.attr("placeholder"), inputAttr.placeholder, "placeholder assigned to clear input");
         if (inputAttr.maxlength)
             equal(clearInput.attr("maxlength"), inputAttr.maxlength, "maxlength assigned to clear input");
         ok(clearInput.attr("id"), "clear input has id");
@@ -451,7 +471,7 @@ $(function() {
             ok(msgWarn.hasClass(cls), "warn msg class assigned: " + cls);
         else
             ok(!msgWarn.hasClass(cls), "warn msg class not assigned");
-        ok(!msgWarn.is(":visible"), "warn msg is not visible");
+        ok(!msgWarn.is(":visible") || !msgWarn.html(), "warn msg is not visible");
         equal(getWarnMsg(), null, "warn msg is not assigned");
     }
 
@@ -463,6 +483,17 @@ $(function() {
             return;
         }
         ok(!tip.is(":visible"), "tip is not visible");
+    }
+
+    function checkPlaceholder(inputAttr) {
+        fakePlaceholder = $("." + addPrefix("placeholder"));
+        if (!fakePlaceholder.length) {
+            fakePlaceholder = null;
+        }
+        if (fakePlaceholder)
+            ok(!supportsPlaceholders, "fake placeholder if no placeholder support detected");
+        if (inputAttr.placeholder && !supportsPlaceholders)
+            ok(fakePlaceholder && fakePlaceholder.is(":visible"), "fake placeholder is present and visible")
     }
 
     // ========================== simple workflow for all cases ==========================
@@ -477,6 +508,9 @@ $(function() {
         }
         if (btnMask) {
             ok(btnMask.is(":visible"), "mask button is visible");
+        }
+        if (fakePlaceholder) {
+            ok(fakePlaceholder.is(":visible"), "fake placeholder is visible on focus with no text");
         }
 
         var pass = "test-pass";
@@ -512,10 +546,17 @@ $(function() {
                 equal(getMainInput().attr("id"), input.attr("id"), "switched back as before generation");
             }
         }
+        if (fakePlaceholder) {
+            ok(!fakePlaceholder.is(":visible"), "fake placeholder is hidden with text");
+        }
 
         passInput.setPass("");
         equal(passInput.val(), "", "pass input value cleared");
         ok(!clearInput.val(), "clear input value cleared");
+
+        if (fakePlaceholder) {
+            ok(fakePlaceholder.is(":visible"), "fake placeholder is visible on pass clear");
+        }
     }
 
     // ========================== utility functions ==========================
@@ -549,6 +590,18 @@ $(function() {
             }
         }
         return msg || null;
+    }
+
+    function getVersionIE() {
+        var rv = -1;
+        if (navigator.appName == "Microsoft Internet Explorer") {
+            var re = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
+            var match = re.exec(navigator.userAgent);
+            if (match != null) {
+                rv = parseFloat(match[1]);
+            }
+        }
+        return rv;
     }
 
     function addPrefix(cls) {
