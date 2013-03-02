@@ -84,6 +84,7 @@ only screen and (                min-resolution: 2dppx) {
     line-height: 18px;
     margin: 0;
     padding: 0;
+    z-index: 10000;
 }
 .a_pf-wrap .a_pf-tip-arr-wrap { height: 9px; margin: 0; }
 .a_pf-wrap.a_pf-ie6 .a_pf-tip-arr-wrap { display: none; }
@@ -118,6 +119,7 @@ only screen and (                min-resolution: 2dppx) {
     border-radius: 3px;
     padding: 5px;
     background-color: white;
+    color: #333;
     margin: 0;
 }
 .a_pf-wrap .a_pf-btn-gen-help {
