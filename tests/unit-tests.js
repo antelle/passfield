@@ -381,7 +381,7 @@ $(function() {
         passInput = $("<input type='password'/>").attr(testOptions.inputAttr).appendTo(wrap);
         anotherInput = $("<input/>").appendTo(fixture);
         supportsPlaceholders = "placeholder" in anotherInput[0];
-        ok(supportsPlaceholders || ieVersion > 0 && ieVersion < 10, "maxLength is present or this is IE9");
+        ok(supportsPlaceholders || ieVersion > 0 && ieVersion < 10, "placeholder is present or this is IE9");
         if (testOptions.isJquery) {
             passInput.passField(options);
             passFieldObj = passInput.data("PassField.Field");
