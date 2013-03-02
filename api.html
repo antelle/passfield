@@ -123,6 +123,7 @@
                     </ul>
                     <p><span class="label label-info">Please note:</span> default value for this parameter is 0.8; this means that a password with length a bit less than one of the pattern is considered ok. If this is not what you wish, you can change this rate to achieve more or less strict password checking. Passwords are always generated with rating = 1.</p>
                     <p>If you need more info, please refer to <code>calculateStrengthAndValidate</code> function.</p>
+                    <p><span class="label">Tip:</span> if you are creating a password field without strength validation at all, pass <code>acceptRate: 0</code>.</p>
 
                     <h5><code id="allowEmpty">allowEmpty</code></h5>
                     <p>
