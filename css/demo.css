@@ -8,7 +8,7 @@
     display: inline-block;
     width: 16px;
     height: 16px;
-    background: url(../rand.png) center -2px no-repeat;
+    background: url(../passfield/rand.png) center -2px no-repeat;
     vertical-align: middle;
     margin-top: 2px;
 }
@@ -19,7 +19,7 @@ only screen and (        min-device-pixel-ratio: 2),
 only screen and (                min-resolution: 192dpi),
 only screen and (                min-resolution: 2dppx) {
     #help-gen-btn {
-        background-image: url(../rand@2x.png);
+        background-image: url(../passfield/rand@2x.png);
         background-size: 16px
     }
 }
