@@ -389,9 +389,9 @@
             if (inputStyle) {
                 _dom.clearInput.style.cssText = inputStyle;
             }
-            var maxlength = _dom.mainInput.getAttribute("maxlength");
+            var maxlength = _dom.mainInput.getAttribute("maxLength");
             if (maxlength) {
-                _dom.clearInput.setAttribute("maxlength", maxlength);
+                _dom.clearInput.setAttribute("maxLength", maxlength);
             }
             _dom.clearInput.style.display = "none";
             insertAfter(_dom.mainInput, _dom.clearInput);
