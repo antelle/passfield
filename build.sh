@@ -11,9 +11,9 @@ java -jar ~/YUI/yuicompressor-2.4.8pre.jar passfield.css --charset utf-8 --nomun
 /g' | sed '/^$/d' > ../build-v1/passfield.min.css
 
 echo "Copying images..."
-cp -f *.png ../build-v1/
+cp -f -X *.png ../build-v1/
 
 echo "Copying to site..."
-cp -f ../build-v1/*.* ../site/passfield/
+cp -f -X ../build-v1/*.* ../site/passfield/
 
 echo "Done"

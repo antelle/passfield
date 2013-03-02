@@ -585,7 +585,8 @@
          * If the element has autofocus attribute, we'll check it and focus if necessary
          */
         function doAutofocus() {
-            if (_dom.mainInput.hasAttribute("autofocus")) {
+            if (typeof _dom.mainInput.hasAttribute === "function" && _dom.mainInput.hasAttribute("autofocus")
+                || _dom.mainInput.getAttribute("autofocus")) {
                 _dom.mainInput.focus();
                 handleInputFocus();
             }
@@ -998,7 +999,11 @@
          * @return {Object} - rect: { top: Number, left: Number }.
          */
         function getBoundingRect(el) {
-            return typeof el.getBoundingClientRect === "function" ? el.getBoundingClientRect() : { top: 0, left: 0 };
+            try {
+                return el.getBoundingClientRect();
+            } catch (err) {
+                return { top: 0, left: 0 }
+            }
         }
 
         /**
@@ -1008,12 +1013,13 @@
          */
         function offset(el) {
             var doc = el.ownerDocument;
-            if (!doc)
+            if (!doc) {
                 return { top: 0, left: 0 };
+            }
             var box = getBoundingRect(el);
             return {
-                top: box.top + window.pageYOffset - doc.documentElement.clientTop,
-                left: box.left + window.pageXOffset - doc.documentElement.clientLeft
+                top: box.top + (window.pageYOffset || 0) - (doc.documentElement.clientTop || 0),
+                left: box.left + (window.pageXOffset || 0) - (doc.documentElement.clientLeft || 0)
             };
         }
 
@@ -1023,7 +1029,11 @@
          * @return {Function|HTMLElement|Element|Element} - offset parent.
          */
         function offsetParent(el) {
-            var op = el.offsetParent || document.documentElement;
+            var op;
+            try { op = el.offsetParent; }
+            catch (e) { }
+            if (!op)
+                op = document.documentElement;
             while (op && (op.nodeName.toLowerCase() != "html") && css(op, "position") === "static") {
                 op = op.offsetParent;
             }
@@ -1079,6 +1089,9 @@
          */
         function setRect(el, rect) {
             utils.each(rect, function (k, v) {
+                if (isNaN(v)) {
+                    return;
+                }
                 el.style[k] = v + "px";
                 if (k == "height") {
                     el.style.lineHeight = v + "px";
