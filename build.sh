@@ -14,6 +14,6 @@ echo "Copying images..."
 cp -f *.png ../build-v1/
 
 echo "Copying to site..."
-cp -f ../build-v1/*.* ../site/lib/passfield/
+cp -f ../build-v1/*.* ../site/passfield/
 
 echo "Done"
