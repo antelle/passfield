@@ -20,6 +20,7 @@ var helpMsgs = {
     locale: "All messages used in Pass*Field are defined in locales. You can select locale using <code>locale</code> parameter (2-letter ISO code, e.g. “en”). " +
         "By default (if you pass null or empty) the locale is read from browser settings but you can specify certain locale here. If the locale is not found, neutral language (English) will be used. Supported: en, de, fr, it, ru, ua, es, el."
 };
+var oldSettings = "(none)";
 
 $(function() {
     $("#frm-settings input").change(function() {
@@ -91,6 +92,11 @@ function readSettings() {
 }
 
 function recreatePasswordField(settings) {
+    var settingsStr = toJs(settings || {});
+    if (oldSettings == settingsStr)
+        return;
+    oldSettings = settingsStr;
+
     var tpl = '<div id="mypass-wrap" class="control-group">\n' +
         '    <input type="password" id="mypass" \n' +
         '        placeholder="{}" />\n' +
@@ -101,7 +107,7 @@ function recreatePasswordField(settings) {
 
     $("#mypass-frm").html(tpl);
     $("#mypass").width(210);
-    showScript(settings);
+    showScript(settingsStr);
     showHtml(tpl);
     prettyPrint();
 
@@ -123,7 +129,7 @@ function recreatePasswordField(settings) {
     }, 500)
 }
 
-function showScript(settings) {
+function toJs(settings) {
     var settingsText = "";
     if (settings) {
         settingsText += "{\n";
@@ -149,6 +155,10 @@ function showScript(settings) {
         if (settingsText == "{\n}")
             settingsText = "";
     }
+    return settingsText;
+}
+
+function showScript(settingsText) {
     var text = '$("#mypass").passField(' + settingsText + ');'
     $("#pre-code-js-jq").text(text);
     text = 'var passField = \n        new PassField.Field("mypass"' + (settingsText ? ", " : "") + settingsText + ');'
