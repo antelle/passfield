@@ -393,6 +393,10 @@
             if (maxlength) {
                 _dom.clearInput.setAttribute("maxLength", maxlength);
             }
+            var size = _dom.mainInput.getAttribute("size");
+            if (size) {
+                _dom.clearInput.setAttribute("size", size);
+            }
             _dom.clearInput.style.display = "none";
             insertAfter(_dom.mainInput, _dom.clearInput);
 
