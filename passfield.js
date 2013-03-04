@@ -248,6 +248,12 @@
             "jesus", "michael", "ninja", "mustang", "password1", "p@ssw0rd", "miss", "root", "secret"
         ],
 
+        generationChars: {
+            digits: "1234567890",
+            letters: "abcdefghijklmnopqrstuvwxyz",
+            letters_up: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        },
+
         dataAttr: "PassField.Field"
     };
 
@@ -937,7 +943,7 @@
             });
             charTypesSeq.sort(function() { return 0.7 - Math.random(); });
             utils.each(charTypesSeq, function(charType) {
-                var sequence = _opts.chars[charType];
+                var sequence = _conf.generationChars[charType] || _opts.chars[charType];
                 result += utils.selectRandom(sequence);
             });
             return result;
