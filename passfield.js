@@ -1,5 +1,5 @@
 /** 
- * @license Pass*Field v1.0.0 | (c) 2013 Antelle | https://github.com/antelle/passfield/blob/master/MIT-LICENSE.txt
+ * @license Pass*Field v1.0.1 | (c) 2013 Antelle | https://github.com/antelle/passfield/blob/master/MIT-LICENSE.txt
  */
 
 // Permission is hereby granted, free of charge, to any person obtaining
