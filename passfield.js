@@ -273,6 +273,7 @@
         var _id;
         var _validateTimer;
         var _blurTimer;
+        var _blurMaskTimer;
         var _warningShown = false;
         var _valMsg = null;
         var _ieVersion;
@@ -469,7 +470,7 @@
                 _dom.mainInput.setAttribute("placeholder", _dom.mainInput.getAttribute("data-placeholder"));
             }
 
-            resizeControls();
+            setTimeout(resizeControls, 30);
         }
 
         /**
@@ -645,11 +646,16 @@
          * Input is focused
          */
         function handleInputFocus() {
-            if (_blurTimer)
+            if (_blurTimer) {
                 clearTimeout(_blurTimer);
-            if (!hasClass(_dom.wrapper, "focused"))
-                resizeControls();
+                _blurTimer = null;
+            }
+            if (_blurMaskTimer) {
+                clearTimeout(_blurMaskTimer);
+                _blurMaskTimer = null;
+            }
             addClass(_dom.wrapper, "focused");
+            setTimeout(resizeControls, 30);
         }
 
         /**
@@ -659,6 +665,13 @@
             _blurTimer = setTimeout(function() {
                 _blurTimer = null;
                 removeClass(_dom.wrapper, "focused");
+                // if the password has not been masked my default, toggle mode after inactivity
+                if (_opts.isMasked && !_blurMaskTimer) {
+                    _blurMaskTimer = setTimeout(function() {
+                        _blurMaskTimer = null;
+                        toggleMasking(true, false);
+                    }, 1500);
+                }
             }, 100);
         }
 
@@ -681,22 +694,22 @@
                 _dom.mainInput.style.display = currentDisplayMode;
                 _dom.clearInput.style.display = "none";
                 _dom.mainInput.value = _dom.clearInput.value;
-                if (needFocus)
-                    _dom.mainInput.focus();
                 if (_dom.maskBtn) {
                     setHtml(_dom.maskBtn, "abc");
                     _dom.maskBtn.title = _locale.msg.showPass;
                 }
+                if (needFocus)
+                    _dom.mainInput.focus();
             } else {
                 _dom.clearInput.style.display = currentDisplayMode;
                 _dom.mainInput.style.display = "none";
                 _dom.clearInput.value = _dom.mainInput.value;
-                if (needFocus)
-                    _dom.clearInput.focus();
                 if (_dom.maskBtn) {
                     setHtml(_dom.maskBtn, "&bull;&bull;&bull;");
                     _dom.maskBtn.title = _locale.msg.hidePass;
                 }
+                if (needFocus)
+                    _dom.clearInput.focus();
             }
 
             // jQuery.validation can isert error laber right after our input, so we'll handle it here
@@ -717,6 +730,7 @@
 
             if (_validateTimer) {
                 clearTimeout(_validateTimer);
+                _validateTimer = null;
             }
             validatePassword();
 
@@ -888,13 +902,14 @@
                 }
             }
             if (_dom.tip) {
+                resizeControls(); // to prevent flickering
                 addClass(_dom.tip, "tip-shown");
                 var html = errorText;
                 if (_dom.genBtn) {
                     html += " " + _locale.msg.generateMsg.replace("{}", '<div class="' + formatClass("btn-gen-help") + '"></div>');
                 }
                 setHtml(_dom.tipBody, html);
-                resizeControls();
+                setTimeout(resizeControls, 50);
             }
 
             _warningShown = true;
