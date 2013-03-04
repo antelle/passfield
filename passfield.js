@@ -582,7 +582,7 @@
                 utils.attachEvent(_dom.clearInput, "onkeyup", handleInputKeydown);
             }
 
-            utils.attachEvent(_dom.wrapper, "onmouseover", resizeControls);
+            utils.attachEvent(_dom.wrapper, "onmouseover", function() { setTimeout(resizeControls, 0); });
             utils.attachEvent(window, "onresize", resizeControls);
 
             if (_dom.maskBtn) {
@@ -655,7 +655,7 @@
                 _blurMaskTimer = null;
             }
             addClass(_dom.wrapper, "focused");
-            setTimeout(resizeControls, 30);
+            setTimeout(resizeControls, 0);
         }
 
         /**
@@ -689,7 +689,7 @@
             else
                 isMasked = !!isMasked;
 
-            var currentDisplayMode = css(_isMasked ? _dom.mainInput : _dom.clearInput, "display");
+            var currentDisplayMode = css(_isMasked ? _dom.mainInput : _dom.clearInput, "display") || "block";
             if (isMasked) {
                 _dom.mainInput.style.display = currentDisplayMode;
                 _dom.clearInput.style.display = "none";
@@ -902,14 +902,13 @@
                 }
             }
             if (_dom.tip) {
-                resizeControls(); // to prevent flickering
                 addClass(_dom.tip, "tip-shown");
                 var html = errorText;
                 if (_dom.genBtn) {
                     html += " " + _locale.msg.generateMsg.replace("{}", '<div class="' + formatClass("btn-gen-help") + '"></div>');
                 }
                 setHtml(_dom.tipBody, html);
-                setTimeout(resizeControls, 50);
+                setTimeout(resizeControls, 0);
             }
 
             _warningShown = true;
@@ -1133,19 +1132,24 @@
                 el.style.width = rect.width + "px";
             }
             if (rect.top || rect.left) {
+                if (css(el, "display") == "none") {
+                    el.style.top = rect.top + "px";
+                    el.style.left = rect.left + "px";
+                    return;
+                }
                 var curLeft, curTop, curOffset;
 
                 curOffset = offset(el);
-                curTop = css(el, "top");
-                curLeft = css(el, "left");
+                curTop = css(el, "top") || 0;
+                curLeft = css(el, "left") || 0;
 
-                if ((curTop + curLeft).indexOf("auto") > -1) {
+                if ((curTop + curLeft + "").indexOf("auto") > -1) {
                     var pos = position(el);
                     curTop = pos.top;
                     curLeft = pos.left;
                 } else {
-                    curTop = parseFloat(curTop);
-                    curLeft = parseFloat(curLeft);
+                    curTop = parseFloat(curTop) || 0;
+                    curLeft = parseFloat(curLeft) || 0;
                 }
 
                 if (rect.top) {
@@ -1188,7 +1192,8 @@
          * @param {Node} el - new node
          */
         function insertAfter(target, el) {
-            target.parentNode.insertBefore(el, target.nextSibling);
+            if (target.parentNode)
+                target.parentNode.insertBefore(el, target.nextSibling);
         }
 
         /**
