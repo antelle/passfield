@@ -376,6 +376,7 @@
         function createNodes() {
             var mainInputRect = getRect(_dom.mainInput);
             mainInputRect.top += cssFloat(_dom.mainInput, "marginTop");
+            var cls = _dom.mainInput.className;
 
             var heightStr = mainInputRect.height + "px";
             addClass(_dom.mainInput, "txt-pass");
@@ -385,6 +386,9 @@
 
             _dom.clearInput = newEl("input", { type: "text", id: "txt-clear", className: "txt-clear",
                     placeholder: _dom.mainInput.placeholder, value: _dom.mainInput.value });
+            if (cls) {
+                addClass(_dom.clearInput, cls, true);
+            }
             var inputStyle = _dom.mainInput.style.cssText;
             if (inputStyle) {
                 _dom.clearInput.style.cssText = inputStyle;
