@@ -383,6 +383,9 @@
 
             _dom.wrapper = _dom.mainInput.parentNode;
             addClass(_dom.wrapper, "wrap");
+            if (css(_dom.wrapper, "position") == "static") {
+                _dom.wrapper.style.position = "relative";
+            }
 
             _dom.clearInput = newEl("input", { type: "text", id: "txt-clear", className: "txt-clear",
                     placeholder: _dom.mainInput.placeholder, value: _dom.mainInput.value });
@@ -468,7 +471,6 @@
          */
         function resizeControls() {
             var rect = getRect(_isMasked ? _dom.mainInput : _dom.clearInput);
-            rect.top += cssFloat(_isMasked ? _dom.mainInput : _dom.clearInput, "marginTop");
             var left = 5;
             if (_dom.maskBtn) {
                 left += cssFloat(_dom.maskBtn, "width");
@@ -1087,7 +1089,7 @@
          * @return {Object} - bounds and offset combined.
          */
         function getRect(el) {
-            return utils.extend(position(el), getBounds(el));
+            return utils.extend(offset(el), getBounds(el));
         }
 
         /**
@@ -1096,15 +1098,36 @@
          * @param {Object} rect - coords to set
          */
         function setRect(el, rect) {
-            utils.each(rect, function (k, v) {
-                if (isNaN(v)) {
-                    return;
+            if (rect.height && !isNaN(rect.height)) {
+                el.style.height = rect.height + "px";
+                el.style.lineHeight = rect.height + "px";
+            }
+            if (rect.width && !isNaN(rect.width)) {
+                el.style.width = rect.width + "px";
+            }
+            if (rect.top || rect.left) {
+                var curLeft, curTop, curOffset;
+
+                curOffset = offset(el);
+                curTop = css(el, "top");
+                curLeft = css(el, "left");
+
+                if ((curTop + curLeft).indexOf("auto") > -1) {
+                    var pos = position(el);
+                    curTop = pos.top;
+                    curLeft = pos.left;
+                } else {
+                    curTop = parseFloat(curTop);
+                    curLeft = parseFloat(curLeft);
                 }
-                el.style[k] = v + "px";
-                if (k == "height") {
-                    el.style.lineHeight = v + "px";
+
+                if (rect.top) {
+                    el.style.top = ((rect.top - curOffset.top) + curTop) + "px";
                 }
-            });
+                if (rect.left) {
+                    el.style.left = ((rect.left - curOffset.left) + curLeft) + "px";
+                }
+            }
         }
 
         /**
