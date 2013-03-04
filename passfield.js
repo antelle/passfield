@@ -958,7 +958,13 @@
             });
             charTypesSeq.sort(function() { return 0.7 - Math.random(); });
             utils.each(charTypesSeq, function(charType) {
-                var sequence = _conf.generationChars[charType] || _opts.chars[charType];
+                var sequence = _conf.generationChars[charType];
+                if (sequence) {
+                    if (_opts.chars[charType] && _opts.chars[charType].indexOf(sequence) < 0)
+                        sequence = _opts.chars[charType]; // overriden without default letters - ok, generate from given chars
+                } else {
+                    sequence = _opts.chars[charType];
+                }
                 result += utils.selectRandom(sequence);
             });
             return result;

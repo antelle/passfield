@@ -212,8 +212,8 @@ $(function() {
         equal(getWarnMsg(), null, "no error is generated for blacklisted pass");
         ok(!passInput.setPass("").validatePass(), "pass is not valid");
         equal(getWarnMsg(), "Password is required.", "error is shown for empty pass");
-        ok(!passInput.setPass("åß∂").validatePass(), "pass is not valid");
-        equal(getWarnMsg(), "Password contains bad characters: “åß∂”.", "error is shown for bad symbols");
+        ok(!passInput.setPass("∂§").validatePass(), "pass is not valid");
+        equal(getWarnMsg(), "Password contains bad characters: “∂§”.", "error is shown for bad symbols");
         ok(passInput.setPass("1").validatePass(), "pass is valid");
         equal(getWarnMsg(), null, "no error is generated for simple pass");
     });
@@ -538,7 +538,7 @@ $(function() {
             isMasked = false;
             curInput = getMainInput();
             equal(curInput.attr("id"), clearInput.attr("id"), "clear input active after generation");
-            ok(!passInput.getPassValidationMessage(), "generated valid password");
+            equal(passInput.getPassValidationMessage(), null, "generated valid password");
 
             if (wasMasked != isMasked) {
                 isMasked = wasMasked;
