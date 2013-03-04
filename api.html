@@ -132,7 +132,7 @@
 
                     <h5><code id="isMasked">isMasked</code></h5>
                     <p>
-                        Password will be initially masked if <code>isMasked</code> is true; otherwise it will be shown as cleartext.
+                        Password will be initially masked if <code>isMasked</code> is true; otherwise it will be shown as cleartext. In case of <code>isMasked</code> is <code>true</code>, if the user switches focus to another field, after several seconds of inactivity the field will switch back to masked mode.
                     </p>
 
                     <h5><code id="showToggle">showToggle</code></h5>
@@ -229,10 +229,9 @@ $("#mypass").passField({ validationCallback: validatePassword });</pre>
 }</pre>
                     <p>E.g. you may want to treat other unicode letters as letters (and not as symbols), so you should add these letters in such way:</p>
                     <pre class="prettyprint language-js">chars: {
-    letters: "abcdefghijklmnopqrstuvwxyzäöü",
-    letters_up: "ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜ"
+    letters: "abcdefghijklmnopqrstuvwxyzσβασ"
 }</pre>
-                    <p>Characters from these lists are also used for password generation.</p>
+                    <p>You can cpecify additional letters here but for password generation latin letters will be used if they are present in <code>chars.letters</code>.</p>
 
                     <h3 id="interface">Interface</h3>
                     <p>After Pass*Field is created, you might want access it. Here's how:</p>
