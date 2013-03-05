@@ -106,13 +106,13 @@ $(function() {
         ok(!passInput.validatePass(), "pass is not valid");
         equal(getWarnMsg(), "Password is required.", "empty password error is generated");
         ok(!passInput.setPass("ab").validatePass(), "pass is not valid");
-        equal(getWarnMsg(), "This password is weak: password must contain letters in UPPER case.", "password uppercase error is generated");
+        equal(getWarnMsg(), "This password is weak: password must contain letters in UPPER case, digits and symbols (@#$%).<br/>Password is too short (min. length: 8).", "password uppercase error is generated");
         ok(!passInput.setPass("abCD").validatePass(), "pass is not valid");
-        equal(getWarnMsg(), "This password is weak: password must contain digits.", "password digits error is generated");
+        equal(getWarnMsg(), "This password is weak: password must contain digits and symbols (@#$%).<br/>Password is too short (min. length: 8).", "password digits error is generated");
         ok(!passInput.setPass("abCD12").validatePass(), "pass is not valid");
-        equal(getWarnMsg(), "This password is weak: password must contain symbols (@#$%).", "password digits error is generated");
+        equal(getWarnMsg(), "This password is weak: password must contain symbols (@#$%).<br/>Password is too short (min. length: 8).", "password digits error is generated");
         ok(!passInput.setPass("abCD12!").validatePass(), "pass is not valid");
-        equal(getWarnMsg(), "This password is weak: password is too short.", "password length is generated");
+        equal(getWarnMsg(), "This password is weak: password is too short (min. length: 8).", "password length is generated");
         ok(passInput.setPass(STRONG_PASS).validatePass(), "pass is valid");
         equal(getWarnMsg(), null, "empty password error is removed");
     });
@@ -147,9 +147,9 @@ $(function() {
         ok(!passInput.setPass("1234").validatePass(), "pass is not valid");
         equal(getWarnMsg(), "Password contains bad characters: “1234”.", "bad chars error is generated");
         ok(!passInput.setPass("dDdD").validatePass(), "pass is not valid");
-        equal(getWarnMsg(), "This password is weak: password must contain symbols (sS).", "chars error is generated");
+        equal(getWarnMsg(), "This password is weak: password must contain symbols (sS), letters and letters in UPPER case.", "chars error is generated");
         ok(!passInput.setPass("dDsS").validatePass(), "pass is not valid");
-        equal(getWarnMsg(), "This password is weak: password must contain letters.", "chars error is generated");
+        equal(getWarnMsg(), "This password is weak: password must contain letters and letters in UPPER case.", "chars error is generated");
         ok(!passInput.setPass("dlsS").validatePass(), "pass is not valid");
         equal(getWarnMsg(), "This password is weak: password must contain letters in UPPER case.", "chars error is generated");
         ok(passInput.setPass("dlsu").validatePass(), "pass is valid");
@@ -159,7 +159,7 @@ $(function() {
         prepare({ pattern: "1234567890", acceptRate: 0.5, validationCallback: function(el, res) { valResult = res; } });
         runBasicWorkFlow();
         ok(!passInput.setPass("5436").validatePass(), "pass is not valid");
-        equal(getWarnMsg(), "This password is weak: password is too short.", "pass short error is generated");
+        equal(getWarnMsg(), "This password is weak: password is too short (min. length: 10).", "pass short error is generated");
         equal(valResult.strength, 0.4, "strength is set");
         equal(passInput.getPassStrength(), 0.4, "strength is returned");
         ok(passInput.setPass("43826").validatePass(), "pass is valid");
@@ -361,7 +361,7 @@ $(function() {
         prepare({ locale: "de", localeMsg: { passTooShort: "bla-bla-bla" }, checkMode: PassField.CheckModes.STRICT });
         runBasicWorkFlow();
         ok(!passInput.setPass("1").validatePass(), "pass is not valid");
-        equal(getWarnMsg(), "Dieses Passwort ist schwach: Passwort muss Buchstaben enthalten.", "localized error is generated");
+        equal(getWarnMsg(), "Dieses Passwort ist schwach: Passwort muss Buchstaben enthalten.<br/>Bla-bla-bla.", "localized error is generated");
         ok(!passInput.setPass("1aA!").validatePass(), "pass is not valid");
         equal(getWarnMsg(), "Dieses Passwort ist schwach: bla-bla-bla.", "custom error is generated");
     });
@@ -369,7 +369,7 @@ $(function() {
         prepare({ locale: "xx", localeMsg: { passTooShort: "bla-bla-bla" }, checkMode: PassField.CheckModes.STRICT });
         runBasicWorkFlow();
         ok(!passInput.setPass("1").validatePass(), "pass is not valid");
-        equal(getWarnMsg(), "This password is weak: password must contain letters.", "localized error is generated");
+        equal(getWarnMsg(), "This password is weak: password must contain letters.<br/>Bla-bla-bla.", "localized error is generated");
         ok(!passInput.setPass("1aA!").validatePass(), "pass is not valid");
         equal(getWarnMsg(), "This password is weak: bla-bla-bla.", "custom error is generated");
     });

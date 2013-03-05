@@ -34,6 +34,11 @@
     var PassField = window.PassField = {};
     PassField.Config = {};
 
+    /**
+     * Password char types
+     * @readonly
+     * @enum {string}
+     */
     PassField.CharTypes = {
         DIGIT: "digits",
         LETTER: "letters",
@@ -52,7 +57,7 @@
         MODERATE: 0,
         /** more strict: it a password is longer than expected length, this makes no difference; all rules must be satisfied */
         STRICT: 1
-    }
+    };
 
     // ========================== defaults ==========================
 
@@ -89,14 +94,16 @@
                 lower: true,
                 msg: {
                     pass: "password",
+                    and: "and",
                     showPass: "Show password",
                     hidePass: "Hide password",
                     genPass: "Random password",
-                    passTooShort: "password is too short",
-                    noDigits: "password must contain digits",
-                    noLetters: "password must contain letters",
-                    noLetters_up: "password must contain letters in UPPER case",
-                    noSymbols: "password must contain symbols ({})",
+                    passTooShort: "password is too short (min. length: {})",
+                    noCharType: "password must contain {}",
+                    digits: "digits",
+                    letters: "letters",
+                    letters_up: "letters in UPPER case",
+                    symbols: "symbols",
                     inBlackList: "password is in list of top used passwords",
                     passRequired: "password is required",
                     badChars: "password contains bad characters: “{}”",
@@ -110,14 +117,16 @@
                 lower: false,
                 msg: {
                     pass: "Passwort",
+                    and: "und",
                     showPass: "Passwort anzeigen",
                     hidePass: "Passwort verbergen",
                     genPass: "Zufallspasswort",
-                    passTooShort: "Passwort ist zu kurz",
-                    noDigits: "Passwort muss Ziffern enthalten",
-                    noLetters: "Passwort muss Buchstaben enthalten",
-                    noLetters_up: "Passwort muss Buchstaben in GROSSSCHRIFT enthalten",
-                    noSymbols: "Passwort muss Symbole ({}) enthalten",
+                    passTooShort: "Passwort ist zu kurz (Mindestlänge: {})",
+                    noCharType: "Passwort muss {} enthalten",
+                    digits: "Ziffern",
+                    letters: "Buchstaben",
+                    letters_up: "Buchstaben in GROSSSCHRIFT",
+                    symbols: "Symbole",
                     inBlackList: "Passwort steht auf der Liste der beliebtesten Passwörter",
                     passRequired: "Passwort wird benötigt",
                     badChars: "Passwort enthält ungültige Zeichen: “{}”",
@@ -131,14 +140,16 @@
                 lower: true,
                 msg: {
                     pass: "mot de passe",
+                    and: "et",
                     showPass: "Montrer le mot de passe",
                     hidePass: "Cacher le mot de passe",
                     genPass: "Mot de passe aléatoire",
-                    passTooShort: "le mot de passe est trop court",
-                    noDigits: "le mot de passe doit contenir des chiffres",
-                    noLetters: "le mot de passe doit contenir des lettres",
-                    noLetters_up: "le mot de passe doit contenir des lettres en MAJUSCULES",
-                    noSymbols: "le mot de passe doit contenir des symboles ({})",
+                    passTooShort: "le mot de passe est trop court (min. longueur: {})",
+                    noCharType: "le mot de passe doit contenir des {}",
+                    digits: "chiffres",
+                    letters: "lettres",
+                    letters_up: "lettres en MAJUSCULES",
+                    symbols: "symboles",
                     inBlackList: "le mot de passe est dans la liste des plus utilisés",
                     passRequired: "le mot de passe est requis",
                     badChars: "le mot de passe contient des caractères incorrects: “{}”",
@@ -152,14 +163,16 @@
                 lower: false,
                 msg: {
                     pass: "password",
+                    and: "e",
                     showPass: "Mostra password",
                     hidePass: "Nascondi password",
                     genPass: "Password casuale",
-                    passTooShort: "la password è troppo breve",
-                    noDigits: "la password deve contenere numeri",
-                    noLetters: "la password deve contenere lettere",
-                    noLetters_up: "la password deve contenere lettere in MAIUSCOLO",
-                    noSymbols: "la password deve contenere simboli ({})",
+                    passTooShort: "la password è troppo breve (lunghezza min.: {})",
+                    noCharType: "la password deve contenere {}",
+                    digits: "numeri",
+                    letters: "lettere",
+                    letters_up: "lettere in MAIUSCOLO",
+                    symbols: "simboli",
                     inBlackList: "la password è nella lista delle password più usate",
                     passRequired: "è necessaria una password",
                     badChars: "la password contiene caratteri non accettati: “{}”",
@@ -173,14 +186,16 @@
                 lower: true,
                 msg: {
                     pass: "пароль",
+                    and: "и",
                     showPass: "Показать пароль",
                     hidePass: "Скрыть пароль",
                     genPass: "Случайный пароль",
-                    passTooShort: "пароль слишком короткий",
-                    noDigits: "в пароле должны быть цифры",
-                    noLetters: "в пароле должны быть буквы",
-                    noLetters_up: "в пароле должны быть буквы в ВЕРХНЕМ регистре",
-                    noSymbols: "в пароле должны быть символы ({})",
+                    passTooShort: "пароль слишком короткий (мин. длина: {})",
+                    noCharType: "в пароле должны быть {}",
+                    digits: "цифры",
+                    letters: "буквы",
+                    letters_up: "буквы в ВЕРХНЕМ регистре",
+                    symbols: "символы",
                     inBlackList: "этот пароль часто используется в Интернете",
                     badChars: "в пароле есть недопустимые символы: «{}»",
                     weakWarn: "слабый",
@@ -194,14 +209,16 @@
                 lower: true,
                 msg: {
                     pass: "пароль",
+                    and: "i",
                     showPass: "Показати пароль",
                     hidePass: "Сховати пароль",
                     genPass: "Випадковий пароль",
-                    passTooShort: "пароль є занадто коротким",
-                    noDigits: "пароль повинен містити цифри",
-                    noLetters: "пароль повинен містити букви",
-                    noLetters_up: "пароль повинен містити букви у ВЕРХНЬОМУ регістрі",
-                    noSymbols: "пароль повинен містити cимволи ({})",
+                    passTooShort: "пароль є занадто коротким (мiн. довжина: {})",
+                    noCharType: "пароль повинен містити {}",
+                    digits: "цифри",
+                    letters: "букви",
+                    letters_up: "букви у ВЕРХНЬОМУ регістрі",
+                    symbols: "cимволи",
                     inBlackList: "пароль входить до списку паролей, що використовуються найчастіше",
                     passRequired: "пароль є обов'язковим",
                     badChars: "пароль містить неприпустимі символи: «{}»",
@@ -215,14 +232,16 @@
                 lower: true,
                 msg: {
                     pass: "contraseña",
+                    and: "y",
                     showPass: "Mostrar contraseña",
                     hidePass: "Ocultar contraseña",
                     genPass: "Contraseña aleatoria",
-                    passTooShort: "contraseña demasiado corta",
-                    noDigits: "la contraseña debe contener dígitos",
-                    noLetters: "la contraseña debe contener letras",
-                    noLetters_up: "la contraseña debe contener letras en MAYÚSCULAS",
-                    noSymbols: "la contraseña debe contener símbolos ({})",
+                    passTooShort: "contraseña demasiado corta (longitud mín.: {})",
+                    noCharType: "la contraseña debe contener {}",
+                    digits: "dígitos",
+                    letters: "letras",
+                    letters_up: "letras en MAYÚSCULAS",
+                    symbols: "símbolos",
                     inBlackList: "la contraseña está en la lista de las contraseñas más usadas",
                     passRequired: "se requiere contraseña",
                     badChars: "la contraseña contiene caracteres no permitidos: “{}”",
@@ -236,14 +255,16 @@
                 lower: true,
                 msg: {
                     pass: "πρόσβασης",
+                    and: "και",
                     showPass: "Προβολή κωδικού πρόσβασης",
                     hidePass: "Απόκρυψη κωδικού πρόσβασης",
                     genPass: "Τυχαίος κωδικός πρόσβασης",
-                    passTooShort: "ο κωδικός πρόσβασης είναι πολύ μικρός",
-                    noDigits: "ο κωδικός πρόσβασης πρέπει να περιέχει ψηφία",
-                    noLetters: "ο κωδικός πρόσβασης πρέπει να περιέχει λατινικά γράμματα",
-                    noLetters_up: "ο κωδικός πρόσβασης πρέπει να περιέχει λατινικά γράμματα με ΚΕΦΑΛΑΙΑ",
-                    noSymbols: "ο κωδικός πρόσβασης πρέπει να περιέχει σύμβολα ({})",
+                    passTooShort: "ο κωδικός πρόσβασης είναι πολύ μικρός (ελάχιστο μήκος: {})",
+                    noCharType: "ο κωδικός πρόσβασης πρέπει να περιέχει {}",
+                    digits: "ψηφία",
+                    letters: "λατινικά γράμματα",
+                    letters_up: "λατινικά γράμματα με ΚΕΦΑΛΑΙΑ",
+                    symbols: "σύμβολα",
                     inBlackList: "ο κωδικός πρόσβασης βρίσκεται σε κατάλογο δημοφιλέστερων κωδικών",
                     passRequired: "απαιτείται κωδικός πρόσβασης",
                     badChars: "ο κωδικός περιέχει μη επιτρεπτούς χαρακτήρες: “{}”",
@@ -850,33 +871,38 @@
             utils.each(charTypesPattern, function(charType) {
                 charTypesPatternCount++;
                 if (!charTypesPass[charType]) {
-                    var msgName = "no" + charType.charAt(0).toUpperCase() + charType.substring(1);
-                    var msg = _locale.msg[msgName];
-                    if (msg.indexOf("{}") >= 0) {
+                    var msg = _locale.msg[charType];
+                    if (charType == PassField.CharTypes.SYMBOL) {
+                        // we should give example of symbols; for other types this is not required
                         var symbolsCount = 4;
                         var charsExample = _opts.chars[charType];
                         if (charsExample.length > symbolsCount)
                             charsExample = charsExample.substring(0, symbolsCount);
-                        msg = msg.replace("{}", charsExample);
+                        msg = msg + " (" + charsExample + ")";
                     }
                     messages.push(msg);
                 }
             });
             var strength = 1 - messages.length / charTypesPatternCount;
+            if (messages.length) {
+                messages = [joinMessagesForCharTypes(messages)];
+            }
 
             if (_opts.checkMode == PassField.CheckModes.MODERATE) {
+                var extraCharTypesCount = 0;
                 utils.each(charTypesPass, function(charType) {
                     if (!charTypesPattern[charType]) {
                         // cool: the user entered char of type which was not in pattern; +strength!
-                        strength += 1 / charTypesPatternCount;
+                        extraCharTypesCount++;
                     }
                 });
+                strength += extraCharTypesCount / charTypesPatternCount;
             }
 
             var lengthRatio = pass.length / _opts.pattern.length - 1;
             if (lengthRatio < 0) {
                 strength += lengthRatio;
-                messages.push(_locale.msg.passTooShort);
+                messages.push(_locale.msg.passTooShort.replace("{}", _opts.pattern.length));
             } else {
                 if (_opts.checkMode == PassField.CheckModes.MODERATE) {
                     strength += lengthRatio / charTypesPatternCount;
@@ -886,11 +912,30 @@
             if (strength < 0) {
                 strength = 0;
             }
-             // MODERATE checking mode could produce positive results for extra long passwords
-            if (strength > 1)
+            // MODERATE checking mode could produce positive results for extra long passwords
+            if (strength > 1) {
                 strength = 1;
+            }
 
             return { strength: strength, messages: messages, charTypes: charTypesPass };
+        }
+
+        /**
+         * Joins messages about absesnse of different char types in one message like:
+         *      "there are no XXX, YYY and ZZZ in your password"
+         * @param messages {string[]} - messages to join.
+         * @return {string} - single joined message
+         */
+        function joinMessagesForCharTypes(messages) {
+            var replacement = messages[0];
+            for (var i = 1; i < messages.length; i++) {
+                if (i == messages.length - 1)
+                    replacement += " " + _locale.msg.and + " ";
+                else
+                    replacement += ", ";
+                replacement += messages[i];
+            }
+            return _locale.msg.noCharType.replace("{}", replacement);
         }
 
         /**
@@ -907,11 +952,22 @@
                 errorText = messages[0].charAt(0).toUpperCase() + messages[0].substring(1);
             } else {
                 shortErrorText = _locale.msg.weakWarn;
-                if (messages && messages.length) {
-                    var firstLetter = messages[0].charAt(0);
-                    if (_locale.lower)
-                        firstLetter = firstLetter.toLowerCase();
-                    errorText = _locale.msg.weakTitle + ": " + firstLetter + messages[0].substring(1);
+                errorText = "";
+                if (messages) {
+                    for (var i = 0; i < messages.length; i++) {
+                        var firstLetter = messages[i].charAt(0);
+                        if (i == 0) {
+                            errorText += _locale.msg.weakTitle + ": ";
+                            if (_locale.lower)
+                                firstLetter = firstLetter.toLowerCase();
+                        } else {
+                            errorText += "<br/>";
+                            firstLetter = firstLetter.toUpperCase();
+                        }
+                        errorText += firstLetter + messages[i].substring(1);
+                        if (errorText && errorText[errorText.length - 1] != ".")
+                            errorText += ".";
+                    }
                 }
             }
             if (errorText && errorText[errorText.length - 1] != ".")
@@ -929,7 +985,7 @@
                 addClass(_dom.tip, "tip-shown");
                 var html = errorText;
                 if (_dom.genBtn) {
-                    html += " " + _locale.msg.generateMsg.replace("{}", '<div class="' + formatClass("btn-gen-help") + '"></div>');
+                    html += "<br/>" + _locale.msg.generateMsg.replace("{}", '<div class="' + formatClass("btn-gen-help") + '"></div>');
                 }
                 setHtml(_dom.tipBody, html);
                 setTimeout(resizeControls, 0);
@@ -1492,7 +1548,7 @@
                 }
             }
             return null;
-        }
+        };
 
         /**
          * Gets message for last password validation
@@ -1507,7 +1563,7 @@
                 }
             }
             return null;
-        }
+        };
     }
 
     // ========================== jQuery.Validation plugin ==========================
