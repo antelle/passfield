@@ -859,7 +859,7 @@
             var msgs = [];
             var obj = { letters: "1", digits: "!" };
             obj.letters_up = "2";
-            $.each({ letters: 1, digits: 2, letters_up: 3, symbols: 4 }, function(k) {
+            utils.each({ letters: 1, digits: 2, letters_up: 3, symbols: 4 }, function(k) {
                 if (!obj[k]) {
                     x -= .25;
                     msgs.push(1);
