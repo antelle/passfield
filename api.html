@@ -77,6 +77,7 @@
                                 <li class="subnav"><a href="#warnMsgClassName">warnMsgClassName</a></li>
                                 <li class="subnav"><a href="#errorWrapClassName">errorWrapClassName</a></li>
                                 <li class="subnav"><a href="#allowAnyChars">allowAnyChars</a></li>
+                                <li class="subnav"><a href="#checkMode">checkMode</a></li>
                                 <li class="subnav"><a href="#chars">chars</a></li>
                             <li><a href="#interface">Interface</a></li>
                             <li><a href="#compatibility">Compatibility</a></li>
@@ -217,6 +218,13 @@ $("#mypass").passField({ validationCallback: validatePassword });</pre>
                     <h5><code id="allowAnyChars">allowAnyChars</code></h5>
                     <p>controls whether the it is allowed to enter characters that are neigher letters, nor digits, nor symbols (see <code><a href="#chars">chars</a></code> parameter for more info).</p>
 
+                    <h5><code id="checkMode">checkMode</code></h5>
+                    <p>allows to choose from different password checking modes:</p>
+                    <ul>
+                        <li><code>PassField.CheckModes.MODERATE</code> &ndash; more user friendly: if a password is better than the pattern (e.g. longer), its strength is increased and it could match even not containing all char types. E.g. if the pattern is “abc4”, in this mode the password “abcdefghijklmn” will be considered strong: it doesn't have digits but is much longer. Also, the password “a#4^_F” will be considered strong against the rule “1234567890” even its length is smaller: this password has different char types and is a good one;</li>
+                        <li><code>PassField.CheckModes.STRICT</code> &ndash; more strict: it a password is longer than expected length, this makes no difference; all rules must be satisfied.</li>
+                    </ul>
+
                     <h5><code id="chars">chars</code></h5>
                     <p>
                         is used to override default lists of character types which are:
@@ -262,6 +270,10 @@ isValid = document.getElementById("mypass").validatePass(); // raw javascript</p
                     <h5><code id="getPassValidationMessage">getPassValidationMessage</code></h5>
                     <p>returns validation error (<code>null</code> if there's no error) generated during the last validation:</p><pre class="prettyprint language-js">msg = $("#mypass").getPassValidationMessage(); // jQuery
 msg = document.getElementById("mypass").getPassValidationMessage(); // raw javascript</pre>
+
+                    <h5><code id="getPasswordStrength">getPasswordStrength</code></h5>
+                    <p>returns strength measured during the last validation. <code>null</code> means that the password is invalid (not weak but really invalid, e.g. contains bad characters); <code>-1</code> is returned if the strength has not yet been calculated; numeric value in range <code>0..1</code> will be returned otherwise.</p>
+                    <p>This method allows to distinguish between invalid and week passwords.</p>
 
                     <h5><code id="placeholder">placeholder</code></h5>
                     <p>Placeholder is set in HTML:</p>
