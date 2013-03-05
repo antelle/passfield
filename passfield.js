@@ -1,5 +1,5 @@
 /** 
- * @license Pass*Field v1.0.1 | (c) 2013 Antelle | https://github.com/antelle/passfield/blob/master/MIT-LICENSE.txt
+ * @license Pass*Field v1.1.0 | (c) 2013 Antelle | https://github.com/antelle/passfield/blob/master/MIT-LICENSE.txt
  */
 
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -275,7 +275,7 @@
         var _blurTimer;
         var _blurMaskTimer;
         var _warningShown = false;
-        var _valMsg = null;
+        var _validationResult = null;
         var _ieVersion;
         var _isBrowserSupported;
         var _features;
@@ -287,6 +287,7 @@
         this.setPass = setPass;
         this.validatePass = validatePassword;
         this.getPassValidationMessage = getPassValidationMessage;
+        this.getPassStrength = getPassStrength;
 
         init.call(this);
 
@@ -808,12 +809,14 @@
             if (pass.length == 0 && _opts.allowEmpty) {
                 // empty but ok
                 hidePasswordWarning();
+                _validationResult = { strength: 0 };
                 return true;
             } else if (checkResult.strength === null || checkResult.strength < _opts.acceptRate) {
                 showPasswordWarning(checkResult.strength, checkResult.messages);
                 return false;
             } else { // ok
                 hidePasswordWarning();
+                _validationResult = { strength: checkResult.strength };
                 return true;
             }
         }
@@ -892,7 +895,7 @@
             }
             if (errorText && errorText[errorText.length - 1] != ".")
                 errorText += ".";
-            _valMsg = errorText;
+            _validationResult = { strength: strength, message: errorText };
 
             if (_dom.warnMsg) {
                 setHtml(_dom.warnMsg, shortErrorText);
@@ -918,7 +921,6 @@
          * Hides password warning
          */
         function hidePasswordWarning() {
-            _valMsg = null;
             if (_dom.warnMsg) {
                 setHtml(_dom.warnMsg, "");
                 _dom.warnMsg.title = "";
@@ -937,7 +939,15 @@
          * @return {String} - last validation message.
          */
         function getPassValidationMessage() {
-            return _valMsg;
+            return _validationResult ? _validationResult.message : null;
+        }
+
+        /**
+         * Gets strength measured during last password validation
+         * @return {Number|Object} - last measured strength: -1 = not measured; null = pass not valid, Number = strength [0..1].
+         */
+        function getPassStrength() {
+            return _validationResult ? _validationResult.strength : -1;
         }
 
         /**
@@ -1456,6 +1466,21 @@
                 var pf = el.data(PassField.Config.dataAttr);
                 if (pf) {
                     return pf.getPassValidationMessage();
+                }
+            }
+            return null;
+        }
+
+        /**
+         * Gets message for last password validation
+         * @return {String} - last validation message.
+         */
+        $.fn.getPassStrength = function () {
+            var el = this.first();
+            if (el) {
+                var pf = el.data(PassField.Config.dataAttr);
+                if (pf) {
+                    return pf.getPassStrength();
                 }
             }
             return null;

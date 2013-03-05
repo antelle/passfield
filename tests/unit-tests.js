@@ -122,6 +122,7 @@ $(function() {
         passInput.setPass("");
         equal(getWarnMsg(), null, "error is not generated");
         ok(passInput.validatePass(), "pass is valid");
+        equal(passInput.getPassStrength(), 0, "pass strength is not null");
         equal(getWarnMsg(), null, "error is not generated after validation");
         passInput.simulate("focus").simulate("blur");
         equal(getWarnMsg(), null, "error is not generated after blur");
@@ -131,12 +132,14 @@ $(function() {
         runBasicWorkFlow();
         ok(!passInput.setPass("≈").validatePass(), "pass is not valid");
         equal(getWarnMsg(), "Password contains bad characters: “≈”.", "error is generated");
+        equal(passInput.getPassStrength(), null, "pass strength is null");
     });
     test("any chars are allowed", function() {
         prepare({ allowAnyChars: true, pattern: "#", acceptRate: 1 });
         runBasicWorkFlow();
         ok(passInput.setPass("≈").validatePass(), "pass is valid");
         equal(getWarnMsg(), null, "error is not generated");
+        equal(passInput.getPassStrength(), 1, "pass strength is full");
     });
     test("override char types", function() {
         prepare({ allowAnyChars: false, pattern: "dslu", acceptRate: 1, chars: { digits: "dD", symbols: "sS", letters: "lL", letters_up: "uU" } });
@@ -158,9 +161,11 @@ $(function() {
         ok(!passInput.setPass("5436").validatePass(), "pass is not valid");
         equal(getWarnMsg(), "This password is weak: password is too short.", "pass short error is generated");
         equal(valResult.strength, 0.4, "strength is set");
+        equal(passInput.getPassStrength(), 0.4, "strength is returned");
         ok(passInput.setPass("43826").validatePass(), "pass is valid");
         equal(getWarnMsg(), null, "pass short error is removed");
         equal(valResult.strength, 0.5, "strength is set");
+        equal(passInput.getPassStrength(), 0.5, "strength is returned");
     });
     test("pass strength by types", function() {
         prepare({ pattern: "aA1!", acceptRate: 0.75, validationCallback: function(el, res) { valResult = res; } });
@@ -539,6 +544,7 @@ $(function() {
             curInput = getMainInput();
             equal(curInput.attr("id"), clearInput.attr("id"), "clear input active after generation");
             equal(passInput.getPassValidationMessage(), null, "generated valid password");
+            equal(passInput.getPassStrength(), 1, "generated valid password strength");
 
             if (wasMasked != isMasked) {
                 isMasked = wasMasked;
