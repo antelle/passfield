@@ -42,6 +42,18 @@
         UNKNOWN: "unknown"
     };
 
+    /**
+     * Password checking mode
+     * @readonly
+     * @enum {number}
+     */
+    PassField.CheckModes = {
+        /** more user friendly: if a password is better than the pattern (e.g. longer), its strength is increased and it could match even not containing all char types */
+        MODERATE: 0,
+        /** more strict: it a password is longer than expected length, this makes no difference; all rules must be satisfied */
+        STRICT: 1
+    }
+
     // ========================== defaults ==========================
 
     PassField.Config = {
@@ -62,6 +74,7 @@
             warnMsgClassName: "help-inline", // class name added to the waring control (empty or null to disable the feature)
             errorWrapClassName: "error", // class name added to wrapping control when validation fails (empty or null to disable the feature)
             allowAnyChars: true, // suppress validation errors if password contains characters not from list (chars param)
+            checkMode: PassField.CheckModes.MODERATE, // password checking mode (how the strength is calculated)
             chars: {
                 // symbol sequences for generation and checking
                 digits: "1234567890",
@@ -832,7 +845,10 @@
 
             var messages = [];
 
+            var charTypesPatternCount = 0;
+
             utils.each(charTypesPattern, function(charType) {
+                charTypesPatternCount++;
                 if (!charTypesPass[charType]) {
                     var msgName = "no" + charType.charAt(0).toUpperCase() + charType.substring(1);
                     var msg = _locale.msg[msgName];
@@ -846,12 +862,25 @@
                     messages.push(msg);
                 }
             });
-            var strength = 1 - messages.length * .25;
+            var strength = 1 - messages.length / charTypesPatternCount;
+
+            if (_opts.checkMode == PassField.CheckModes.MODERATE) {
+                utils.each(charTypesPass, function(charType) {
+                    if (!charTypesPattern[charType]) {
+                        // cool: the user entered char of type which was not in pattern; +strength!
+                        strength += 1 / charTypesPatternCount;
+                    }
+                });
+            }
 
             var lengthRatio = pass.length / _opts.pattern.length - 1;
             if (lengthRatio < 0) {
                 strength += lengthRatio;
                 messages.push(_locale.msg.passTooShort);
+            } else {
+                if (_opts.checkMode == PassField.CheckModes.MODERATE) {
+                    strength += lengthRatio / charTypesPatternCount;
+                }
             }
 
             if (strength < 0) {
@@ -868,6 +897,10 @@
                     msgs.push(1);
                 }
             });
+
+             // MODERATE checking mode could produce positive results for extra long passwords
+            if (strength > 1)
+                strength = 1;
 
             return { strength: strength, messages: messages, charTypes: charTypesPass };
         }
@@ -1286,10 +1319,12 @@
         var arg = arguments;
         for (var i = 1; i < arg.length; i++) {
             utils.each(arg[i], function (key, value) {
-                if (utils.isArray(arg[i][key]) || utils.isArray(arg[0][key])) {
+                if (utils.isArray(arg[0][key]) || utils.isArray(value)) {
                     arg[0][key] = arg[0][key] ? arg[0][key].concat(value || []) : value;
                 } else if (typeof arg[0][key] === "object" && typeof value === "object") {
                     arg[0][key] = utils.extend({}, arg[0][key], value);
+                } else if (typeof value === "object") {
+                    arg[0][key] = utils.extend({}, value);
                 } else {
                     arg[0][key] = value;
                 }

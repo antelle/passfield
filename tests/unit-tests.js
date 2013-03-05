@@ -99,7 +99,7 @@ $(function() {
         equal(getWarnMsg(), null, "empty password error is removed");
     });
     test("basic pass validation", function() {
-        prepare({ allowEmpty: false, pattern: STRONG_PASS, acceptRate: 1 });
+        prepare({ allowEmpty: false, pattern: STRONG_PASS, acceptRate: 1, checkMode: PassField.CheckModes.STRICT });
         runBasicWorkFlow();
         passInput.setPass("");
         equal(getWarnMsg(), null, "error is not generated");
@@ -213,7 +213,7 @@ $(function() {
     test("zero strength", function() {
         prepare({ acceptRate: 0, allowAnyChars: false, allowEmpty: false });
         runBasicWorkFlow();
-        ok(passInput.setPass("qwerty").validatePass(), "pass iss valid");
+        ok(passInput.setPass("qwerty").validatePass(), "pass is valid");
         equal(getWarnMsg(), null, "no error is generated for blacklisted pass");
         ok(!passInput.setPass("").validatePass(), "pass is not valid");
         equal(getWarnMsg(), "Password is required.", "error is shown for empty pass");
@@ -221,6 +221,28 @@ $(function() {
         equal(getWarnMsg(), "Password contains bad characters: “∂§”.", "error is shown for bad symbols");
         ok(passInput.setPass("1").validatePass(), "pass is valid");
         equal(getWarnMsg(), null, "no error is generated for simple pass");
+    });
+    test("extra hard pass strength in strict mode", function () {
+        prepare({ pattern: "abcd1234", acceptRate: 1, checkMode: PassField.CheckModes.STRICT });
+        runBasicWorkFlow();
+        ok(passInput.setPass("abcd1234").validatePass(), "pass is valid");
+        equal(passFieldObj.getPassStrength(), 1, "strength is 1");
+        ok(!passInput.setPass("abcdefghijklmnop").validatePass(), "long pass is not valid");
+        equal(passFieldObj.getPassStrength(), 0.5, "strength is 0.75");
+        ok(!passInput.setPass("a@3!").validatePass(), "short pass with extra symbols is not valid");
+        equal(passFieldObj.getPassStrength(), 0.5, "strength is 0.5");
+    });
+    test("extra hard pass strength in moderate mode", function () {
+        prepare({ pattern: "abcd1234", acceptRate: 1 });
+        runBasicWorkFlow();
+        ok(passInput.setPass("abcd1234").validatePass(), "pass is valid");
+        equal(passFieldObj.getPassStrength(), 1, "strength is 1");
+        ok(!passInput.setPass("abcdefghijkl").validatePass(), "not so long pass is not valid");
+        equal(passFieldObj.getPassStrength(), 0.75, "not so long pass is not valid");
+        ok(passInput.setPass("abcdefghijklmnop").validatePass(), "long pass is valid");
+        equal(passFieldObj.getPassStrength(), 1, "long pass is valid");
+        ok(passInput.setPass("a@3!").validatePass(), "short pass with extra symbols is valid");
+        equal(passFieldObj.getPassStrength(), 1, "short pass with extra symbols is valid");
     });
     test("custom validation", function() {
         var valReturn = null;
@@ -336,7 +358,7 @@ $(function() {
         equal(getMainInput().val(), pass, "pass written to clear input")
     });
     test("locale override", function() {
-        prepare({ locale: "de", localeMsg: { passTooShort: "bla-bla-bla" } });
+        prepare({ locale: "de", localeMsg: { passTooShort: "bla-bla-bla" }, checkMode: PassField.CheckModes.STRICT });
         runBasicWorkFlow();
         ok(!passInput.setPass("1").validatePass(), "pass is not valid");
         equal(getWarnMsg(), "Dieses Passwort ist schwach: Passwort muss Buchstaben enthalten.", "localized error is generated");
@@ -344,7 +366,7 @@ $(function() {
         equal(getWarnMsg(), "Dieses Passwort ist schwach: bla-bla-bla.", "custom error is generated");
     });
     test("neutral locale when locale not found", function() {
-        prepare({ locale: "xx", localeMsg: { passTooShort: "bla-bla-bla" } });
+        prepare({ locale: "xx", localeMsg: { passTooShort: "bla-bla-bla" }, checkMode: PassField.CheckModes.STRICT });
         runBasicWorkFlow();
         ok(!passInput.setPass("1").validatePass(), "pass is not valid");
         equal(getWarnMsg(), "This password is weak: password must contain letters.", "localized error is generated");
