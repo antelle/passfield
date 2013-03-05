@@ -1,7 +1,7 @@
 Release notes
 -------------
 ##### v1.0.2 (2013-03-05)
-Minor bugfix release
+Minor bugfix release  
 `-` #9: fixed jQuery dependency issue  
 
 ##### v1.0.1 (2013-03-04)
