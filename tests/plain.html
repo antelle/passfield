@@ -4,13 +4,13 @@
     <title>Pass*Field Simple Test</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
-    <script src="../lib/jquery/jquery-1.9.1.min.js"></script>
+    <!--<script src="../lib/jquery/jquery-1.9.1.min.js"></script>-->
     <script src="../passfield.js"></script>
     <link rel="stylesheet" type="text/css" href="../passfield.css"/>
     <script>
-        $(function() {
-            $("input[type=password]").passField();
-        })
+        window.onload = function() {
+            new PassField.Field("mypass");
+        }
     </script>
     <style>
         p { margin: 5px 0; }
