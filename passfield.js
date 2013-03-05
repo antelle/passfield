@@ -886,18 +886,6 @@
             if (strength < 0) {
                 strength = 0;
             }
-
-            var x = 1;
-            var msgs = [];
-            var obj = { letters: "1", digits: "!" };
-            obj.letters_up = "2";
-            utils.each({ letters: 1, digits: 2, letters_up: 3, symbols: 4 }, function(k) {
-                if (!obj[k]) {
-                    x -= .25;
-                    msgs.push(1);
-                }
-            });
-
              // MODERATE checking mode could produce positive results for extra long passwords
             if (strength > 1)
                 strength = 1;
