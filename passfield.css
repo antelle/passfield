@@ -26,6 +26,9 @@
     -webkit-user-select: none;
     -o-user-select: none;
 }
+.a_pf-wrap div.a_pf-btn.a_pf-long-pass {
+    display: none;
+}
 .a_pf-wrap .a_pf-btn:hover {
     color: #4b4b4b;
 }

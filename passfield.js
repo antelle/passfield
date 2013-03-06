@@ -315,6 +315,7 @@
         var _features;
 
         var ELEMENTS_PREFIX = "a_pf-";
+        var BUTTONS_PADDING_RIGHT = 5;
 
         // exports
         this.toggleMasking = function(isMasked) { toggleMasking(isMasked); };
@@ -505,6 +506,15 @@
                 _dom.mainInput.setAttribute("placeholder", _dom.mainInput.getAttribute("data-placeholder"));
             }
 
+            if (_features.passSymbol) {
+                _dom.passLengthChecker = newEl("div", { id: "len" },
+                    { position: "absolute", top: "-10000px", left: "-10000px", display: "block", color: "transparent",
+                        marginLeft: css(_dom.mainInput, "marginLeft"),
+                        height: css(_dom.mainInput, "height"),
+                        border: "none" });
+                insertAfter(_dom.clearInput, _dom.passLengthChecker);
+            }
+
             setTimeout(resizeControls, 30);
         }
 
@@ -513,7 +523,7 @@
          */
         function resizeControls() {
             var rect = getRect(_isMasked ? _dom.mainInput : _dom.clearInput);
-            var left = 5;
+            var left = BUTTONS_PADDING_RIGHT;
             if (_dom.maskBtn) {
                 left += cssFloat(_dom.maskBtn, "width");
                 setRect(_dom.maskBtn, { top: rect.top, left: rect.left + rect.width - left, height: rect.height });
@@ -577,9 +587,13 @@
             var isBoxModel = box.offsetWidth == 2;
             document.body.removeChild(box);
 
+            var passSymbol = navigator.userAgent.indexOf("AppleWebKit") >= 0 || navigator.userAgent.indexOf("Opera") >= 0
+                ? /*BULLET*/"\u2022" : /*BLACK CIRCLE*/"\u25cf";
+
             _features = {
                 placeholders: supportsPlaceholder,
-                boxModel: isBoxModel
+                boxModel: isBoxModel,
+                passSymbol: passSymbol
             };
         }
 
@@ -664,6 +678,42 @@
             }
             if (_dom.placeholder && !val) {
                 _dom.placeholder.style.display = "block";
+            }
+            hideButtonsByPassLength();
+        }
+
+        /**
+         * Hides buttons if the password is too long
+         */
+        function hideButtonsByPassLength() {
+            if (!_dom.passLengthChecker)
+                return;
+            var pass = _isMasked ? _dom.mainInput.value.replace(/./g, _features.passSymbol) : _dom.clearInput.value;
+            setHtml(_dom.passLengthChecker, pass);
+            var passWidth = cssFloat(_dom.passLengthChecker, "width");
+            var padding = cssFloat(_dom.mainInput, "paddingLeft");
+            passWidth += padding;
+            _dom.passLengthChecker.style.marginLeft = padding + "px"; // for test
+            var maskBtnWidth = 0,
+                genBtnWidth = 0,
+                fieldWidth = cssFloat(_isMasked ? _dom.mainInput : _dom.clearInput, "width");
+            if (_dom.maskBtn) {
+                maskBtnWidth = cssFloat(_dom.genBtn, "width");
+                var maskBtnLeft = fieldWidth - maskBtnWidth - BUTTONS_PADDING_RIGHT;
+                if (passWidth > maskBtnLeft) {
+                    addClass(_dom.maskBtn, "long-pass");
+                } else {
+                    removeClass(_dom.maskBtn, "long-pass");
+                }
+            }
+            if (_dom.genBtn) {
+                genBtnWidth = cssFloat(_dom.genBtn, "width");
+                var genBtnLeft = fieldWidth - maskBtnWidth - genBtnWidth - BUTTONS_PADDING_RIGHT;
+                if (passWidth > genBtnLeft) {
+                    addClass(_dom.genBtn, "long-pass");
+                } else {
+                    removeClass(_dom.genBtn, "long-pass");
+                }
             }
         }
 

@@ -384,6 +384,19 @@ $(function() {
         ok(btnMask.is(":visible"), "mask btn is visible");
         runBasicWorkFlow();
     });
+    test("buttons are hidden when the pass is long", function() {
+        prepare();
+        passInput.setPass("***").focus();
+        ok(btnMask.is(":visible"), "mask btn is visible when the pass is not long");
+        ok(btnGen.is(":visible"), "mask btn is visible when the pass is not long");
+        passInput.setPass("*************************************************").focus();
+        ok(!btnMask.is(":visible"), "mask btn is hidden when the pass is long");
+        ok(!btnGen.is(":visible"), "mask btn is hidden when the pass is long");
+        passInput.setPass("").focus();
+        ok(btnMask.is(":visible"), "mask btn is visible again");
+        ok(btnGen.is(":visible"), "mask btn is visible again");
+        runBasicWorkFlow();
+    });
 
     // ========================== init ==========================
 

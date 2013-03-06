@@ -1,9 +1,10 @@
 Release notes
 -------------
 ##### v1.1.0 (2013-03-14)
-`+` #7 added `getPassStrength` method for more flexible result check availability  
+`+` #7: added `getPassStrength` method for more flexible result check availability  
 `+` #5: all non-satisfied rules will be shown in the tip after strength validation  
-`*` #4 password strength estimation algorithm made smarter; `checkMode` parameter introduced  
+`*` #4: password strength estimation algorithm made smarter; `checkMode` parameter introduced  
+`-` #3: fixed a bug when buttons were still visible even with long pasword  
 
 ##### v1.0.2 (2013-03-05)
 Minor bugfix release  
