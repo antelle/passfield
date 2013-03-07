@@ -63,7 +63,7 @@
 
     PassField.Config = {
         defaults: {
-            pattern: "abcdef1", // pattern for password (for strength calculation)
+            pattern: "abcdef12", // pattern for password (for strength calculation)
             acceptRate: 0.8, // threshold (of strength conformity with pattern) under which the password is considered weak
             allowEmpty: true, // allow empty password (will show validation errors if not)
             isMasked: true, // is the password masked by default 
