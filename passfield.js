@@ -692,8 +692,8 @@
          */
         function handleMouseEvent(e) {
             var isInside = e.type === "mouseover";
-            var src = e.relatedTarget || isInside ? e.fromElement : e.toElement;
-            if (src && src.id && (src.id.indexOf(ELEMENTS_PREFIX + "btn") == 0 || src === _dom.mainInput || src === _dom.clearInput))
+            var el = e.relatedTarget ? e.relatedTarget : isInside ? e.fromElement : e.toElement;
+            if (el && el.id && (el.id.indexOf(ELEMENTS_PREFIX + "btn") == 0 || el === _dom.mainInput || el === _dom.clearInput))
                 return;
             _isInputHover = isInside;
             resizeControls();
