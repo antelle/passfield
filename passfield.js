@@ -295,8 +295,8 @@
 
     /**
      * Encapsulates PassField logic
-     * @param {object|string} el - input for which the field is initizlized (or ID of the input)
-     * @param {object} opts - options to override defaults
+     * @param {HTMLInputElement|string} el - input for which the field is initizlized (or ID of the input)
+     * @param {object} [opts] - options to override defaults
      */
     PassField.Field = function(el, opts) {
         var _conf = PassField.Config;
@@ -362,6 +362,7 @@
          */
         function setMainEl() {
             if (typeof el == "string") {
+                //noinspection JSValidateTypes
                 el = document.getElementById(el);
             }
             _dom.mainInput = el;
@@ -431,8 +432,8 @@
                 _dom.wrapper.style.position = "relative";
             }
 
-            _dom.clearInput = newEl("input", { type: "text", id: "txt-clear", className: "txt-clear",
-                    placeholder: _dom.mainInput.placeholder, value: _dom.mainInput.value });
+            _dom.clearInput = newEl("input", { type: "text", id: "txt-clear", className: "txt-clear", value: _dom.mainInput.value },
+                { display: "none" });
             if (cls) {
                 addClass(_dom.clearInput, cls, true);
             }
@@ -440,15 +441,12 @@
             if (inputStyle) {
                 _dom.clearInput.style.cssText = inputStyle;
             }
-            var maxlength = _dom.mainInput.getAttribute("maxLength");
-            if (maxlength) {
-                _dom.clearInput.setAttribute("maxLength", maxlength);
-            }
-            var size = _dom.mainInput.getAttribute("size");
-            if (size) {
-                _dom.clearInput.setAttribute("size", size);
-            }
-            _dom.clearInput.style.display = "none";
+            utils.each(["maxLength", "size", "placeholder"], function(attr) {
+                var value = _dom.mainInput.getAttribute(attr);
+                if (value) {
+                    _dom.clearInput.setAttribute(attr, value);
+                }
+            });
             insertAfter(_dom.mainInput, _dom.clearInput);
 
             if (_opts.showWarn) {
@@ -509,10 +507,9 @@
 
             if (_features.passSymbol) {
                 _dom.passLengthChecker = newEl("div", { id: "len" },
-                    { position: "absolute", top: "-10000px", left: "-10000px", display: "block", color: "transparent",
-                        marginLeft: css(_dom.mainInput, "marginLeft"),
-                        height: css(_dom.mainInput, "height"),
-                        border: "none" });
+                    { position: "absolute", height: css(_dom.mainInput, "height"),
+                        top: "-10000px", left: "-10000px", display: "block", color: "transparent", border: "none",
+                        marginLeft: css(_dom.mainInput, "marginLeft") });
                 insertAfter(_dom.clearInput, _dom.passLengthChecker);
             }
 
@@ -549,7 +546,7 @@
          */
         function toggleButtons() {
             if (_dom.genBtn) {
-                _dom.genBtn.style.display = (_isInputHover || _isInputFocused) && !_passHidesGenBtn ? "block" : "none";;
+                _dom.genBtn.style.display = (_isInputHover || _isInputFocused) && !_passHidesGenBtn ? "block" : "none";
             }
             if (_dom.maskBtn) {
                 _dom.maskBtn.style.display = (_isInputHover || _isInputFocused) && !_passHidesMaskBtn ? "block" : "none";
@@ -636,7 +633,7 @@
         /**
          * Handles MouseOver and MouseOut events
          * sets _inputHover state
-         * @param {object} el - element
+         * @param {object} e - event
          */
         function handleMouseEvent(e) {
             var isInside = e.type === "mouseover";
@@ -679,16 +676,14 @@
                 return;
             var pass = _isMasked ? _dom.mainInput.value.replace(/./g, _features.passSymbol) : _dom.clearInput.value;
             setHtml(_dom.passLengthChecker, pass);
-            var passWidth = cssFloat(_dom.passLengthChecker, "width");
-            var padding = cssFloat(_dom.mainInput, "paddingLeft");
-            passWidth += padding;
-            _dom.passLengthChecker.style.marginLeft = padding + "px"; // for test
-            var maskBtnWidth = 0,
-                genBtnWidth = 0,
-                fieldWidth = cssFloat(_isMasked ? _dom.mainInput : _dom.clearInput, "width");
+            var passWidth = _dom.passLengthChecker.offsetWidth;
+            passWidth += cssFloat(_dom.mainInput, "paddingLeft");
+            var maskBtnWidth = 0, genBtnWidth = 0;
+            var fieldBounds = getBounds(_isMasked ? _dom.mainInput : _dom.clearInput);
+            var fieldWidth = fieldBounds.width;
             var changed = false;
             if (_dom.maskBtn) {
-                maskBtnWidth = cssFloat(_dom.genBtn, "width");
+                maskBtnWidth = cssFloat(_dom.maskBtn, "width");
                 var maskBtnLeft = fieldWidth - maskBtnWidth - BUTTONS_PADDING_RIGHT;
                 var passHidesMaskBtn = passWidth > maskBtnLeft;
                 if (_passHidesMaskBtn != passHidesMaskBtn) {
@@ -954,7 +949,7 @@
             var lengthRatio = pass.length / _opts.pattern.length - 1;
             if (lengthRatio < 0) {
                 strength += lengthRatio;
-                messages.push(_locale.msg.passTooShort.replace("{}", _opts.pattern.length));
+                messages.push(_locale.msg.passTooShort.replace("{}", _opts.pattern.length.toString()));
             } else {
                 if (_opts.checkMode == PassField.CheckModes.MODERATE) {
                     strength += lengthRatio / charTypesPatternCount;
@@ -1017,12 +1012,12 @@
                             firstLetter = firstLetter.toUpperCase();
                         }
                         errorText += firstLetter + messages[i].substring(1);
-                        if (errorText && errorText[errorText.length - 1] != ".")
+                        if (errorText && (errorText.charAt(errorText.length - 1) != "."))
                             errorText += ".";
                     }
                 }
             }
-            if (errorText && errorText[errorText.length - 1] != ".")
+            if (errorText && (errorText.charAt(errorText.length - 1) != "."))
                 errorText += ".";
             _validationResult = { strength: strength, message: errorText };
 
@@ -1299,12 +1294,12 @@
 
         /**
          * Gets CSS property (including inherited)
-         * @param {Object} el - DOM element
+         * @param {Object|HTMLElement} el - DOM element
          * @param {String} prop - CSS property name
          * @return {String} - property value.
          */
         function css(el, prop) {
-            var st = typeof window.getComputedStyle === "function" ? window.getComputedStyle(el) : el.currentStyle;
+            var st = typeof window.getComputedStyle === "function" ? window.getComputedStyle(el, null) : el.currentStyle;
             return st ? st[prop] : null;
         }
 
@@ -1342,7 +1337,7 @@
                 el.innerHTML = html;
             } catch (err) {
                 // browser doesn't support innerHTML or it's readonly
-                var newNode = document.createElement();
+                var newNode = document.createElement("c");
                 newNode.innerHTML = html;
                 while (el.firstChild) {
                     el.removeChild(el.firstChild);

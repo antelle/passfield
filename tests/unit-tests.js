@@ -124,7 +124,8 @@ $(function() {
         ok(passInput.validatePass(), "pass is valid");
         equal(passInput.getPassStrength(), 0, "pass strength is not null");
         equal(getWarnMsg(), null, "error is not generated after validation");
-        passInput.simulate("focus").simulate("blur");
+        triggerEvent(passInput[0], "focus");
+        passInput.simulate("blur");
         equal(getWarnMsg(), null, "error is not generated after blur");
     });
     test("any chars are not allowed", function() {
@@ -321,23 +322,25 @@ $(function() {
     });
     test("disable rand btn", function() {
         prepare({ showGenerate: false });
-        runBasicWorkFlow();
+        triggerEvent(passInput[0], "focus");
         ok(!btnGen, "rand btn is not visible");
         ok(btnMask && btnMask.is(":visible"), "mask btn is visible")
+        runBasicWorkFlow();
     });
     test("disable rand and mask btns", function() {
         prepare({ showGenerate: false, showToggle: false });
-        runBasicWorkFlow();
         ok(!btnMask, "mask btn is not visible");
-        ok(!btnGen, "rand btn is not visible")
+        ok(!btnGen, "rand btn is not visible");
+        runBasicWorkFlow();
     });
     test("disable mask btn but enable rand btn", function() {
         prepare({ showGenerate: true, showToggle: false });
+        triggerEvent(passInput[0], "focus");
         isMasked = false;
-        runBasicWorkFlow();
         equal(getMainInput().attr("id"), clearInput.attr("id"), "mode switched to clear input");
         ok(!btnMask, "mask btn is not visible");
-        ok(btnGen && btnGen.is(":visible"), "rand btn is visible")
+        ok(btnGen && btnGen.is(":visible"), "rand btn is visible");
+        runBasicWorkFlow();
     });
     test("disable warn msg", function() {
         prepare({ showWarn: false });
@@ -385,15 +388,17 @@ $(function() {
     });
     test("buttons are hidden when the pass is long", function() {
         prepare();
-        passInput.setPass("***").focus();
+        passInput.setPass("***");
+        triggerEvent(passInput[0], "focus");
         ok(btnMask.is(":visible"), "mask btn is visible when the pass is not long");
         ok(btnGen.is(":visible"), "mask btn is visible when the pass is not long");
-        passInput.setPass("*************************************************").focus();
+        passInput.setPass("").simulate("key-sequence", { sequence: "*************************************************" });
         ok(!btnMask.is(":visible"), "mask btn is hidden when the pass is long");
         ok(!btnGen.is(":visible"), "mask btn is hidden when the pass is long");
-        passInput.setPass("").focus();
+        passInput.setPass("").simulate("key-sequence", { sequence: "***" });
         ok(btnMask.is(":visible"), "mask btn is visible again");
         ok(btnGen.is(":visible"), "mask btn is visible again");
+        passInput.setPass("");
         runBasicWorkFlow();
     });
 
@@ -441,7 +446,7 @@ $(function() {
 
     // ========================== initial checks ==========================
 
-    function checkWrap(wrapAttr, inputAttr) {
+    function checkWrap(wrapAttr) {
         equal(wrap.attr("class"), addPrefix("wrap") +
             (ieVersion == 6 || ieVersion == 7 ? " a_pf-wrap-no-ib" : ""), "wrap class assigned to wrap");
         if (!wrapAttr.id)
@@ -539,7 +544,7 @@ $(function() {
     function runBasicWorkFlow() {
         var input = getMainInput();
 
-        input.simulate("focus");
+        triggerEvent(input[0], "focus");
         if (btnGen) {
             ok(btnGen.is(":visible"), "gen button is visible");
         }
@@ -646,7 +651,24 @@ $(function() {
         return ELEMENTS_PREFIX + cls;
     }
 
-    function hasPrefixedClass(el, cls) {
-        return el.hasClass(addPrefix(cls));
+    function triggerEvent(el, eventName) {
+        var event;
+        if (document.createEvent) {
+            event = document.createEvent("HTMLEvents");
+            event.initEvent(eventName, true, true);
+        } else if (document.createEventObject) {// IE < 9
+            event = document.createEventObject();
+            event.eventType = eventName;
+        }
+        event.eventName = eventName;
+        if (el.dispatchEvent) {
+            el.dispatchEvent(event);
+        } else if (el.fireEvent) {// IE < 9
+            el.fireEvent("on" + event.eventType, event);// can trigger only real event (e.g. 'click')
+        } else if (el[eventName]) {
+            el[eventName]();
+        } else if (el["on" + eventName]) {
+            el["on" + eventName]();
+        }
     }
 });
