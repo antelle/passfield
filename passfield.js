@@ -641,23 +641,16 @@
          * Binds handler events to DOM nodes
          */
         function bindEvents() {
-            utils.attachEvent(_dom.mainInput, "onkeyup", handleInputKeyup);
-            utils.attachEvent(_dom.mainInput, "onfocus", handleInputFocus);
-            utils.attachEvent(_dom.mainInput, "onblur", handleInputBlur);
-            utils.attachEvent(_dom.mainInput, "onmouseover", handleMouseEvent);
-            utils.attachEvent(_dom.mainInput, "onmouseout", handleMouseEvent);
-            if (_dom.placeholder) {
-                utils.attachEvent(_dom.mainInput, "onkeyup", handleInputKeydown);
-            }
-
-            utils.attachEvent(_dom.clearInput, "onkeyup", handleInputKeyup);
-            utils.attachEvent(_dom.clearInput, "onfocus", handleInputFocus);
-            utils.attachEvent(_dom.clearInput, "onblur", handleInputBlur);
-            utils.attachEvent(_dom.clearInput, "onmouseover", handleMouseEvent);
-            utils.attachEvent(_dom.clearInput, "onmouseout", handleMouseEvent);
-            if (_dom.placeholder) {
-                utils.attachEvent(_dom.clearInput, "onkeyup", handleInputKeydown);
-            }
+            utils.each([_dom.mainInput, _dom.clearInput], function (el) {
+                utils.attachEvent(el, "onkeyup", handleInputKeyup);
+                utils.attachEvent(el, "onfocus", handleInputFocus);
+                utils.attachEvent(el, "onblur", handleInputBlur);
+                utils.attachEvent(el, "onmouseover", handleMouseEvent);
+                utils.attachEvent(el, "onmouseout", handleMouseEvent);
+                if (_dom.placeholder) {
+                    utils.attachEvent(el, "onkeydown", handleInputKeydown);
+                }
+            });
 
             utils.attachEvent(window, "onresize", resizeControls);
 
