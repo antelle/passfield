@@ -443,7 +443,7 @@ $(function() {
 
     function checkWrap(wrapAttr, inputAttr) {
         equal(wrap.attr("class"), addPrefix("wrap") +
-            (ieVersion == 6 ? " a_pf-ie6" : "") + (ieVersion == 7 ? " a_pf-ie7" : ""), "wrap class assigned to wrap");
+            (ieVersion == 6 || ieVersion == 7 ? " a_pf-wrap-no-ib" : ""), "wrap class assigned to wrap");
         if (!wrapAttr.id)
             ok(!wrap.attr("id"), "wrap has not been assigned any id");
     }

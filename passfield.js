@@ -310,8 +310,6 @@
         var _blurMaskTimer;
         var _warningShown = false;
         var _validationResult = null;
-        var _ieVersion;
-        var _isBrowserSupported;
         var _features;
         var _isInputHover = false;
         var _isInputFocused = false;
@@ -334,9 +332,6 @@
          * Initizlizes the password field
          */
         function init() {
-            fillBrowserVersion();
-            if (!_isBrowserSupported)
-                return;
             fixErrorsAndFillOptions();
             if (!setMainEl())
                 return;
@@ -344,7 +339,6 @@
             defineId();
             detectFeatures();
             createNodes();
-            addClassForIE();
             bindEvents();
             toggleMasking(_opts.isMasked, false);
             doAutofocus();
@@ -430,6 +424,9 @@
 
             _dom.wrapper = _dom.mainInput.parentNode;
             addClass(_dom.wrapper, "wrap");
+            if (!_features.hasInlineBlock) {
+                addClass(_dom.wrapper, "wrap-no-ib");
+            }
             if (css(_dom.wrapper, "position") == "static") {
                 _dom.wrapper.style.position = "relative";
             }
@@ -566,51 +563,6 @@
         }
 
         /**
-         * Fills in _ieVersion and _isBrowserSupported
-         */
-        function fillBrowserVersion() {
-            _ieVersion = getVersionIE();
-            _isBrowserSupported = isBrowserSupported();
-        }
-
-        /**
-         * Checks whether we support this browser
-         * @return {boolean} - should we contibue execution.
-         */
-        function isBrowserSupported() {
-            return _ieVersion < 0 || _ieVersion >= 6;
-        }
-
-        /**
-         * Applies style to the wrapper if the browser is IE
-         */
-        function addClassForIE() {
-            if (_ieVersion < 0)
-                return;
-            if (_ieVersion < 7) {
-                addClass(_dom.wrapper, "ie6");
-            } else if (_ieVersion < 8) {
-                addClass(_dom.wrapper, "ie7");
-            }
-        }
-
-        /**
-         * returns IE version
-         * @return {Number} - IE version (-1 if this is another browser).
-         */
-        function getVersionIE() {
-            var rv = -1;
-            if (navigator.appName == "Microsoft Internet Explorer") {
-                var re = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
-                var match = re.exec(navigator.userAgent);
-                if (match != null) {
-                    rv = parseFloat(match[1]);
-                }
-            }
-            return rv;
-        }
-
-        /**
          * Detects browser features support
          * Fills in _features variable
          */
@@ -622,9 +574,11 @@
             }
 
             var box = document.createElement("div");
+            box.setAttribute('style','display:inline-block');
             box.style.paddingLeft = box.style.width = "1px";
             document.body.appendChild(box);
             var isBoxModel = box.offsetWidth == 2;
+            var hasInlineBlock = css(box, "display") === "inline-block";
             document.body.removeChild(box);
 
             var passSymbol = navigator.userAgent.indexOf("AppleWebKit") >= 0 || navigator.userAgent.indexOf("Opera") >= 0
@@ -633,6 +587,7 @@
             _features = {
                 placeholders: supportsPlaceholder,
                 boxModel: isBoxModel,
+                hasInlineBlock: hasInlineBlock,
                 passSymbol: passSymbol
             };
         }
@@ -880,10 +835,6 @@
          * @return {Boolean} - is the password valid.
          */
         function validatePassword() {
-            if (!_isBrowserSupported) {
-                // otherwise unwanted error will be generated while validation
-                return true;
-            }
             if (_validateTimer) {
                 clearTimeout(_validateTimer);
                 _validateTimer = null;
