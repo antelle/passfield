@@ -13,7 +13,6 @@
 }
 
 /* buttons */
-.a_pf-wrap:hover div.a_pf-btn, .a_pf-wrap.a_pf-focused div.a_pf-btn { display: block; }
 .a_pf-wrap .a_pf-btn {
     display: none;
     width: 25px;
@@ -25,9 +24,6 @@
     -khtml-user-select: none;
     -webkit-user-select: none;
     -o-user-select: none;
-}
-.a_pf-wrap div.a_pf-btn.a_pf-long-pass {
-    display: none;
 }
 .a_pf-wrap .a_pf-btn:hover {
     color: #4b4b4b;
@@ -79,9 +75,6 @@ only screen and (                min-resolution: 2dppx) {
 .a_pf-wrap.a_pf-ie7 .a_pf-warn, .a_pf-wrap.a_pf-ie6 .a_pf-warn { display: inline; padding-bottom: 2px; }
 
 /* tooltip */
-.a_pf-wrap.a_pf-focused div.a_pf-tip.a_pf-tip-shown {
-    display: block;
-}
 .a_pf-wrap .a_pf-tip {
     display: none;
     line-height: 18px;

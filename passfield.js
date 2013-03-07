@@ -313,6 +313,10 @@
         var _ieVersion;
         var _isBrowserSupported;
         var _features;
+        var _isInputHover = false;
+        var _isInputFocused = false;
+        var _passHidesGenBtn = false;
+        var _passHidesMaskBtn = false;
 
         var ELEMENTS_PREFIX = "a_pf-";
         var BUTTONS_PADDING_RIGHT = 5;
@@ -475,7 +479,7 @@
                 addClass(_dom.genBtn, "btn");
                 insertAfter(_dom.clearInput, _dom.genBtn);
 
-                _dom.genBtnInner = newEl("div", { id: "btn-gtn-i", className: "btn-gen-i", title: _locale.msg.genPass });
+                _dom.genBtnInner = newEl("div", { id: "btn-gen-i", className: "btn-gen-i", title: _locale.msg.genPass });
                 _dom.genBtn.appendChild(_dom.genBtnInner);
             }
 
@@ -515,29 +519,49 @@
                 insertAfter(_dom.clearInput, _dom.passLengthChecker);
             }
 
-            setTimeout(resizeControls, 30);
+            setTimeout(resizeControls, 0);
         }
 
         /**
          * Resizes controls (for window.onresize event)
          */
         function resizeControls() {
+            toggleButtons();
+            toggleTip();
             var rect = getRect(_isMasked ? _dom.mainInput : _dom.clearInput);
             var left = BUTTONS_PADDING_RIGHT;
-            if (_dom.maskBtn) {
+            if (_dom.maskBtn && _dom.maskBtn.style.display != "none") {
                 left += cssFloat(_dom.maskBtn, "width");
                 setRect(_dom.maskBtn, { top: rect.top, left: rect.left + rect.width - left, height: rect.height });
             }
-            if (_dom.genBtn) {
+            if (_dom.genBtn && _dom.genBtn.style.display != "none") {
                 left += cssFloat(_dom.genBtn, "width");
                 setRect(_dom.genBtn, { top: rect.top, left: rect.left + rect.width - left, height: rect.height });
                 _dom.genBtnInner.style.marginTop = Math.max(0, Math.round((rect.height - 19) / 2)) + "px";
             }
-            if (_dom.placeholder) {
+            if (_dom.placeholder && _dom.placeholder.style.display != "none") {
                 setRect(_dom.placeholder, { top: rect.top, left: rect.left + 7, height: rect.height });
             }
-            if (_dom.tip) {
+            if (_dom.tip && _dom.tip.style.display != "none") {
                 setRect(_dom.tip, { left: rect.left, top: rect.top + rect.height, width: rect.width });
+            }
+        }
+
+        /**
+         * Shows or hides buttons depending on the controls state
+         */
+        function toggleButtons() {
+            if (_dom.genBtn) {
+                _dom.genBtn.style.display = (_isInputHover || _isInputFocused) && !_passHidesGenBtn ? "block" : "none";;
+            }
+            if (_dom.maskBtn) {
+                _dom.maskBtn.style.display = (_isInputHover || _isInputFocused) && !_passHidesMaskBtn ? "block" : "none";
+            }
+        }
+
+        function toggleTip() {
+            if (_dom.tip) {
+                _dom.tip.style.display = (_warningShown && _isInputFocused) ? "block" : "none";
             }
         }
 
@@ -571,6 +595,22 @@
         }
 
         /**
+         * returns IE version
+         * @return {Number} - IE version (-1 if this is another browser).
+         */
+        function getVersionIE() {
+            var rv = -1;
+            if (navigator.appName == "Microsoft Internet Explorer") {
+                var re = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
+                var match = re.exec(navigator.userAgent);
+                if (match != null) {
+                    rv = parseFloat(match[1]);
+                }
+            }
+            return rv;
+        }
+
+        /**
          * Detects browser features support
          * Fills in _features variable
          */
@@ -598,28 +638,14 @@
         }
 
         /**
-         * returns IE version
-         * @return {Number} - IE version (-1 if this is another browser).
-         */
-        function getVersionIE() {
-            var rv = -1;
-            if (navigator.appName == "Microsoft Internet Explorer") {
-                var re = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
-                var match = re.exec(navigator.userAgent);
-                if (match != null) {
-                    rv = parseFloat(match[1]);
-                }
-            }
-            return rv;
-        }
-
-        /**
          * Binds handler events to DOM nodes
          */
         function bindEvents() {
             utils.attachEvent(_dom.mainInput, "onkeyup", handleInputKeyup);
             utils.attachEvent(_dom.mainInput, "onfocus", handleInputFocus);
             utils.attachEvent(_dom.mainInput, "onblur", handleInputBlur);
+            utils.attachEvent(_dom.mainInput, "onmouseover", handleMouseEvent);
+            utils.attachEvent(_dom.mainInput, "onmouseout", handleMouseEvent);
             if (_dom.placeholder) {
                 utils.attachEvent(_dom.mainInput, "onkeyup", handleInputKeydown);
             }
@@ -627,35 +653,50 @@
             utils.attachEvent(_dom.clearInput, "onkeyup", handleInputKeyup);
             utils.attachEvent(_dom.clearInput, "onfocus", handleInputFocus);
             utils.attachEvent(_dom.clearInput, "onblur", handleInputBlur);
+            utils.attachEvent(_dom.clearInput, "onmouseover", handleMouseEvent);
+            utils.attachEvent(_dom.clearInput, "onmouseout", handleMouseEvent);
             if (_dom.placeholder) {
                 utils.attachEvent(_dom.clearInput, "onkeyup", handleInputKeydown);
             }
 
-            utils.attachEvent(_dom.wrapper, "onmouseover", function() { setTimeout(resizeControls, 0); });
             utils.attachEvent(window, "onresize", resizeControls);
 
             if (_dom.maskBtn) {
-                _dom.maskBtn.onclick = function() { toggleMasking(); };
+                utils.attachEvent(_dom.maskBtn, "onclick", function() { toggleMasking(); });
+                utils.attachEvent(_dom.maskBtn, "onmouseover", handleMouseEvent);
+                utils.attachEvent(_dom.maskBtn, "onmouseout", handleMouseEvent);
             }
 
             if (_dom.genBtn) {
-                _dom.genBtn.onclick = function() { generatePassword(); };
+                utils.attachEvent(_dom.genBtn, "onclick", function() { generatePassword(); });
+                utils.attachEvent(_dom.genBtn, "onmouseover", handleMouseEvent);
+                utils.attachEvent(_dom.genBtn, "onmouseout", handleMouseEvent);
             }
 
             if (_dom.placeholder) {
-                _dom.placeholder.onclick = function() { (_isMasked ? _dom.mainInput : _dom.clearInput).focus(); }
+                utils.attachEvent(_dom.placeholder, "onclick", handlePlaceholderClicked);
             }
         }
 
         /**
-         * If the element has autofocus attribute, we'll check it and focus if necessary
+         * Handles fake placeholder click event
          */
-        function doAutofocus() {
-            if (typeof _dom.mainInput.hasAttribute === "function" && _dom.mainInput.hasAttribute("autofocus")
-                || _dom.mainInput.getAttribute("autofocus")) {
-                _dom.mainInput.focus();
-                handleInputFocus();
-            }
+        function handlePlaceholderClicked() {
+            (_isMasked ? _dom.mainInput : _dom.clearInput).focus();
+        }
+
+        /**
+         * Handles MouseOver and MouseOut events
+         * sets _inputHover state
+         * @param {object} el - element
+         */
+        function handleMouseEvent(e) {
+            var isInside = e.type === "mouseover";
+            var src = e.relatedTarget || isInside ? e.fromElement : e.toElement;
+            if (src && src.id && (src.id.indexOf(ELEMENTS_PREFIX + "btn") == 0 || src === _dom.mainInput || src === _dom.clearInput))
+                return;
+            _isInputHover = isInside;
+            resizeControls();
         }
 
         /**
@@ -697,23 +738,27 @@
             var maskBtnWidth = 0,
                 genBtnWidth = 0,
                 fieldWidth = cssFloat(_isMasked ? _dom.mainInput : _dom.clearInput, "width");
+            var changed = false;
             if (_dom.maskBtn) {
                 maskBtnWidth = cssFloat(_dom.genBtn, "width");
                 var maskBtnLeft = fieldWidth - maskBtnWidth - BUTTONS_PADDING_RIGHT;
-                if (passWidth > maskBtnLeft) {
-                    addClass(_dom.maskBtn, "long-pass");
-                } else {
-                    removeClass(_dom.maskBtn, "long-pass");
+                var passHidesMaskBtn = passWidth > maskBtnLeft;
+                if (_passHidesMaskBtn != passHidesMaskBtn) {
+                    changed = true;
+                    _passHidesMaskBtn = passHidesMaskBtn;
                 }
             }
             if (_dom.genBtn) {
                 genBtnWidth = cssFloat(_dom.genBtn, "width");
                 var genBtnLeft = fieldWidth - maskBtnWidth - genBtnWidth - BUTTONS_PADDING_RIGHT;
-                if (passWidth > genBtnLeft) {
-                    addClass(_dom.genBtn, "long-pass");
-                } else {
-                    removeClass(_dom.genBtn, "long-pass");
+                var passHidesGenBtn = passWidth > genBtnLeft;
+                if (_passHidesGenBtn != passHidesGenBtn) {
+                    changed = true;
+                    _passHidesGenBtn = passHidesGenBtn;
                 }
+            }
+            if (changed) {
+                resizeControls();
             }
         }
 
@@ -739,8 +784,8 @@
                 clearTimeout(_blurMaskTimer);
                 _blurMaskTimer = null;
             }
-            addClass(_dom.wrapper, "focused");
-            setTimeout(resizeControls, 0);
+            _isInputFocused = true;
+            resizeControls();
         }
 
         /**
@@ -749,7 +794,8 @@
         function handleInputBlur() {
             _blurTimer = setTimeout(function() {
                 _blurTimer = null;
-                removeClass(_dom.wrapper, "focused");
+                _isInputFocused = false;
+                resizeControls();
                 // if the password has not been masked my default, toggle mode after inactivity
                 if (_opts.isMasked && !_blurMaskTimer) {
                     _blurMaskTimer = setTimeout(function() {
@@ -803,6 +849,18 @@
             }
 
             _isMasked = isMasked;
+            resizeControls();
+        }
+
+        /**
+         * If the element has autofocus attribute, we'll check it and focus if necessary
+         */
+        function doAutofocus() {
+            if (typeof _dom.mainInput.hasAttribute === "function" && _dom.mainInput.hasAttribute("autofocus")
+                || _dom.mainInput.getAttribute("autofocus")) {
+                _dom.mainInput.focus();
+                handleInputFocus();
+            }
         }
 
         /**
@@ -1032,16 +1090,15 @@
                 }
             }
             if (_dom.tip) {
-                addClass(_dom.tip, "tip-shown");
                 var html = errorText;
                 if (_dom.genBtn) {
                     html += "<br/>" + _locale.msg.generateMsg.replace("{}", '<div class="' + formatClass("btn-gen-help") + '"></div>');
                 }
                 setHtml(_dom.tipBody, html);
-                setTimeout(resizeControls, 0);
             }
 
             _warningShown = true;
+            resizeControls();
         }
 
         /**
@@ -1055,10 +1112,8 @@
                     removeClass(_dom.wrapper, _opts.errorWrapClassName, true);
                 }
             }
-            if (_dom.tip) {
-                removeClass(_dom.tip, "tip-shown");
-            }
             _warningShown = false;
+            resizeControls();
         }
 
         /**
@@ -1459,10 +1514,12 @@
      */
     utils.attachEvent = function(el, event, handler) {
         var oldHandler = el[event];
-        el[event] = function() {
-            handler(el);
+        el[event] = function(e) {
+            if (!e)
+                e = window.event;
+            handler(e);
             if (typeof oldHandler === "function") {
-                oldHandler(el);
+                oldHandler(e);
             }
         };
     };
