@@ -574,7 +574,7 @@
             }
 
             var box = document.createElement("div");
-            box.setAttribute('style','display:inline-block');
+            box.setAttribute("style", "display:inline-block");
             box.style.paddingLeft = box.style.width = "1px";
             document.body.appendChild(box);
             var isBoxModel = box.offsetWidth == 2;
