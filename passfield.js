@@ -71,6 +71,7 @@
             showGenerate: true, // show generation button
             showWarn: true, // show short password validation warning
             showTip: true, // show password validation tooltips
+            tipPopoverStyle: {}, // if tooltip is shown and Twitter Bootstrap is present, this style will be used. null = use own tips, {} = bootstrap tip options
             strengthCheckTimeout: 500, // timeout before automatic strength checking if no key is pressed (in ms; 0 = disable this feature)
             validationCallback: null, // function which will be called when password strength is validated
             blackList: [], // well-known bad passwords (very weak), e.g. qwerty or 12345
@@ -315,6 +316,8 @@
         var _isInputFocused = false;
         var _passHidesGenBtn = false;
         var _passHidesMaskBtn = false;
+        var _bootstrapPopoverShownText = false;
+        var _tipHtml = null;
 
         var ELEMENTS_PREFIX = "a_pf-";
         var BUTTONS_PADDING_RIGHT = 5;
@@ -418,11 +421,23 @@
         function createNodes() {
             var mainInputRect = getRect(_dom.mainInput);
             mainInputRect.top += cssFloat(_dom.mainInput, "marginTop");
-            var cls = _dom.mainInput.className;
 
-            var heightStr = mainInputRect.height + "px";
-            addClass(_dom.mainInput, "txt-pass");
+            setupWrapper();
+            createClearInput();
+            createWarnLabel();
+            createMaskBtn();
+            createGenBtn();
+            createTip(mainInputRect);
+            createFakePlaceholder(mainInputRect);
+            createPassLengthChecker();
 
+            setTimeout(resizeControls, 0);
+        }
+
+        /**
+         * Assigns necessary properties to wrapper element
+         */
+        function setupWrapper() {
             _dom.wrapper = _dom.mainInput.parentNode;
             addClass(_dom.wrapper, "wrap");
             if (!_features.hasInlineBlock) {
@@ -431,9 +446,15 @@
             if (css(_dom.wrapper, "position") == "static") {
                 _dom.wrapper.style.position = "relative";
             }
+        }
 
+        /**
+         * Creates cleartext password field
+         */
+        function createClearInput() {
             _dom.clearInput = newEl("input", { type: "text", id: "txt-clear", className: "txt-clear", value: _dom.mainInput.value },
                 { display: "none" });
+            var cls = _dom.mainInput.className;
             if (cls) {
                 addClass(_dom.clearInput, cls, true);
             }
@@ -448,27 +469,40 @@
                 }
             });
             insertAfter(_dom.mainInput, _dom.clearInput);
+            addClass(_dom.mainInput, "txt-pass");
+        }
 
+        /**
+         * Creates password warning label
+         */
+        function createWarnLabel() {
             if (_opts.showWarn) {
-                // password warning label
                 _dom.warnMsg = newEl("div", { id: "warn", className: "warn" },
                     { margin: "0 0 0 3px" });
                 if (_opts.warnMsgClassName)
                     addClass(_dom.warnMsg, _opts.warnMsgClassName, true);
                 insertAfter(_dom.clearInput, _dom.warnMsg);
             }
+        }
 
+        /**
+         * Creates toggle password masking button
+         */
+        function createMaskBtn() {
             if (_opts.showToggle) {
-                // toggle password masking button
                 _dom.maskBtn = newEl("div", { id: "btn-mask", className: "btn-mask", title: _locale.msg.showPass },
                     { position: "absolute", margin: "0", padding: "0" });
                 addClass(_dom.maskBtn, "btn");
                 setHtml(_dom.maskBtn, "abc");
                 insertAfter(_dom.clearInput, _dom.maskBtn);
             }
+        }
 
+        /**
+         * Creates password generation button
+         */
+        function createGenBtn() {
             if (_opts.showGenerate) {
-                // password generation button
                 _dom.genBtn = newEl("div", { id: "btn-gen", className: "btn-gen", title: _locale.msg.genPass },
                     { position: "absolute", margin: "0", padding: "0" });
                 addClass(_dom.genBtn, "btn");
@@ -477,34 +511,71 @@
                 _dom.genBtnInner = newEl("div", { id: "btn-gen-i", className: "btn-gen-i", title: _locale.msg.genPass });
                 _dom.genBtn.appendChild(_dom.genBtnInner);
             }
+        }
 
+        /**
+         * Creates password tooltip
+         * If Twitter Bootstrap is present, this will be popover; fallback to own popover else
+         * @param {Object} mainInputRect - password input element rect
+         */
+        function createTip(mainInputRect) {
             if (_opts.showTip) {
-                // password tooltip below the field
-                _dom.tip = newEl("div", { id: "tip", className: "tip" },
-                    { position: "absolute", margin: "0", padding: "0", width: mainInputRect.width + "px" });
-                insertAfter(_dom.clearInput, _dom.tip);
+                if (_opts.tipPopoverStyle && $ && typeof $.fn.popover === "function") {
+                    // using Twitter Bootstrap
+                    $(_dom.mainInput).popover(utils.extend({
+                            // popover defaults (overridable)
+                            title: null,
+                            placement: _opts.tipPopoverStyle.placement || function(pop, el) {
+                                //noinspection JSValidateTypes
+                                var top = $(el).position().top - $(window).scrollTop();
+                                var spaceBelow = $(window).height() - top;
+                                return spaceBelow > 300 || spaceBelow > top ? "bottom" : "top";
+                            }
+                        }, _opts.tipPopoverStyle, {
+                            // popovers properties (non-overridable)
+                            trigger: "manual",
+                            html: true,
+                            content: function() { return _tipHtml; }
+                        }));
+                } else {
+                    // not using Twitter Bootstrap
+                    _dom.tip = newEl("div", { id: "tip", className: "tip" },
+                        { position: "absolute", margin: "0", padding: "0", width: mainInputRect.width + "px" });
+                    insertAfter(_dom.clearInput, _dom.tip);
 
-                var arrWrap = newEl("div", { id: "tip-arr-wrap", className: "tip-arr-wrap" });
-                _dom.tip.appendChild(arrWrap);
-                arrWrap.appendChild(newEl("div", { id: "tip-arr", className: "tip-arr" }));
-                arrWrap.appendChild(newEl("div", { id: "tip-arr-in", className: "tip-arr-in" }));
+                    var arrWrap = newEl("div", { id: "tip-arr-wrap", className: "tip-arr-wrap" });
+                    _dom.tip.appendChild(arrWrap);
+                    arrWrap.appendChild(newEl("div", { id: "tip-arr", className: "tip-arr" }));
+                    arrWrap.appendChild(newEl("div", { id: "tip-arr-in", className: "tip-arr-in" }));
 
-                _dom.tipBody = newEl("div", { id: "tip-body", className: "tip-body" });
-                _dom.tip.appendChild(_dom.tipBody);
+                    _dom.tipBody = newEl("div", { id: "tip-body", className: "tip-body" });
+                    _dom.tip.appendChild(_dom.tipBody);
+                }
             }
+        }
 
+        /**
+         * Creates fake placeholders (if there's no support in browser)
+         * @param {Object} mainInputRect - password input element rect
+         */
+        function createFakePlaceholder(mainInputRect) {
             if (!_features.placeholders) {
                 var placeholderText = _dom.mainInput.getAttribute("placeholder") || _dom.mainInput.getAttribute("data-placeholder");
                 if (placeholderText) {
                     _dom.placeholder = newEl("div", { id: "placeholder", className: "placeholder" },
-                        { position: "absolute", margin: "0", padding: "0", height: heightStr, lineHeight: heightStr });
+                        { position: "absolute", margin: "0", padding: "0", height: mainInputRect.height + "px", lineHeight: mainInputRect.height + "px" });
                     setHtml(_dom.placeholder, placeholderText);
                     insertAfter(_dom.clearInput, _dom.placeholder);
                 }
             } else if (!_dom.mainInput.getAttribute("placeholder") && _dom.mainInput.getAttribute("data-placeholder")) {
                 _dom.mainInput.setAttribute("placeholder", _dom.mainInput.getAttribute("data-placeholder"));
             }
+        }
 
+        /**
+         * Creates invisible div for measuring password test rect
+         */
+        function createPassLengthChecker() {
             if (_features.passSymbol) {
                 _dom.passLengthChecker = newEl("div", { id: "len" },
                     { position: "absolute", height: css(_dom.mainInput, "height"),
@@ -512,8 +583,6 @@
                         marginLeft: css(_dom.mainInput, "marginLeft") });
                 insertAfter(_dom.clearInput, _dom.passLengthChecker);
             }
-
-            setTimeout(resizeControls, 0);
         }
 
         /**
@@ -554,8 +623,27 @@
         }
 
         function toggleTip() {
+            if (!_opts.showTip) {
+                return;
+            }
             if (_dom.tip) {
                 _dom.tip.style.display = (_warningShown && _isInputFocused) ? "block" : "none";
+            } else {
+                if (_warningShown && _isInputFocused) {
+                    if (!_bootstrapPopoverShownText || (_tipHtml != _bootstrapPopoverShownText)) {
+                        var opts = $(_dom.mainInput).data("popover").options;
+                        var animationBackup = opts.animation;
+                        opts.animation = false;
+                        $(_dom.mainInput).popover("show");
+                        _bootstrapPopoverShownText = _tipHtml;
+                        opts.animation = animationBackup;
+                    }
+                } else {
+                    if (_bootstrapPopoverShownText) {
+                        _bootstrapPopoverShownText = null;
+                        $(_dom.mainInput).popover("hide");
+                    }
+                }
             }
         }
 
@@ -1028,12 +1116,15 @@
                     addClass(_dom.wrapper, _opts.errorWrapClassName, true);
                 }
             }
-            if (_dom.tip) {
+            if (_opts.showTip) {
                 var html = errorText;
                 if (_dom.genBtn) {
                     html += "<br/>" + _locale.msg.generateMsg.replace("{}", '<div class="' + formatClass("btn-gen-help") + '"></div>');
                 }
-                setHtml(_dom.tipBody, html);
+                _tipHtml = html;
+                if (_dom.tipBody) {
+                    setHtml(_dom.tipBody, html);
+                }
             }
 
             _warningShown = true;
@@ -1051,6 +1142,7 @@
                     removeClass(_dom.wrapper, _opts.errorWrapClassName, true);
                 }
             }
+            _tipHtml = null;
             _warningShown = false;
             resizeControls();
         }
@@ -1411,7 +1503,7 @@
                     arg[0][key] = arg[0][key] ? arg[0][key].concat(value || []) : value;
                 } else if (typeof arg[0][key] === "object" && typeof value === "object") {
                     arg[0][key] = utils.extend({}, arg[0][key], value);
-                } else if (typeof value === "object") {
+                } else if (typeof value === "object" && value !== null) {
                     arg[0][key] = utils.extend({}, value);
                 } else {
                     arg[0][key] = value;

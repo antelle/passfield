@@ -4,6 +4,7 @@ Release notes
 New features; stability and UX improvements  
 `+` #7: added `getPassStrength` method for more flexible result check availability  
 `+` #5: all non-satisfied rules will be shown in the tip after strength validation  
+`+` #10: option to use bootstrap popovers (`tipPopoverStyle` property)  
 `*` #4: password strength estimation algorithm made smarter; `checkMode` parameter introduced  
 `-` #3: fixed a bug when buttons were still visible even with long pasword  
 
