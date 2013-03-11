@@ -1501,7 +1501,7 @@
             utils.each(arg[i], function (key, value) {
                 if (utils.isArray(arg[0][key]) || utils.isArray(value)) {
                     arg[0][key] = arg[0][key] ? arg[0][key].concat(value || []) : value;
-                } else if (typeof arg[0][key] === "object" && typeof value === "object") {
+                } else if (typeof arg[0][key] === "object" && typeof value === "object" && value !== null) {
                     arg[0][key] = utils.extend({}, arg[0][key], value);
                 } else if (typeof value === "object" && value !== null) {
                     arg[0][key] = utils.extend({}, value);
