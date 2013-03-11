@@ -615,10 +615,10 @@
          */
         function toggleButtons() {
             if (_dom.genBtn) {
-                _dom.genBtn.style.display = (_isInputHover || _isInputFocused) && !_passHidesGenBtn ? "block" : "none";
+                _dom.genBtn.style.display = _isInputHover || _isInputFocused && !_passHidesGenBtn ? "block" : "none";
             }
             if (_dom.maskBtn) {
-                _dom.maskBtn.style.display = (_isInputHover || _isInputFocused) && !_passHidesMaskBtn ? "block" : "none";
+                _dom.maskBtn.style.display = _isInputHover || _isInputFocused && !_passHidesMaskBtn ? "block" : "none";
             }
         }
 
