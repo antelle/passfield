@@ -69,6 +69,7 @@
                                 <li class="subnav"><a href="#showGenerate">showGenerate</a></li>
                                 <li class="subnav"><a href="#showWarn">showWarn</a></li>
                                 <li class="subnav"><a href="#showTip">showTip</a></li>
+                                <li class="subnav"><a href="#tipPopoverStyle">tipPopoverStyle</a></li>
                                 <li class="subnav"><a href="#strengthCheckTimeout">strengthCheckTimeout</a></li>
                                 <li class="subnav"><a href="#validationCallback">validationCallback</a></li>
                                 <li class="subnav"><a href="#blackList">blackList</a></li>
@@ -156,6 +157,11 @@
                         enables help balloon with tips how to create a strong password. Tips are visible only when the field is focused. If password generation is enabled, user will see the explanation, how to generate a password. Here's an example of such tip (balloon below the field): 
                     </p>
                     <p><img src="img/scr/weak.png" style="width: 280px;" /></p>
+
+                    <h5><code id="tipPopoverStyle">tipPopoverStyle</code></h5>
+                    <p>
+                        If Twitter Bootstrap is present, the tip will be displayed as Bootstrap popover. You can control popover options using this parameter (e.g. change title). If you want to disable Bootstrap popovers at all and use Pass*Field internal popovers, pass <code>null</code> here.
+                    </p>
 
                     <h5><code id="strengthCheckTimeout">strengthCheckTimeout</code></h5>
                     <p>
@@ -304,7 +310,7 @@ $("#mypass").attr("placeholder", placeholder);</pre>
                     <h3 id="browsers">Browsers Support</h3>
                     <h5>Desktop</h5>
                     <p>
-                        Pass*Field is tested on all modern browsers (Safari, Chrome, Firefox, Opera, Internet Explorer) under Mac OS X, Windows and Ubuntu. IE is supported in full starting from version 7. IE6 users will not be able to access some features: triangle border in tooltip, visibility on <code>:hover</code> and images transparency &ndash; everything else is working (hovewer, you could find pngfix and hoverfix to resolve last two issues; if you support IE6 users on your website, most probably you already have them installed).
+                        Pass*Field is tested on all modern browsers (Safari, Chrome, Firefox, Opera, Internet Explorer) under Mac OS X, Windows and Ubuntu. IE is supported in full starting from version 7. IE6 users will not be able to access some features like triangle border in tooltip and and images transparency.
                     </p>
                     <p>
                         IE10 provides “reveal password” button but it lacks some features: you can neither copy the password, nor show the password in cleartext by default. Also there's no such button in mainstream browsers: only IE has it. That is why there's no option to leave it: this button will be hidden and replaced with “toggle password” button.
