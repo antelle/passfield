@@ -592,7 +592,7 @@
             toggleButtons();
             toggleTip();
             var rect = getRect(_isMasked ? _dom.mainInput : _dom.clearInput);
-            var left = BUTTONS_PADDING_RIGHT;
+            var left = getRightBtnPadding();
             if (_dom.maskBtn && _dom.maskBtn.style.display != "none") {
                 left += cssFloat(_dom.maskBtn, "width");
                 setRect(_dom.maskBtn, { top: rect.top, left: rect.left + rect.width - left, height: rect.height });
@@ -608,6 +608,15 @@
             if (_dom.tip && _dom.tip.style.display != "none") {
                 setRect(_dom.tip, { left: rect.left, top: rect.top + rect.height, width: rect.width });
             }
+        }
+
+        /**
+         * Gets padding after right button
+         * @returns {number} - padding in px.
+         */
+        function getRightBtnPadding() {
+            var paddingRight = cssFloat(_isMasked ? _dom.mainInput : _dom.clearInput, "paddingRight");
+            return Math.max(BUTTONS_PADDING_RIGHT, paddingRight);
         }
 
         /**
@@ -770,9 +779,10 @@
             var fieldBounds = getBounds(_isMasked ? _dom.mainInput : _dom.clearInput);
             var fieldWidth = fieldBounds.width;
             var changed = false;
+            var btnPadding = getRightBtnPadding();
             if (_dom.maskBtn) {
                 maskBtnWidth = cssFloat(_dom.maskBtn, "width");
-                var maskBtnLeft = fieldWidth - maskBtnWidth - BUTTONS_PADDING_RIGHT;
+                var maskBtnLeft = fieldWidth - maskBtnWidth - btnPadding;
                 var passHidesMaskBtn = passWidth > maskBtnLeft;
                 if (_passHidesMaskBtn != passHidesMaskBtn) {
                     changed = true;
@@ -781,7 +791,7 @@
             }
             if (_dom.genBtn) {
                 genBtnWidth = cssFloat(_dom.genBtn, "width");
-                var genBtnLeft = fieldWidth - maskBtnWidth - genBtnWidth - BUTTONS_PADDING_RIGHT;
+                var genBtnLeft = fieldWidth - maskBtnWidth - genBtnWidth - btnPadding;
                 var passHidesGenBtn = passWidth > genBtnLeft;
                 if (_passHidesGenBtn != passHidesGenBtn) {
                     changed = true;
@@ -852,29 +862,30 @@
                 isMasked = !!isMasked;
 
             var currentDisplayMode = css(_isMasked ? _dom.mainInput : _dom.clearInput, "display") || "block";
-            if (isMasked) {
-                _dom.mainInput.style.display = currentDisplayMode;
-                _dom.clearInput.style.display = "none";
-                _dom.mainInput.value = _dom.clearInput.value;
-                if (_dom.maskBtn) {
-                    setHtml(_dom.maskBtn, "abc");
-                    _dom.maskBtn.title = _locale.msg.showPass;
-                }
-                if (needFocus)
-                    _dom.mainInput.focus();
-            } else {
-                _dom.clearInput.style.display = currentDisplayMode;
-                _dom.mainInput.style.display = "none";
-                _dom.clearInput.value = _dom.mainInput.value;
-                if (_dom.maskBtn) {
-                    setHtml(_dom.maskBtn, "&bull;&bull;&bull;");
-                    _dom.maskBtn.title = _locale.msg.hidePass;
-                }
-                if (needFocus)
-                    _dom.clearInput.focus();
+
+            var currentInput = isMasked ? _dom.clearInput : _dom.mainInput;
+            var nextInput = isMasked ? _dom.mainInput : _dom.clearInput;
+            if (_dom.maskBtn) {
+                setHtml(_dom.maskBtn, isMasked ? "abc" : "&bull;&bull;&bull;");
+                _dom.maskBtn.title = isMasked ? _locale.msg.showPass : _locale.msg.hidePass;
+            }
+            if (_isMasked != isMasked) {
+                // LastPass could insert style attributes here: we'll copy them to clear input (if any)
+                utils.each(["paddingRight", "width", "backgroundImage", "backgroundPosition", "backgroundRepeat", "backgroundAttachment", "border"], function (prop) {
+                    var cur = currentInput.style[prop];
+                    if (cur) {
+                        nextInput.style[prop] = cur;
+                    }
+                });
+            }
+            nextInput.style.display = currentDisplayMode;
+            currentInput.style.display = "none";
+            nextInput.value = currentInput.value;
+            if (needFocus) {
+                nextInput.focus();
             }
 
-            // jQuery.validation can isert error laber right after our input, so we'll handle it here
+            // jQuery.validation can insert error label right after our input, so we'll handle it here
             if (_dom.mainInput.nextSibling != _dom.clearInput) {
                 insertAfter(_dom.mainInput, _dom.clearInput);
             }
