@@ -1,6 +1,6 @@
 Release notes
 -------------
-##### v1.1.0 (2013-03-14)
+##### v1.1.0 (2013-03-12)
 New features; stability and UX improvements  
 `+` #7: added `getPassStrength` method for more flexible result check availability  
 `+` #5: all non-satisfied rules will be shown in the tip after strength validation  
