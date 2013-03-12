@@ -631,6 +631,9 @@
             }
         }
 
+        /**
+         * Toggles tip visibility
+         */
         function toggleTip() {
             if (!_opts.showTip) {
                 return;
@@ -878,10 +881,12 @@
                     }
                 });
             }
+            var selection = getSelection(currentInput);
             nextInput.style.display = currentDisplayMode;
             currentInput.style.display = "none";
             nextInput.value = currentInput.value;
             if (needFocus) {
+                setSelection(nextInput, selection);
                 nextInput.focus();
             }
 
@@ -891,7 +896,34 @@
             }
 
             _isMasked = isMasked;
+            hideButtonsByPassLength();
             resizeControls();
+        }
+
+        /**
+         * Gets selected text indices in input
+         * @param {HTMLInputElement} el - element to get the selection
+         * @returns {{ start: {Number}, end: {Number} }} - selection.
+         */
+        function getSelection(el) {
+            if (typeof el.selectionStart === "number" && typeof el.selectionEnd === "number") {
+                return { start: el.selectionStart, end: el.selectionEnd };
+            }
+            return null;
+        }
+
+        /**
+         * Sets selection in input
+         * @param {HTMLInputElement} el - element to set the selection
+         * @param {{ start: {Number}, end: {Number} }} - selection.
+         */
+        function setSelection(el, selection) {
+            if (!selection)
+                return;
+            if (typeof el.selectionStart === "number" && typeof el.selectionEnd === "number") {
+                el.selectionStart = selection.start;
+                el.selectionEnd = selection.end;
+            }
         }
 
         /**
