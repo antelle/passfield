@@ -579,11 +579,16 @@
             if (_features.passSymbol) {
                 _dom.passLengthChecker = newEl("div", { id: "len" },
                     { position: "absolute", height: css(_dom.mainInput, "height"),
-                        top: "-10000px", left: "-10000px", display: "block", color: "transparent", border: "none",
-                        marginLeft: css(_dom.mainInput, "marginLeft"),
-                        fontFamily: css(_dom.mainInput, "fontFamily"), fontSize: css(_dom.mainInput, "fontSize"), fontWeight: css(_dom.mainInput, "fontWeight"),
-                        fontStyle: css(_dom.mainInput, "fontStyle"), fontVariant: css(_dom.mainInput, "fontVariant") });
+                        top: "-10000px", left: "-10000px", display: "block", color: "transparent", border: "none" });
                 insertAfter(_dom.clearInput, _dom.passLengthChecker);
+                setTimeout(function() {
+                    utils.each(["marginLeft", "fontFamily", "fontSize", "fontWeight", "fontStyle", "fontVariant"], function(attr) {
+                        var value = css(_dom.mainInput, attr);
+                        if (value) {
+                            _dom.passLengthChecker.style[attr] = value;
+                        }
+                    });
+                }, 50);
             }
         }
 
@@ -681,6 +686,7 @@
             document.body.removeChild(box);
 
             var passSymbol = navigator.userAgent.indexOf("AppleWebKit") >= 0 || navigator.userAgent.indexOf("Opera") >= 0
+                || navigator.userAgent.indexOf("Firefox") >= 0 && navigator.platform.indexOf("Mac") >= 0
                 ? /*BULLET*/"\u2022" : /*BLACK CIRCLE*/"\u25cf";
 
             _features = {
@@ -905,7 +911,7 @@
         /**
          * Gets selected text indices in input
          * @param {HTMLInputElement} el - element to get the selection
-         * @returns {{ start: {Number}, end: {Number} }} - selection.
+         * @returns {{ start: Number, end: Number }} - selection.
          */
         function getSelection(el) {
             if (typeof el.selectionStart === "number" && typeof el.selectionEnd === "number") {
@@ -917,7 +923,7 @@
         /**
          * Sets selection in input
          * @param {HTMLInputElement} el - element to set the selection
-         * @param {{ start: {Number}, end: {Number} }} - selection.
+         * @param {{ start: Number, end: Number }} selection - selection.
          */
         function setSelection(el, selection) {
             if (!selection)
