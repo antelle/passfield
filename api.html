@@ -60,26 +60,9 @@
                             <li class="nav-header">API Index</li>
                             <li class="active"><a href="#installation">Installation</a></li>
                             <li><a href="#options">Options</a></li>
-                                <li class="subnav"><a href="#defaults">defaults</a></li>
-                                <li class="subnav"><a href="#pattern">pattern</a></li>
-                                <li class="subnav"><a href="#acceptRate">acceptRate</a></li>
-                                <li class="subnav"><a href="#allowEmpty">allowEmpty</a></li>
-                                <li class="subnav"><a href="#isMasked">isMasked</a></li>
-                                <li class="subnav"><a href="#showToggle">showToggle</a></li>
-                                <li class="subnav"><a href="#showGenerate">showGenerate</a></li>
-                                <li class="subnav"><a href="#showWarn">showWarn</a></li>
-                                <li class="subnav"><a href="#showTip">showTip</a></li>
-                                <li class="subnav"><a href="#tipPopoverStyle">tipPopoverStyle</a></li>
-                                <li class="subnav"><a href="#strengthCheckTimeout">strengthCheckTimeout</a></li>
-                                <li class="subnav"><a href="#validationCallback">validationCallback</a></li>
-                                <li class="subnav"><a href="#blackList">blackList</a></li>
-                                <li class="subnav"><a href="#locale">locale</a></li>
-                                <li class="subnav"><a href="#localeMsg">localeMsg</a></li>
-                                <li class="subnav"><a href="#warnMsgClassName">warnMsgClassName</a></li>
-                                <li class="subnav"><a href="#errorWrapClassName">errorWrapClassName</a></li>
-                                <li class="subnav"><a href="#allowAnyChars">allowAnyChars</a></li>
-                                <li class="subnav"><a href="#checkMode">checkMode</a></li>
-                                <li class="subnav"><a href="#chars">chars</a></li>
+                            <li class="subnav"><a href="#defaults">Defaults</a></li>
+                            <li class="subnav"><a href="#validation">Validation</a></li>
+                            <li class="subnav"><a href="#ui-elements">UI Elements</a></li>
                             <li><a href="#interface">Interface</a></li>
                             <li><a href="#compatibility">Compatibility</a></li>
                             <li><a href="#browsers">Browsers Support</a></li>
@@ -104,7 +87,7 @@
                     <h3 id="options">Options</h3>
                     <p>Options is a javascript object that is passed in initialization function. You can try different options setup on the <a href="demo.html">live demo</a> page.</p>
 
-                    <h5 id="defaults">defaults</h5>
+                    <h4 id="defaults">Defaults</h4>
                     <p>You can pass empty object or skip it at all - missing options will be taken from defaults. To see the defaults, you can eigther inspect js files, or view them on the <a href="demo.html">live demo</a> page: when you just load it without changing anything, defaults are applied. Also, defaults are stored in <code>PassField.Config.defaults</code> object.</p>
 
                     <h5><code id="pattern">pattern</code></h5>
@@ -116,6 +99,7 @@
                     </ul>
                     <p>There are 4 groups of characters: letters, UPPERcase letters, digits, symbols. Everything that is neigher letter, nor digit is considered to be a symbol (see <code><a href="#chars">chars</a></code> and <code><a href="#allowAnyChars">allowAnyChars</a></code> parameters for more info).</p>
 
+                    <h4 id="validation">Validation</h4>
                     <h5><code id="acceptRate">acceptRate</code></h5>
                     <p>Pass*Field uses its own algorighm to calculate password strength (you can get calculated strength value in <code><a href="#validationCallback">validationCallback</a></code>). Password strength is a value in range <code>0..1</code> (1 is strong). Factors taken into attention when strength is calculated:</p>
                     <ul>
@@ -135,37 +119,6 @@
                     <h5><code id="isMasked">isMasked</code></h5>
                     <p>
                         Password will be initially masked if <code>isMasked</code> is true; otherwise it will be shown as cleartext. In case of <code>isMasked</code> is <code>true</code>, if the user switches focus to another field, after several seconds of inactivity the field will switch back to masked mode.
-                    </p>
-
-                    <h5><code id="showToggle">showToggle</code></h5>
-                    <p>
-                        enables user to toggle password masking with “&bull;&bull;&bull;/abc” button. If you disable masking but enable generation, the field will switch to cleartext mode when the user generates a password; there will be no way back.
-                    </p>
-
-                    <h5><code id="showGenerate">showGenerate</code></h5>
-                    <p>
-                        adds <span id="help-gen-btn"></span> button for random password generation. When the user clicks this button, password will be automatically shown in cleartext.
-                    </p>
-
-                    <h5><code id="showWarn">showWarn</code></h5>
-                    <p>
-                        Warning (<span class="text-error">red</span> text to the right of the field) is only shown if <code>showWarn</code> option is set to true. Otherwise it's your responsibility to show warnings. For example, you may want to implement custom validation UI &ndash; in this case you should disable this option and add custom validation controls.
-                    </p>
-
-                    <h5><code id="showTip">showTip</code></h5>
-                    <p>
-                        enables help balloon with tips how to create a strong password. Tips are visible only when the field is focused. If password generation is enabled, user will see the explanation, how to generate a password. Here's an example of such tip (balloon below the field): 
-                    </p>
-                    <p><img src="img/scr/weak.png" style="width: 280px;" /></p>
-
-                    <h5><code id="tipPopoverStyle">tipPopoverStyle</code></h5>
-                    <p>
-                        If Twitter Bootstrap is present, the tip will be displayed as Bootstrap popover. You can control popover options using this parameter (e.g. change title). If you want to disable Bootstrap popovers at all and use Pass*Field internal popovers, pass <code>null</code> here.
-                    </p>
-
-                    <h5><code id="strengthCheckTimeout">strengthCheckTimeout</code></h5>
-                    <p>
-                        Passwords are checked not immediately but after a small timeout: <code>strengthCheckTimeout</code> milliseconds. This ensures that if the user is typing a password, he will not see the warning until he has stopped typing. The user is less annoyed in such way (you are unlikely to change this parameter but if there's anything special, you can).
                     </p>
 
                     <h5><code id="validationCallback">validationCallback</code></h5>
@@ -201,26 +154,6 @@ $("#mypass").passField({ validationCallback: validatePassword });</pre>
                     <p>Optionally, to disable the global blacklist (built-in list of top passwords), insert the following code before initizalizing Pass*Field:</p>
                     <pre class="prettyprint language-js">PassField.Config.blackList = [];</pre>
 
-                    <h5><code id="locale">locale</code></h5>
-                    <p>
-                        All messages used in Pass*Field are defined in locales. You can select locale using <code>locale</code> parameter (this is <a href="http://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a> Alpha-2 code, e.g. “en”). By default (if you pass null or empty) the locale is read from browser settings but you can specify certain locale here. If the locale is not found, neutral language (English) will be used. Currently supported languages: en, de, fr, it, ru, ua, es, el.
-                    </p>
-
-                    <h5><code id="localeMsg">localeMsg</code></h5>
-                    <p>
-                        You can specify different i18n messages. To see the full list, please refer to <code>PassField.Config.locales.en.msg</code> &ndash; the meaning of the messages is self-descriptive. If you pass only several of messages here, missing messages will be taken from the used locale.
-                    </p>
-
-                    <h5><code id="warnMsgClassName">warnMsgClassName</code></h5>
-                    <p>
-                        is a name of the CSS class added to warning element. By default, Bootstrap <code>help-inline</code> class is used. This class is not prefixed. Pass empty string if you don't need this feature.
-                    </p>
-
-                    <h5><code id="errorWrapClassName">errorWrapClassName</code></h5>
-                    <p>
-                        is a name of the CSS class added to wrapping element if validation error occurs. By default, Bootstrap <code>error</code> class is used. This class is not prefixed. Pass empty string if you don't need this feature.
-                    </p>
-
                     <h5><code id="allowAnyChars">allowAnyChars</code></h5>
                     <p>controls whether the it is allowed to enter characters that are neigher letters, nor digits, nor symbols (see <code><a href="#chars">chars</a></code> parameter for more info).</p>
 
@@ -246,6 +179,58 @@ $("#mypass").passField({ validationCallback: validatePassword });</pre>
     letters: "abcdefghijklmnopqrstuvwxyzσβασ"
 }</pre>
                     <p>You can cpecify additional letters here but for password generation latin letters will be used if they are present in <code>chars.letters</code>.</p>
+
+                    <h4 id="ui-elements">UI Elements</h4>
+                    <h5><code id="showToggle">showToggle</code></h5>
+                    <p>
+                        enables user to toggle password masking with “&bull;&bull;&bull;/abc” button. If you disable masking but enable generation, the field will switch to cleartext mode when the user generates a password; there will be no way back.
+                    </p>
+
+                    <h5><code id="showGenerate">showGenerate</code></h5>
+                    <p>
+                        adds <span id="help-gen-btn"></span> button for random password generation. When the user clicks this button, password will be automatically shown in cleartext.
+                    </p>
+
+                    <h5><code id="showWarn">showWarn</code></h5>
+                    <p>
+                        Warning (<span class="text-error">red</span> text to the right of the field) is only shown if <code>showWarn</code> option is set to true. Otherwise it's your responsibility to show warnings. For example, you may want to implement custom validation UI &ndash; in this case you should disable this option and add custom validation controls.
+                    </p>
+
+                    <h5><code id="showTip">showTip</code></h5>
+                    <p>
+                        enables help balloon with tips how to create a strong password. Tips are visible only when the field is focused. If password generation is enabled, user will see the explanation, how to generate a password. Here's an example of such tip (balloon below the field): 
+                    </p>
+                    <p><img src="img/scr/weak.png" style="width: 280px;" /></p>
+
+                    <h5><code id="tipPopoverStyle">tipPopoverStyle</code></h5>
+                    <p>
+                        If Twitter Bootstrap is present, the tip will be displayed as Bootstrap popover. You can control popover options using this parameter (e.g. change title). If you want to disable Bootstrap popovers at all and use Pass*Field internal popovers, pass <code>null</code> here.
+                    </p>
+
+                    <h5><code id="strengthCheckTimeout">strengthCheckTimeout</code></h5>
+                    <p>
+                        Passwords are checked not immediately but after a small timeout: <code>strengthCheckTimeout</code> milliseconds. This ensures that if the user is typing a password, he will not see the warning until he has stopped typing. The user is less annoyed in such way (you are unlikely to change this parameter but if there's anything special, you can).
+                    </p>
+
+                    <h5><code id="locale">locale</code></h5>
+                    <p>
+                        All messages used in Pass*Field are defined in locales. You can select locale using <code>locale</code> parameter (this is <a href="http://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a> Alpha-2 code, e.g. “en”). By default (if you pass null or empty) the locale is read from browser settings but you can specify certain locale here. If the locale is not found, neutral language (English) will be used. Currently supported languages: en, de, fr, it, ru, ua, es, el.
+                    </p>
+
+                    <h5><code id="localeMsg">localeMsg</code></h5>
+                    <p>
+                        You can specify different i18n messages. To see the full list, please refer to <code>PassField.Config.locales.en.msg</code> &ndash; the meaning of the messages is self-descriptive. If you pass only several of messages here, missing messages will be taken from the used locale.
+                    </p>
+
+                    <h5><code id="warnMsgClassName">warnMsgClassName</code></h5>
+                    <p>
+                        is a name of the CSS class added to warning element. By default, Bootstrap <code>help-inline</code> class is used. This class is not prefixed. Pass empty string if you don't need this feature.
+                    </p>
+
+                    <h5><code id="errorWrapClassName">errorWrapClassName</code></h5>
+                    <p>
+                        is a name of the CSS class added to wrapping element if validation error occurs. By default, Bootstrap <code>error</code> class is used. This class is not prefixed. Pass empty string if you don't need this feature.
+                    </p>
 
                     <h3 id="interface">Interface</h3>
                     <p>After Pass*Field is created, you might want access it. Here's how:</p>
