@@ -580,7 +580,9 @@
                 _dom.passLengthChecker = newEl("div", { id: "len" },
                     { position: "absolute", height: css(_dom.mainInput, "height"),
                         top: "-10000px", left: "-10000px", display: "block", color: "transparent", border: "none",
-                        marginLeft: css(_dom.mainInput, "marginLeft") });
+                        marginLeft: css(_dom.mainInput, "marginLeft"),
+                        fontFamily: css(_dom.mainInput, "fontFamily"), fontSize: css(_dom.mainInput, "fontSize"), fontWeight: css(_dom.mainInput, "fontWeight"),
+                        fontStyle: css(_dom.mainInput, "fontStyle"), fontVariant: css(_dom.mainInput, "fontVariant") });
                 insertAfter(_dom.clearInput, _dom.passLengthChecker);
             }
         }
