@@ -7,7 +7,7 @@ New features; stability and UX improvements
 `+` #10: option to use bootstrap popovers (`tipPopoverStyle` property)  
 `+` text selection is now preserved after display mode switch  
 `*` #4: password strength estimation algorithm made smarter; `checkMode` parameter introduced  
-`-` #3: fixed a bug when buttons were still visible even with long password
+`-` #3: fixed a bug when buttons were still visible even with long password  
 `-` #2: fixed wrong behavior when LastPass plugin is installed
 
 ##### v1.0.2 (2013-03-05)
