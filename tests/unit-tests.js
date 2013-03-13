@@ -67,11 +67,13 @@ $(function() {
             border, "border assigned to pass input");
         equal(passInput.css("font-size"), fontSize, "font-size assigned to pass input");
 
-        equal(Math.round(parseFloat(clearInput.css("height"))) + "px", height, "height assigned to clear input");
-        equal(Math.round(parseFloat(clearInput.css("width"))) + "px", width, "width assigned to clear input");
-        equal(Math.round(parseFloat(clearInput.css("border-top-width"))) + "px " + clearInput.css("border-left-style") + " " + clearInput.css("border-right-color").replace(/\s/g, ''),
-            border, "border assigned clear input");
-        equal(clearInput.css("font-size"), fontSize, "font-size assigned clear input");
+        if (clearInput) {
+            equal(Math.round(parseFloat(clearInput.css("height"))) + "px", height, "height assigned to clear input");
+            equal(Math.round(parseFloat(clearInput.css("width"))) + "px", width, "width assigned to clear input");
+            equal(Math.round(parseFloat(clearInput.css("border-top-width"))) + "px " + clearInput.css("border-left-style") + " " + clearInput.css("border-right-color").replace(/\s/g, ''),
+                border, "border assigned clear input");
+            equal(clearInput.css("font-size"), fontSize, "font-size assigned clear input");
+        }
     });
     test("pass is set", function() {
         prepare();
@@ -79,12 +81,14 @@ $(function() {
         var pass = "new-pass";
         passFieldObj.setPass(pass);
         equal(passInput.val(), pass, "pass input value changed");
-        equal(clearInput.val(), pass, "clear input value changed");
+        if (clearInput)
+            equal(clearInput.val(), pass, "clear input value changed");
         equal(getWarnMsg(), null, "error is not generated");
         pass = "new-pass-2";
         passInput.setPass(pass);
         equal(passInput.val(), pass, "pass input value changed");
-        equal(clearInput.val(), pass, "clear input value changed");
+        if (clearInput)
+            equal(clearInput.val(), pass, "clear input value changed");
         equal(getWarnMsg(), null, "error is not generated");
     });
     test("empty pass validation", function() {
@@ -291,22 +295,22 @@ $(function() {
     test("toggle pass masking", function() {
         prepare();
         runBasicWorkFlow();
-        equal(getMainInput().attr("id"), passInput.attr("id"), "pass input is visible");
+        ok(getMainInput(), "pass input is visible");
         passInput.togglePassMasking();
         isMasked = !isMasked;
-        equal(getMainInput().attr("id"), clearInput.attr("id"), "clear input is visible");
+        ok(getMainInput(), "clear input is visible");
         passFieldObj.toggleMasking();
         isMasked = !isMasked;
-        equal(getMainInput().attr("id"), passInput.attr("id"), "pass input is visible");
+        ok(getMainInput(), "pass input is visible");
 
         passInput.togglePassMasking(true);
-        equal(getMainInput().attr("id"), passInput.attr("id"), "pass input is visible");
+        ok(getMainInput(),  "pass input is visible");
 
         isMasked = false;
         passInput.togglePassMasking(false);
-        equal(getMainInput().attr("id"), clearInput.attr("id"), "clear input is visible");
+        ok(getMainInput(), "clear input is visible");
         passInput.togglePassMasking(false);
-        equal(getMainInput().attr("id"), clearInput.attr("id"), "clear input is visible");
+        ok(getMainInput(), "clear input is visible");
     });
     test("custom wrap error class", function() {
         prepare({ errorWrapClassName: "my-cls-wrap" });
@@ -337,7 +341,7 @@ $(function() {
         prepare({ showGenerate: true, showToggle: false });
         triggerEvent(passInput[0], "focus");
         isMasked = false;
-        equal(getMainInput().attr("id"), clearInput.attr("id"), "mode switched to clear input");
+        ok(getMainInput(), "mode switched to clear input");
         ok(!btnMask, "mask btn is not visible");
         ok(btnGen && btnGen.is(":visible"), "rand btn is visible");
         runBasicWorkFlow();
@@ -357,7 +361,8 @@ $(function() {
         prepare({ isMasked: false }, {
             inputAttr: { value: pass }
         });
-        equal(getMainInput().attr("id"), clearInput.attr("id"), "mode switched to clear input");
+        isMasked = false;
+        ok(getMainInput(), "mode switched to clear input");
         equal(getMainInput().val(), pass, "pass written to clear input")
     });
     test("locale override", function() {
@@ -454,7 +459,7 @@ $(function() {
     }
 
     function checkPassInput(inputAttr) {
-        equal($("input[type=password]", wrap).length, 1, "password input found");
+        ok(passInput, "password input found");
         equal(passInput.attr("class"), addPrefix("txt-pass"), "class assigned to pass input");
         if (inputAttr.placeholder && supportsPlaceholders)
             equal(passInput.attr("placeholder"), inputAttr.placeholder, "placeholder assigned to pass input");
@@ -465,6 +470,10 @@ $(function() {
 
     function checkClearInput(inputAttr) {
         clearInput = $("input[type=text]", wrap);
+        if (!clearInput.length || clearInput.attr("id") == passInput.attr("id")) {
+            clearInput = null;
+            return;
+        }
         equal(clearInput.length, 1, "clear input found");
         equal(clearInput.attr("class"), addPrefix("txt-clear"), "class assigned to clear input");
         if (inputAttr.placeholder && supportsPlaceholders)
@@ -558,19 +567,19 @@ $(function() {
         var pass = "test-pass";
         input.simulate("key-sequence", { sequence: pass });
         equal(passInput.val(), pass, "pass input value changed");
-        equal(clearInput.val(), pass, "clear input value changed");
+        if (clearInput)
+            equal(clearInput.val(), pass, "clear input value changed");
 
         var curInput;
         if (btnMask) {
+            var oldInputType = getMainInput().attr("type");
             isMasked = !isMasked;
             btnMask.simulate("click");
-            curInput = getMainInput();
-            ok(curInput.attr("id") != input.attr("id"), "input switched");
+            ok(getMainInput().attr("type") != oldInputType, "input switched");
 
             isMasked = !isMasked;
             btnMask.simulate("click");
-            curInput = getMainInput();
-            ok(curInput.attr("id") == input.attr("id"), "input switched back");
+            ok(getMainInput().attr("type") == oldInputType, "input switched back");
         }
 
         if (btnGen) {
@@ -578,8 +587,7 @@ $(function() {
 
             btnGen.simulate("click");
             isMasked = false;
-            curInput = getMainInput();
-            equal(curInput.attr("id"), clearInput.attr("id"), "clear input active after generation");
+            ok(getMainInput(), "clear input active after generation");
             equal(passInput.getPassValidationMessage(), null, "generated valid password");
             equal(passInput.getPassStrength(), 1, "generated valid password strength");
 
@@ -595,7 +603,8 @@ $(function() {
 
         passInput.setPass("");
         equal(passInput.val(), "", "pass input value cleared");
-        ok(!clearInput.val(), "clear input value cleared");
+        if (clearInput)
+            ok(!clearInput.val(), "clear input value cleared");
 
         if (fakePlaceholder) {
             ok(fakePlaceholder.is(":visible"), "fake placeholder is visible on pass clear");
@@ -605,9 +614,9 @@ $(function() {
     // ========================== utility functions ==========================
 
     function getMainInput() {
-        var input = isMasked ? passInput : clearInput;
-        ok(input.is(":visible"), "main input is visible");
-        ok(!(isMasked ? clearInput : passInput).is(":visible"), "second input is not visible");
+        var input = $("input:visible", wrap);
+        equal(input.length, 1, "only 1 input is visible");
+        equal(input.attr("type"), isMasked ? "password" : "text", "visible input type is correct");
         return input;
     }
 

@@ -1,5 +1,9 @@
 Release notes
 -------------
+##### v1.1.1 (2013-03-13)
+Small stability improvement
+`+` more smooth and reliable password visibility toggle mechanism
+
 ##### v1.1.0 (2013-03-12)
 New features; stability and UX improvements  
 `+` #7: added `getPassStrength` method for more flexible result check availability  

@@ -398,7 +398,9 @@
          */
         function setPass(val) {
             _dom.mainInput.value = val;
-            _dom.clearInput.value = val;
+            if (_dom.clearInput) {
+                _dom.clearInput.value = val;
+            }
             handleInputKeyup();
         }
 
@@ -452,23 +454,26 @@
          * Creates cleartext password field
          */
         function createClearInput() {
-            _dom.clearInput = newEl("input", { type: "text", id: "txt-clear", className: "txt-clear", value: _dom.mainInput.value },
-                { display: "none" });
-            var cls = _dom.mainInput.className;
-            if (cls) {
-                addClass(_dom.clearInput, cls, true);
-            }
-            var inputStyle = _dom.mainInput.style.cssText;
-            if (inputStyle) {
-                _dom.clearInput.style.cssText = inputStyle;
-            }
-            utils.each(["maxLength", "size", "placeholder"], function(attr) {
-                var value = _dom.mainInput.getAttribute(attr);
-                if (value) {
-                    _dom.clearInput.setAttribute(attr, value);
+            if (!_features.changeType) {
+                // IE < 9 don't support input type changing
+                _dom.clearInput = newEl("input", { type: "text", id: "txt-clear", className: "txt-clear", value: _dom.mainInput.value },
+                    { display: "none" });
+                var cls = _dom.mainInput.className;
+                if (cls) {
+                    addClass(_dom.clearInput, cls, true);
                 }
-            });
-            insertAfter(_dom.mainInput, _dom.clearInput);
+                var inputStyle = _dom.mainInput.style.cssText;
+                if (inputStyle) {
+                    _dom.clearInput.style.cssText = inputStyle;
+                }
+                utils.each(["maxLength", "size", "placeholder"], function(attr) {
+                    var value = _dom.mainInput.getAttribute(attr);
+                    if (value) {
+                        _dom.clearInput.setAttribute(attr, value);
+                    }
+                });
+                insertAfter(_dom.mainInput, _dom.clearInput);
+            }
             addClass(_dom.mainInput, "txt-pass");
         }
 
@@ -481,7 +486,7 @@
                     { margin: "0 0 0 3px" });
                 if (_opts.warnMsgClassName)
                     addClass(_dom.warnMsg, _opts.warnMsgClassName, true);
-                insertAfter(_dom.clearInput, _dom.warnMsg);
+                insertAfter(_dom.clearInput || _dom.mainInput, _dom.warnMsg);
             }
         }
 
@@ -494,7 +499,7 @@
                     { position: "absolute", margin: "0", padding: "0" });
                 addClass(_dom.maskBtn, "btn");
                 setHtml(_dom.maskBtn, "abc");
-                insertAfter(_dom.clearInput, _dom.maskBtn);
+                insertAfter(_dom.mainInput, _dom.maskBtn);
             }
         }
 
@@ -506,7 +511,7 @@
                 _dom.genBtn = newEl("div", { id: "btn-gen", className: "btn-gen", title: _locale.msg.genPass },
                     { position: "absolute", margin: "0", padding: "0" });
                 addClass(_dom.genBtn, "btn");
-                insertAfter(_dom.clearInput, _dom.genBtn);
+                insertAfter(_dom.mainInput, _dom.genBtn);
 
                 _dom.genBtnInner = newEl("div", { id: "btn-gen-i", className: "btn-gen-i", title: _locale.msg.genPass });
                 _dom.genBtn.appendChild(_dom.genBtnInner);
@@ -541,7 +546,7 @@
                     // not using Twitter Bootstrap
                     _dom.tip = newEl("div", { id: "tip", className: "tip" },
                         { position: "absolute", margin: "0", padding: "0", width: mainInputRect.width + "px" });
-                    insertAfter(_dom.clearInput, _dom.tip);
+                    insertAfter(_dom.mainInput, _dom.tip);
 
                     var arrWrap = newEl("div", { id: "tip-arr-wrap", className: "tip-arr-wrap" });
                     _dom.tip.appendChild(arrWrap);
@@ -565,7 +570,7 @@
                     _dom.placeholder = newEl("div", { id: "placeholder", className: "placeholder" },
                         { position: "absolute", margin: "0", padding: "0", height: mainInputRect.height + "px", lineHeight: mainInputRect.height + "px" });
                     setHtml(_dom.placeholder, placeholderText);
-                    insertAfter(_dom.clearInput, _dom.placeholder);
+                    insertAfter(_dom.mainInput, _dom.placeholder);
                 }
             } else if (!_dom.mainInput.getAttribute("placeholder") && _dom.mainInput.getAttribute("data-placeholder")) {
                 _dom.mainInput.setAttribute("placeholder", _dom.mainInput.getAttribute("data-placeholder"));
@@ -580,7 +585,7 @@
                 _dom.passLengthChecker = newEl("div", { id: "len" },
                     { position: "absolute", height: css(_dom.mainInput, "height"),
                         top: "-10000px", left: "-10000px", display: "block", color: "transparent", border: "none" });
-                insertAfter(_dom.clearInput, _dom.passLengthChecker);
+                insertAfter(_dom.mainInput, _dom.passLengthChecker);
                 setTimeout(function() {
                     utils.each(["marginLeft", "fontFamily", "fontSize", "fontWeight", "fontStyle", "fontVariant"], function(attr) {
                         var value = css(_dom.mainInput, attr);
@@ -598,7 +603,7 @@
         function resizeControls() {
             toggleButtons();
             toggleTip();
-            var rect = getRect(_isMasked ? _dom.mainInput : _dom.clearInput);
+            var rect = getRect(getActiveInput());
             var left = getRightBtnPadding();
             if (_dom.maskBtn && _dom.maskBtn.style.display != "none") {
                 left += cssFloat(_dom.maskBtn, "width");
@@ -622,7 +627,7 @@
          * @returns {number} - padding in px.
          */
         function getRightBtnPadding() {
-            var paddingRight = cssFloat(_isMasked ? _dom.mainInput : _dom.clearInput, "paddingRight");
+            var paddingRight = cssFloat(getActiveInput(), "paddingRight");
             return Math.max(BUTTONS_PADDING_RIGHT, paddingRight);
         }
 
@@ -672,10 +677,19 @@
          */
         function detectFeatures() {
             var supportsPlaceholder = true;
+            var changeType = true;
             var test = document.createElement("input");
             if (!("placeholder" in test)) {
                 supportsPlaceholder = false;
             }
+            test.setAttribute("style", "position:absolute;left:-10000px;top:-10000px;");
+            document.body.appendChild(test);
+            try {
+                test.setAttribute("type", "password");
+            } catch (err) {
+                changeType = false;
+            }
+            document.body.removeChild(test);
 
             var box = document.createElement("div");
             box.setAttribute("style", "display:inline-block");
@@ -691,6 +705,7 @@
 
             _features = {
                 placeholders: supportsPlaceholder,
+                changeType: changeType,
                 boxModel: isBoxModel,
                 hasInlineBlock: hasInlineBlock,
                 passSymbol: passSymbol
@@ -698,10 +713,18 @@
         }
 
         /**
+         * Gets currently active input
+         * @return {HTMLInputElement} - currently active input.
+         */
+        function getActiveInput() {
+            return _isMasked ? _dom.mainInput : _dom.clearInput || _dom.mainInput;
+        }
+
+        /**
          * Binds handler events to DOM nodes
          */
         function bindEvents() {
-            utils.each([_dom.mainInput, _dom.clearInput], function (el) {
+            utils.each(_dom.clearInput ? [_dom.mainInput, _dom.clearInput] : [_dom.mainInput], function (el) {
                 utils.attachEvent(el, "onkeyup", handleInputKeyup);
                 utils.attachEvent(el, "onfocus", handleInputFocus);
                 utils.attachEvent(el, "onblur", handleInputBlur);
@@ -735,7 +758,7 @@
          * Handles fake placeholder click event
          */
         function handlePlaceholderClicked() {
-            (_isMasked ? _dom.mainInput : _dom.clearInput).focus();
+            getActiveInput().focus();
         }
 
         /**
@@ -757,10 +780,14 @@
          */
         function handleInputKeyup() {
             var val;
-            if (_isMasked) {
-                val = _dom.clearInput.value = _dom.mainInput.value;
+            if (_dom.clearInput) {
+                if (_isMasked) {
+                    val = _dom.clearInput.value = _dom.mainInput.value;
+                } else {
+                    val = _dom.mainInput.value = _dom.clearInput.value;
+                }
             } else {
-                val = _dom.mainInput.value = _dom.clearInput.value;
+                val = _dom.mainInput.value;
             }
             if (_opts.strengthCheckTimeout > 0 && !_warningShown) {
                 if (_validateTimer) {
@@ -782,12 +809,14 @@
         function hideButtonsByPassLength() {
             if (!_dom.passLengthChecker)
                 return;
-            var pass = _isMasked ? _dom.mainInput.value.replace(/./g, _features.passSymbol) : _dom.clearInput.value;
+            var pass = getActiveInput().value;
+            if (_isMasked)
+                pass = pass.replace(/./g, _features.passSymbol);
             setHtml(_dom.passLengthChecker, pass);
             var passWidth = _dom.passLengthChecker.offsetWidth;
             passWidth += cssFloat(_dom.mainInput, "paddingLeft");
             var maskBtnWidth = 0, genBtnWidth = 0;
-            var fieldBounds = getBounds(_isMasked ? _dom.mainInput : _dom.clearInput);
+            var fieldBounds = getBounds(getActiveInput());
             var fieldWidth = fieldBounds.width;
             var changed = false;
             var btnPadding = getRightBtnPadding();
@@ -872,35 +901,44 @@
             else
                 isMasked = !!isMasked;
 
-            var currentDisplayMode = css(_isMasked ? _dom.mainInput : _dom.clearInput, "display") || "block";
+            if (_features.changeType) {
+                var el = getActiveInput();
+                var sel = getSelection(el);
+                el.setAttribute("type", isMasked ? "password" : "text");
+                if (needFocus) {
+                    setSelection(el, sel);
+                    el.focus();
+                }
+            } else {
+                var currentDisplayMode = css(getActiveInput(), "display") || "block";
+                var currentInput = isMasked ? _dom.clearInput : _dom.mainInput;
+                var nextInput = isMasked ? _dom.mainInput : _dom.clearInput;
+                if (_isMasked != isMasked) {
+                    // LastPass could insert style attributes here: we'll copy them to clear input (if any)
+                    utils.each(["paddingRight", "width", "backgroundImage", "backgroundPosition", "backgroundRepeat", "backgroundAttachment", "border"], function (prop) {
+                        var cur = currentInput.style[prop];
+                        if (cur) {
+                            nextInput.style[prop] = cur;
+                        }
+                    });
+                }
+                var selection = getSelection(currentInput);
+                nextInput.style.display = currentDisplayMode;
+                currentInput.style.display = "none";
+                nextInput.value = currentInput.value;
+                if (needFocus) {
+                    setSelection(nextInput, selection);
+                    nextInput.focus();
+                }
 
-            var currentInput = isMasked ? _dom.clearInput : _dom.mainInput;
-            var nextInput = isMasked ? _dom.mainInput : _dom.clearInput;
+                // jQuery.validation can insert error label right after our input, so we'll handle it here
+                if (_dom.mainInput.nextSibling != _dom.clearInput) {
+                    insertAfter(_dom.mainInput, _dom.clearInput);
+                }
+            }
             if (_dom.maskBtn) {
                 setHtml(_dom.maskBtn, isMasked ? "abc" : "&bull;&bull;&bull;");
                 _dom.maskBtn.title = isMasked ? _locale.msg.showPass : _locale.msg.hidePass;
-            }
-            if (_isMasked != isMasked) {
-                // LastPass could insert style attributes here: we'll copy them to clear input (if any)
-                utils.each(["paddingRight", "width", "backgroundImage", "backgroundPosition", "backgroundRepeat", "backgroundAttachment", "border"], function (prop) {
-                    var cur = currentInput.style[prop];
-                    if (cur) {
-                        nextInput.style[prop] = cur;
-                    }
-                });
-            }
-            var selection = getSelection(currentInput);
-            nextInput.style.display = currentDisplayMode;
-            currentInput.style.display = "none";
-            nextInput.value = currentInput.value;
-            if (needFocus) {
-                setSelection(nextInput, selection);
-                nextInput.focus();
-            }
-
-            // jQuery.validation can insert error label right after our input, so we'll handle it here
-            if (_dom.mainInput.nextSibling != _dom.clearInput) {
-                insertAfter(_dom.mainInput, _dom.clearInput);
             }
 
             _isMasked = isMasked;
@@ -950,7 +988,10 @@
          */
         function generatePassword() {
             var pass = createRandomPassword();
-            _dom.clearInput.value = _dom.mainInput.value = pass;
+            _dom.mainInput.value = pass;
+            if (_dom.clearInput) {
+                _dom.clearInput.value = pass;
+            }
             toggleMasking(false);
 
             if (_validateTimer) {
@@ -973,7 +1014,7 @@
                 clearTimeout(_validateTimer);
                 _validateTimer = null;
             }
-            var pass = _isMasked ? _dom.mainInput.value : _dom.clearInput.value;
+            var pass = getActiveInput().value;
             var checkResult = calculateStrength(pass);
 
             if (pass.length == 0) {
