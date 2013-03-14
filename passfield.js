@@ -84,8 +84,8 @@
             chars: {
                 // symbol sequences for generation and checking
                 digits: "1234567890",
-                letters: "abcdefghijklmnopqrstuvwxyzßабвгедёжзийклмнопрстуфхцчшщъыьэюяґєåäâáàéèêíìїóòöüúùý",
-                letters_up: "ABCDEFGHIJKLMNOPQRSTUVWXYZАБВГЕДЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯҐЄÅÄÂÁÀÉÈÊÍÌЇÓÒÖÜÚÙÝ",
+                letters: "abcdefghijklmnopqrstuvwxyzßабвгедёжзийклмнопрстуфхцчшщъыьэюяґєåäâáàãéèêëíìîїóòôõöüúùûýñçøåæþðαβγδεζηθικλμνξοπρσςτυφχψω",
+                letters_up: "ABCDEFGHIJKLMNOPQRSTUVWXYZАБВГЕДЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯҐЄÅÄÂÁÀÃÉÈÊËÍÌÎЇÓÒÔÕÖÜÚÙÛÝÑÇØÅÆÞÐΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ",
                 symbols: "@#$%^&*()-_=+[]{};:<>/?!"
             }
         },
@@ -157,7 +157,7 @@
                     weakWarn: "faible",
                     invalidPassWarn: "*",
                     weakTitle: "Ce mot de passe est faible",
-                    generateMsg: "Pour créer un mot de passe fort cliquez sur le bouton."
+                    generateMsg: "Pour créer un mot de passe fort cliquez sur le bouton {}."
                 }
             },
             it: {
