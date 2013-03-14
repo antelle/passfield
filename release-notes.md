@@ -1,5 +1,9 @@
 Release notes
 -------------
+##### v1.1.2 (2013-03-18)
+Some improvements  
+`+` #6: now most letters from european alphabets are treated as letters  
+
 ##### v1.1.1 (2013-03-13)
 Small stability improvement  
 `+` more smooth and reliable password visibility toggle mechanism
