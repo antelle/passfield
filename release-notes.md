@@ -3,6 +3,8 @@ Release notes
 ##### v1.1.2 (2013-03-18)
 Some improvements  
 `+` #6: now most letters from european alphabets are treated as letters  
+`+` bootstrap popovers are now the same width as input  
+`-` popovers behavior fixed in old browsers  
 
 ##### v1.1.1 (2013-03-13)
 Small stability improvement  

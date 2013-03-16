@@ -127,3 +127,4 @@ only screen and (                min-resolution: 2dppx) {
     padding: 0;
 }
 .a_pf-wrap.a_pf-wrap-no-ib .a_pf-btn-gen-help { display: inline; }
+.a_pf-wrap.a_pf-wrap-no-ib .arrow { display: none; }

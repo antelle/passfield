@@ -528,20 +528,21 @@
                 if (_opts.tipPopoverStyle && $ && typeof $.fn.popover === "function") {
                     // using Twitter Bootstrap
                     $(_dom.mainInput).popover(utils.extend({
-                            // popover defaults (overridable)
-                            title: null,
-                            placement: _opts.tipPopoverStyle.placement || function(pop, el) {
-                                //noinspection JSValidateTypes
-                                var top = $(el).position().top - $(window).scrollTop();
-                                var spaceBelow = $(window).height() - top;
-                                return spaceBelow > 300 || spaceBelow > top ? "bottom" : "top";
-                            }
-                        }, _opts.tipPopoverStyle, {
-                            // popovers properties (non-overridable)
-                            trigger: "manual",
-                            html: true,
-                            content: function() { return _tipHtml; }
-                        }));
+                        // popover defaults (overridable)
+                        title: null,
+                        placement: _opts.tipPopoverStyle.placement || function(pop, el) {
+                            //noinspection JSValidateTypes
+                            var top = $(el).position().top - $(window).scrollTop();
+                            var spaceBelow = $(window).height() - top;
+                            return spaceBelow > 300 || spaceBelow > top ? "bottom" : "top";
+                        },
+                        animation: false
+                    }, _opts.tipPopoverStyle, {
+                        // popovers properties (non-overridable)
+                        trigger: "manual",
+                        html: true,
+                        content: function() { return _tipHtml; }
+                    }));
                 } else {
                     // not using Twitter Bootstrap
                     _dom.tip = newEl("div", { id: "tip", className: "tip" },
@@ -655,9 +656,22 @@
             } else {
                 if (_warningShown && _isInputFocused) {
                     if (!_bootstrapPopoverShownText || (_tipHtml != _bootstrapPopoverShownText)) {
-                        var opts = $(_dom.mainInput).data("popover").options;
+                        var data = $(_dom.mainInput).data("popover");
+                        var opts = data.options;
                         var animationBackup = opts.animation;
-                        opts.animation = false;
+                        if (_bootstrapPopoverShownText)
+                            opts.animation = false;
+                        // set popover width (Bootstrap popovers doesn't support width setting, so we'll apply a hack)
+                        var width = getActiveInput().offsetWidth - 2;
+                        var el = data.$tip;
+                        if (el) {
+                            el.width(width);
+                        } else if (data.options.template) {
+                            data.options.template = data.options.template.replace('class="popover"', 'class="popover" style="width: ' + width + 'px"');
+                        }
+                        if (_dom.clearInput) {
+                            data.$element = $(getActiveInput());
+                        }
                         $(_dom.mainInput).popover("show");
                         _bootstrapPopoverShownText = _tipHtml;
                         opts.animation = animationBackup;
