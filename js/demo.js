@@ -119,8 +119,7 @@ function recreatePasswordField(settings) {
                 return { strength: 0.5, messages: ["Hello! This is a custom error message"] };
             if ($(el).val() == "bad")
                 return { strength: null, messages: ["Really bad password! This is a custom error message"] };
-        },
-        tipPopoverStyle: null
+        }
     });
 
     $("#mypass").passField(settings);
