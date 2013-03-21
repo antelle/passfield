@@ -77,4 +77,6 @@ only screen and (                min-resolution: 2dppx) {
         background-size: 32px;
     }
 }
-
+body.no-bg {
+    background: #fafafa;
+}
