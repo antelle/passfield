@@ -4,6 +4,7 @@ Release notes
 Small new features  
 `+` events option introduced; `generated` and `switched` events are now triggered  
 `+` option to compare password with login (`nonMatchField` parameter)  
+`+` passwords like 111111 will be considered weak  
 
 ##### v1.1.2 (2013-03-18)
 Some improvements  

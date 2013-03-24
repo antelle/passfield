@@ -249,6 +249,13 @@ $(function() {
         ok(passInput.setPass("a@3!").validatePass(), "short pass with extra symbols is valid");
         equal(passFieldObj.getPassStrength(), 1, "short pass with extra symbols is valid");
     });
+    test("character repetitions wtrength", function () {
+        prepare({ pattern: "abcd", acceptRate: 0.1 });
+        runBasicWorkFlow();
+        ok(!passInput.setPass("aaaaaaaaaaaaaaa").validatePass(), "pass is not valid");
+        equal(passFieldObj.getPassStrength(), 0, "pass is weak");
+        equal(getWarnMsg(), "This password is weak: password consists of repeating characters.", "pass msg is assigned");
+    });
     test("custom validation", function() {
         var valReturn = null;
         prepare({ validationCallback: function(el, res) { valResult = res; return valReturn; } });

@@ -113,6 +113,7 @@
                     inBlackList: "password is in list of top used passwords",
                     passRequired: "password is required",
                     equalTo: "password is equal to login",
+                    repeat: "password consists of repeating characters",
                     badChars: "password contains bad characters: “{}”",
                     weakWarn: "weak",
                     invalidPassWarn: "*",
@@ -137,6 +138,7 @@
                     inBlackList: "Passwort steht auf der Liste der beliebtesten Passwörter",
                     passRequired: "Passwort wird benötigt",
                     equalTo: "Passwort ist wie Anmeldung",
+                    repeat: "Passwort besteht aus sich wiederholenden Zeichen",
                     badChars: "Passwort enthält ungültige Zeichen: “{}”",
                     weakWarn: "Schwach",
                     invalidPassWarn: "*",
@@ -161,6 +163,7 @@
                     inBlackList: "le mot de passe est dans la liste des plus utilisés",
                     passRequired: "le mot de passe est requis",
                     equalTo: "le mot de passe est le même que l'identifiant",
+                    repeat: "le mot de passe est une répétition de caractères",
                     badChars: "le mot de passe contient des caractères incorrects: “{}”",
                     weakWarn: "faible",
                     invalidPassWarn: "*",
@@ -185,6 +188,7 @@
                     inBlackList: "la password è nella lista delle password più usate",
                     passRequired: "è necessaria una password",
                     equalTo: "la password è uguale al login",
+                    repeat: "la password è composta da caratteri che si ripetono",
                     badChars: "la password contiene caratteri non accettati: “{}”",
                     weakWarn: "debole",
                     invalidPassWarn: "*",
@@ -207,10 +211,11 @@
                     letters_up: "буквы в ВЕРХНЕМ регистре",
                     symbols: "символы",
                     inBlackList: "этот пароль часто используется в Интернете",
-                    badChars: "в пароле есть недопустимые символы: «{}»",
-                    weakWarn: "слабый",
                     passRequired: "пароль обязателен",
                     equalTo: "пароль совпадает с логином",
+                    repeat: "пароль состоит из повторяющихся символов",
+                    badChars: "в пароле есть недопустимые символы: «{}»",
+                    weakWarn: "слабый",
                     invalidPassWarn: "*",
                     weakTitle: "Пароль слабый, его легко взломать",
                     generateMsg: "Чтобы сгенерировать пароль, нажмите кнопку {}."
@@ -232,7 +237,8 @@
                     symbols: "cимволи",
                     inBlackList: "пароль входить до списку паролей, що використовуються найчастіше",
                     passRequired: "пароль є обов'язковим",
-                    equalTo: "TODO",
+                    equalTo: "пароль та логін однакові",
+                    repeat: "пароль містить повторювані символи",
                     badChars: "пароль містить неприпустимі символи: «{}»",
                     weakWarn: "слабкий",
                     invalidPassWarn: "*",
@@ -257,6 +263,7 @@
                     inBlackList: "la contraseña está en la lista de las contraseñas más usadas",
                     passRequired: "se requiere contraseña",
                     equalTo: "la contraseña es igual al inicio de sesión",
+                    repeat: "la contraseña tiene caracteres repetidos",
                     badChars: "la contraseña contiene caracteres no permitidos: “{}”",
                     weakWarn: "débil",
                     invalidPassWarn: "*",
@@ -281,6 +288,7 @@
                     inBlackList: "ο κωδικός πρόσβασης βρίσκεται σε κατάλογο δημοφιλέστερων κωδικών",
                     passRequired: "απαιτείται κωδικός πρόσβασης",
                     equalTo: "ο κωδικός είναι όμοιος με το όνομα χρήστη",
+                    repeat: "ο κωδικός αποτελείται από επαναλαμβανόμενους χαρακτήρες",
                     badChars: "ο κωδικός περιέχει μη επιτρεπτούς χαρακτήρες: “{}”",
                     weakWarn: "αδύναμος",
                     invalidPassWarn: "*",
@@ -1188,6 +1196,21 @@
             } else {
                 if (_opts.checkMode == PassField.CheckModes.MODERATE) {
                     strength += lengthRatio / charTypesPatternCount;
+                }
+            }
+
+            if (pass.length > 2) {
+                var firstChar = pass.charAt(0);
+                var allEqual = true;
+                for (var i = 0; i < pass.length; i++) {
+                    if (pass.charAt(i) != firstChar) {
+                        allEqual = false;
+                        break;
+                    }
+                }
+                if (allEqual) {
+                    strength = 0;
+                    messages = [_locale.msg.repeat];
                 }
             }
 
