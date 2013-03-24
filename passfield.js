@@ -91,7 +91,8 @@
             events: {
                 generated: null,
                 switched: null
-            }
+            },
+            nonMatchField: null // login field (to compare password with - should not be equal)
         },
 
         locales: {
@@ -111,6 +112,7 @@
                     symbols: "symbols",
                     inBlackList: "password is in list of top used passwords",
                     passRequired: "password is required",
+                    equalTo: "password is equal to login",
                     badChars: "password contains bad characters: “{}”",
                     weakWarn: "weak",
                     invalidPassWarn: "*",
@@ -134,6 +136,7 @@
                     symbols: "Symbole",
                     inBlackList: "Passwort steht auf der Liste der beliebtesten Passwörter",
                     passRequired: "Passwort wird benötigt",
+                    equalTo: "Passwort ist wie Anmeldung",
                     badChars: "Passwort enthält ungültige Zeichen: “{}”",
                     weakWarn: "Schwach",
                     invalidPassWarn: "*",
@@ -157,6 +160,7 @@
                     symbols: "symboles",
                     inBlackList: "le mot de passe est dans la liste des plus utilisés",
                     passRequired: "le mot de passe est requis",
+                    equalTo: "le mot de passe est le même que l'identifiant",
                     badChars: "le mot de passe contient des caractères incorrects: “{}”",
                     weakWarn: "faible",
                     invalidPassWarn: "*",
@@ -180,6 +184,7 @@
                     symbols: "simboli",
                     inBlackList: "la password è nella lista delle password più usate",
                     passRequired: "è necessaria una password",
+                    equalTo: "la password è uguale al login",
                     badChars: "la password contiene caratteri non accettati: “{}”",
                     weakWarn: "debole",
                     invalidPassWarn: "*",
@@ -205,6 +210,7 @@
                     badChars: "в пароле есть недопустимые символы: «{}»",
                     weakWarn: "слабый",
                     passRequired: "пароль обязателен",
+                    equalTo: "пароль совпадает с логином",
                     invalidPassWarn: "*",
                     weakTitle: "Пароль слабый, его легко взломать",
                     generateMsg: "Чтобы сгенерировать пароль, нажмите кнопку {}."
@@ -226,6 +232,7 @@
                     symbols: "cимволи",
                     inBlackList: "пароль входить до списку паролей, що використовуються найчастіше",
                     passRequired: "пароль є обов'язковим",
+                    equalTo: "TODO",
                     badChars: "пароль містить неприпустимі символи: «{}»",
                     weakWarn: "слабкий",
                     invalidPassWarn: "*",
@@ -249,6 +256,7 @@
                     symbols: "símbolos",
                     inBlackList: "la contraseña está en la lista de las contraseñas más usadas",
                     passRequired: "se requiere contraseña",
+                    equalTo: "la contraseña es igual al inicio de sesión",
                     badChars: "la contraseña contiene caracteres no permitidos: “{}”",
                     weakWarn: "débil",
                     invalidPassWarn: "*",
@@ -272,6 +280,7 @@
                     symbols: "σύμβολα",
                     inBlackList: "ο κωδικός πρόσβασης βρίσκεται σε κατάλογο δημοφιλέστερων κωδικών",
                     passRequired: "απαιτείται κωδικός πρόσβασης",
+                    equalTo: "ο κωδικός είναι όμοιος με το όνομα χρήστη",
                     badChars: "ο κωδικός περιέχει μη επιτρεπτούς χαρακτήρες: “{}”",
                     weakWarn: "αδύναμος",
                     invalidPassWarn: "*",
@@ -771,6 +780,13 @@
             if (_dom.placeholder) {
                 utils.attachEvent(_dom.placeholder, "onclick", handlePlaceholderClicked);
             }
+
+            if (_opts.nonMatchField) {
+                var el = getEl(_opts.nonMatchField);
+                if (el) {
+                    utils.attachEvent(el, "onkeyup", handleLoginChanged);
+                }
+            }
         }
 
         /**
@@ -904,6 +920,15 @@
                     }, 1500);
                 }
             }, 100);
+        }
+
+        /**
+         * Login changed in login field
+         */
+        function handleLoginChanged() {
+            if (_warningShown) {
+                validatePassword();
+            }
         }
 
         /**
@@ -1062,6 +1087,11 @@
                 });
                 if (isInBlackList) {
                     checkResult = { strength: 0, messages: [_locale.msg.inBlackList] };
+                }
+
+                // check equal to login
+                if (pass && pass === getNonMatchingFieldValue()) {
+                    checkResult = { strength: 0, messages: [_locale.msg.equalTo] };
                 }
             }
             // check: external (if present)
@@ -1262,6 +1292,19 @@
             _tipHtml = null;
             _warningShown = false;
             resizeControls();
+        }
+
+        /**
+         * Returns the value of field with which the password is compared
+         * @return {String} - field value or null if we don't need this
+         */
+        function getNonMatchingFieldValue() {
+            if (!_opts.nonMatchField)
+                return null;
+            var field = getEl(_opts.nonMatchField);
+            if (!field)
+                return null;
+            return field.value;
         }
 
         /**
@@ -1556,6 +1599,21 @@
         }
 
         /**
+         * Gets DOM element my ID or jQuery selector or DOM element
+         * @param el {object|string|jQuery} - element
+         * @returns {object} - DOM element
+         */
+        function getEl(el) {
+            if (typeof el === "string") {
+                return document.getElementById(el);
+            }
+            if (el.jquery) {
+                return el[0];
+            }
+            return el;
+        }
+
+        /**
          * Adds class to element
          * @param {object} el - element
          * @param {string} cls - class name
@@ -1636,6 +1694,8 @@
             utils.each(arg[i], function (key, value) {
                 if (utils.isArray(arg[0][key]) || utils.isArray(value)) {
                     arg[0][key] = arg[0][key] ? arg[0][key].concat(value || []) : value;
+                } else if (utils.isElement(value)) {
+                    arg[0][key] = value;
                 } else if (typeof arg[0][key] === "object" && typeof value === "object" && value !== null) {
                     arg[0][key] = utils.extend({}, arg[0][key], value);
                 } else if (typeof value === "object" && value !== null) {
@@ -1718,6 +1778,22 @@
      */
     utils.isArray = function(obj) {
         return Object.prototype.toString.call(obj) === '[object Array]';
+    };
+
+    /**
+     * Check whether the object is DOM element or jQuery object
+     * @param {object} obj - object to check
+     * @return {Boolean} - element or not.
+     */
+    utils.isElement = function(obj) {
+        if (!obj)
+            return false;
+        try {
+            return obj instanceof HTMLElement || $ && obj instanceof jQuery;
+        }
+        catch (err) {
+            return typeof obj === "object" && obj.nodeType || obj.jquery;
+        }
     };
 
     /**

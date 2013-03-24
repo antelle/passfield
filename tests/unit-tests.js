@@ -292,6 +292,33 @@ $(function() {
         ok(passInput.setPass(STRONG_PASS).validatePass(), "pass is valid and strong");
         ok(!getWarnMsg(), "pass msg not assigned");
     });
+    test("with login field by id", function() {
+        $('<input type="text" id="my-login" />').val(STRONG_PASS).appendTo("#qunit-fixture");
+        prepare({
+            nonMatchField: "my-login"
+        });
+        runBasicWorkFlow();
+        ok(!passInput.setPass(STRONG_PASS).validatePass(), "pass is not valid");
+        equal(getWarnMsg(), "This password is weak: password is equal to login.", "pass msg assigned");
+    });
+    test("with login field by element", function() {
+        var loginEl = $('<input type="text" id="my-login" />').val(STRONG_PASS).appendTo("#qunit-fixture")[0];
+        prepare({
+            nonMatchField: loginEl
+        });
+        runBasicWorkFlow();
+        ok(!passInput.setPass(STRONG_PASS).validatePass(), "pass is not valid");
+        equal(getWarnMsg(), "This password is weak: password is equal to login.", "pass msg assigned");
+    });
+    test("with login field by jQuery selector", function() {
+        var loginEl = $('<input type="text" id="my-login" />').val(STRONG_PASS).appendTo("#qunit-fixture");
+        prepare({
+            nonMatchField: loginEl
+        });
+        runBasicWorkFlow();
+        ok(!passInput.setPass(STRONG_PASS).validatePass(), "pass is not valid");
+        equal(getWarnMsg(), "This password is weak: password is equal to login.", "pass msg assigned");
+    });
     test("toggle pass masking", function() {
         prepare();
         runBasicWorkFlow();
