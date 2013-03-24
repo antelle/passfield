@@ -192,12 +192,14 @@ $("#mypass").passField({ validationCallback: validatePassword });</pre>
                     <h5><code id="events.generated">generated</code></h5>
                     <p>Triggered when the password is generated.</p>
                     <pre class="prettyprint language-js">$("#mypass").on("pass:generated", function(e, pass) {}); // jQuery
-$("#mypass").passField({ events: { generated: function(pass) {} } }); // no jQuery</pre>
+new PassField.Field("mypass", { /*options,*/ 
+    events: { generated: function(pass) {} } }); // no jQuery</pre>
 
                     <h5><code id="events.switched">switched</code></h5>
                     <p>Triggered when the password display mode is switched.</p>
                     <pre class="prettyprint language-js">$("#mypass").on("pass:switched", function(e, isMasked) {}); // jQuery
-$("#mypass").passField({ events: { switched: function(isMasked) {} } }); // no jQuery</pre>
+new PassField.Field("mypass", { /*options,*/ 
+    events: { switched: function(isMasked) {} } }); // no jQuery</pre>
 
                     <h4 id="ui-elements">UI Elements</h4>
                     <h5><code id="showToggle">showToggle</code></h5>
