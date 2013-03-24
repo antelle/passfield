@@ -87,6 +87,10 @@
                 letters: "abcdefghijklmnopqrstuvwxyzßабвгедёжзийклмнопрстуфхцчшщъыьэюяґєåäâáàãéèêëíìîїóòôõöüúùûýñçøåæþðαβγδεζηθικλμνξοπρσςτυφχψω",
                 letters_up: "ABCDEFGHIJKLMNOPQRSTUVWXYZАБВГЕДЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯҐЄÅÄÂÁÀÃÉÈÊËÍÌÎЇÓÒÔÕÖÜÚÙÛÝÑÇØÅÆÞÐΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ",
                 symbols: "@#$%^&*()-_=+[]{};:<>/?!"
+            },
+            events: {
+                generated: null,
+                switched: null
             }
         },
 
@@ -320,6 +324,7 @@
         var _tipHtml = null;
 
         var ELEMENTS_PREFIX = "a_pf-";
+        var JQUERY_EVENT_PREFIX = "pass:";
         var BUTTONS_PADDING_RIGHT = 5;
 
         // exports
@@ -910,6 +915,7 @@
             if (needFocus === undefined)
                 needFocus = true;
 
+            var eventHappened = isMasked != _isMasked;
             if (isMasked === undefined)
                 isMasked = !_isMasked;
             else
@@ -958,6 +964,10 @@
             _isMasked = isMasked;
             hideButtonsByPassLength();
             resizeControls();
+
+            if (eventHappened) {
+                triggerEvent("switched", _isMasked);
+            }
         }
 
         /**
@@ -1006,6 +1016,7 @@
             if (_dom.clearInput) {
                 _dom.clearInput.value = pass;
             }
+            triggerEvent("generated", pass);
             toggleMasking(false);
 
             if (_validateTimer) {
@@ -1578,6 +1589,24 @@
         function hasClass(el, cls, raw) {
             cls = " " + (raw === true ? cls : formatClass(cls)) + " ";
             return (" " + el.className + " ").replace(/[\n\t]/g, " ").indexOf(cls) > -1;
+        }
+
+        /**
+         * Triggers event
+         * Event is searched in opts.events.<event_name> and called if present
+         * If jQuery is present, jQuery event (pass:<event_name>) is also triggered
+         * @param {string} name - event name
+         * @param arg - event argument
+         */
+        function triggerEvent(name, arg) {
+            if ($) {
+                try { $(_dom.mainInput).trigger(JQUERY_EVENT_PREFIX + name, arg); }
+                catch (err) {}
+            }
+            if (_opts.events && typeof _opts.events[name] === "function") {
+                try { _opts.events[name].call(_dom.mainInput, arg); }
+                catch (err) {}
+            }
         }
 
         /**

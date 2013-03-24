@@ -328,7 +328,7 @@ $(function() {
         prepare({ showGenerate: false });
         triggerEvent(passInput[0], "focus");
         ok(!btnGen, "rand btn is not visible");
-        ok(btnMask && btnMask.is(":visible"), "mask btn is visible")
+        ok(btnMask && btnMask.is(":visible"), "mask btn is visible");
         runBasicWorkFlow();
     });
     test("disable rand and mask btns", function() {
@@ -404,6 +404,59 @@ $(function() {
         ok(btnMask.is(":visible"), "mask btn is visible again");
         ok(btnGen.is(":visible"), "mask btn is visible again");
         passInput.setPass("");
+        runBasicWorkFlow();
+    });
+    test("events are triggered", function() {
+        var evGeneratedSimple = [];
+        var evGeneratedJquery = [];
+        var evSwitchedSimple = [];
+        var evSwitchedJquery = [];
+        prepare({
+            events: {
+                generated: function(pass) { evGeneratedSimple.push(pass); },
+                switched: function(isMasked) { evSwitchedSimple.push(isMasked); }
+            }
+        });
+        passInput.on({
+            "pass:generated": function(e, pass) { evGeneratedJquery.push(pass); },
+            "pass:switched": function(e, isMasked) { evSwitchedJquery.push(isMasked); }
+        });
+
+        triggerEvent(passInput[0], "focus");
+        ok(btnGen && btnGen.is(":visible"), "rand btn is visible");
+        ok(btnMask && btnMask.is(":visible"), "mask btn is visible");
+
+        btnMask.click();
+
+        isMasked = false;
+        ok(getMainInput(), "mode switched to clear input");
+        equal(evSwitchedSimple.length, 1, "simple switched event is triggered");
+        equal(evSwitchedSimple[0], false, "simple switched event is valid");
+        equal(evSwitchedJquery.length, 1, "jQuery switched event is triggered");
+        equal(evSwitchedJquery[0], false, "jQuery switched event is valid");
+
+        btnGen.click();
+
+        equal(evGeneratedSimple.length, 1, "simple generated event is triggered");
+        equal(evGeneratedSimple[0], passInput.val(), "simple generated event is valid");
+        equal(evGeneratedJquery.length, 1, "jQuery generated event is triggered");
+        equal(evGeneratedJquery[0], passInput.val(), "jQuery generated event is valid");
+
+        passInput.setPass("");
+
+        runBasicWorkFlow();
+    });
+    test("error in events", function() {
+        prepare({
+            events: {
+                generated: function() { throw "error"; },
+                switched: function() { throw "error"; }
+            }
+        });
+        passInput.on({
+            "pass:generated": function() { throw "error"; },
+            "pass:switched": function() { throw "error"; }
+        });
         runBasicWorkFlow();
     });
 
@@ -570,7 +623,6 @@ $(function() {
         if (clearInput)
             equal(clearInput.val(), pass, "clear input value changed");
 
-        var curInput;
         if (btnMask) {
             var oldInputType = getMainInput().attr("type");
             isMasked = !isMasked;

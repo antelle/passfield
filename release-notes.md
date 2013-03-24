@@ -1,5 +1,9 @@
 Release notes
 -------------
+##### v1.1.3 (2013-03-24)
+Small new features  
+`+` events option introduced; `generated` and `switched` events are now triggered  
+
 ##### v1.1.2 (2013-03-18)
 Some improvements  
 `+` #6: now most letters from european alphabets are treated as letters  
