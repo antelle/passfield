@@ -123,10 +123,16 @@ function recreatePasswordField(settings) {
     });
 
     $("#mypass").passField(settings);
+    $("#mypass").on("pass:generated", function(e, pass) {
+        console.log("pass:generated pass=" + pass);
+    });
+    $("#mypass").on("pass:switched", function(e, isMasked) {
+        console.log("pass:switched isMasked=" + isMasked);
+    });
     refreshTimeout = setTimeout(function() {
         refreshTimeout = null;
         $("#mypass-wrap input:visible").focus();
-    }, 500)
+    }, 500);
 }
 
 function toJs(settings) {

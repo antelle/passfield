@@ -63,6 +63,7 @@
                             <li><a href="#options">Options</a></li>
                             <li class="subnav"><a href="#defaults">Defaults</a></li>
                             <li class="subnav"><a href="#validation">Validation</a></li>
+                            <li class="subnav"><a href="#events">Events</a></li>
                             <li class="subnav"><a href="#ui-elements">UI Elements</a></li>
                             <li><a href="#interface">Interface</a></li>
                             <li><a href="#compatibility">Compatibility</a></li>
@@ -106,7 +107,9 @@
                     <ul>
                         <li><em>length</em> &ndash; length percentage is calculated and subtracted from strength (e.g. password “123” has strength 0.75 with pattern “1234”);</li>
                         <li><em>symbols usage</em> &ndash; password “a1” consists of letters and digits; password “a1%” contains also symbols. If a pattern contains character type but password does not, password strength is decreased. So, if we have pattern “abc123”, password “abc” will be weak but password “b2” is strong (by this parameter). The number of characters of each type does not matter;</li>
-                        <li><em>black-list</em> &ndash; there's a list of commonly used passwords. If the password belongs to this list, its strength is considered to be 0 (e.g. password “querty”). Pass*Field has this list built-in but you can specify additional passwords in <code><a href="#blackList">blackList</a></code> parameter.</li>
+                        <li><em>black-list</em> &ndash; there's a list of commonly used passwords. If the password belongs to this list, its strength is considered to be 0 (e.g. password “querty”). Pass*Field has this list built-in but you can specify additional passwords in <code><a href="#blackList">blackList</a></code> parameter;</li>
+                        <li><em>characters</em> &ndash; if the password consist only of repeating character (like “11111” or “aaaaaa”), it will be considered weak;</li>
+                        <li><em>non-matching field</em> &ndash; if the password is equal to <code><a href="#nonMatchField">nonMatchField</a></code> field value (if any), it will be also considered weak.</li>
                     </ul>
                     <p><span class="label label-info">Please note:</span> default value for this parameter is 0.8; this means that a password with length a bit less than one of the pattern is considered ok. If this is not what you wish, you can change this rate to achieve more or less strict password checking. Passwords are always generated with rating = 1.</p>
                     <p>If you need more info, please refer to <code>calculateStrengthAndValidate</code> function.</p>
@@ -180,6 +183,21 @@ $("#mypass").passField({ validationCallback: validatePassword });</pre>
     letters: "abcdefghijklmnopqrstuvwxyzσβασ"
 }</pre>
                     <p>You can cpecify additional letters here but for password generation latin letters will be used if they are present in <code>chars.letters</code>.</p>
+
+                    <h5><code id="nonMatchField">nonMatchField</code></h5>
+                    <p>If you have login field, you can specify it here; if the password will be equal to login, error will be shown. You can pass login either element id, or element itself, or jQuery selector here.</p>
+
+                    <h4 id="events">Events</h4>
+                    <p>The following events are available:</p>
+                    <h5><code id="events.generated">generated</code></h5>
+                    <p>Triggered when the password is generated.</p>
+                    <pre class="prettyprint language-js">$("#mypass").on("pass:generated", function(e, pass) {}); // jQuery
+$("#mypass").passField({ events: { generated: function(pass) {} } }); // no jQuery</pre>
+
+                    <h5><code id="events.switched">switched</code></h5>
+                    <p>Triggered when the password display mode is switched.</p>
+                    <pre class="prettyprint language-js">$("#mypass").on("pass:switched", function(e, isMasked) {}); // jQuery
+$("#mypass").passField({ events: { switched: function(isMasked) {} } }); // no jQuery</pre>
 
                     <h4 id="ui-elements">UI Elements</h4>
                     <h5><code id="showToggle">showToggle</code></h5>
