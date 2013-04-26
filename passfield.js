@@ -295,6 +295,31 @@
                     weakTitle: "Αυτός ο κωδικός πρόσβασης είναι αδύναμος",
                     generateMsg: "Για να δημιουργήσετε δυνατό κωδικό πρόσβασης, κάντε κλικ στο κουμπί {}."
                 }
+            },
+            pt: {
+                lower: true,
+                msg: {
+                    pass: "senha",
+                    and: "e",
+                    showPass: "Mostrar senha",
+                    hidePass: "Ocultar senha",
+                    genPass: "Senha aleatória",
+                    passTooShort: "senha muito curta (tamanho mínimo: {})",
+                    noCharType: "Senha deve conter {}",
+                    digits: "dígito",
+                    letters: "letras",
+                    letters_up: "letters in UPPER case",
+                    symbols: "símbolos",
+                    inBlackList: "senha está na lista das senhas mais usadas",
+                    passRequired: "senha é obrigatória",
+                    equalTo: "senha igual ao login",
+                    repeat: "senha consiste em uma repetição de caracteres",
+                    badChars: "senha tem caracteres inválidos: “{}”",
+                    weakWarn: "fraca",
+                    invalidPassWarn: "*",
+                    weakTitle: "Esta senha é fraca",
+                    generateMsg: "Para gerar uma senha forte, clique no botão {}."
+                }
             }
         },
 
