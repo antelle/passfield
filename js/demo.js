@@ -18,7 +18,7 @@ var helpMsgs = {
     blackList: "You can specify list of unwanted passwords in <code>blackList</code> parameter. User will see a warning that it's not the best idea to use this password. " +
         "By default, the list of top passwords is provided but can add additional items here.",
     locale: "All messages used in Pass*Field are defined in locales. You can select locale using <code>locale</code> parameter (2-letter ISO code, e.g. “en”). " +
-        "By default (if you pass null or empty) the locale is read from browser settings but you can specify certain locale here. If the locale is not found, neutral language (English) will be used. Supported: en, de, fr, it, ru, ua, es, el."
+        "By default (if you pass null or empty) the locale is read from browser settings but you can specify certain locale here. If the locale is not found, neutral language (English) will be used. Supported: en, de, fr, it, ru, ua, es, el, pt."
 };
 var oldSettings = "(none)";
 
