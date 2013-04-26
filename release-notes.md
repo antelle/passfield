@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### v1.1.4 (2013-04-26)
+New locale  
+`+` #11: added pt locale (thanks to gimoteco)  
 ##### v1.1.3 (2013-03-24)
 Small new features  
 `+` events option introduced; `generated` and `switched` events are now triggered  
