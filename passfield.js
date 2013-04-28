@@ -308,7 +308,7 @@
                     noCharType: "Senha deve conter {}",
                     digits: "dígito",
                     letters: "letras",
-                    letters_up: "letters in UPPER case",
+                    letters_up: "letras maiúsculas",
                     symbols: "símbolos",
                     inBlackList: "senha está na lista das senhas mais usadas",
                     passRequired: "senha é obrigatória",
