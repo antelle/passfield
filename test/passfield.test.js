@@ -4,6 +4,15 @@
 $(function() {
     "use strict";
 
+    module("Main tests", {
+        setup: function() {
+            if (!$("#qunit-fixture").length)
+                $("<div id='qunit-fixture' style='position:absolute;width:1000px;height:1000px;left:-10000px;top:-10000px;'></div>").appendTo("body");
+            $("#qunit-fixture")
+                .html("");
+        }
+    });
+
     // ========================== declarations ==========================
 
     var fixture,

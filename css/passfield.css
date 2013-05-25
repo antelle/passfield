@@ -39,7 +39,7 @@
 }
 .a_pf-wrap .a_pf-btn-gen-i, .a_pf-wrap .a_pf-btn-gen-help {
     height: 16px;
-    background: url(rand.png) center -16px no-repeat;
+    background: url(../img/rand.png) center -16px no-repeat;
 }
 .a_pf-wrap .a_pf-btn-gen-i:hover {
     background-position: center 0;
@@ -52,7 +52,7 @@ only screen and (        min-device-pixel-ratio: 2),
 only screen and (                min-resolution: 192dpi),
 only screen and (                min-resolution: 2dppx) {
     .a_pf-wrap .a_pf-btn-gen-i, .a_pf-wrap .a_pf-btn-gen-help {
-        background-image: url(rand@2x.png);
+        background-image: url(../img/rand@2x.png);
         background-size: 16px;
     }
 }

@@ -27,9 +27,9 @@
         }
     ],
     "bugs": "https://github.com/antelle/passfield/issues",
-    "homepage": "http://antelle.github.com/passfield/",
-    "docs": "http://antelle.github.com/passfield/api.html",
-    "download": "http://antelle.github.com/passfield/download.html",
+    "homepage": "http://antelle.github.io/passfield/",
+    "docs": "http://antelle.github.io/passfield/api.html",
+    "download": "http://antelle.github.io/passfield/download.html",
     "dependencies": {
         "jquery": ">=1.5"
     }

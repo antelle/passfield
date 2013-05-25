@@ -1,0 +1,19 @@
+server: http://localhost:9876
+
+load:
+ - lib/qunit/equiv.js
+ - lib/qunit/QUnitAdapter.js
+ - lib/jquery/jquery-1.9.1.min.js
+ - lib/jquery-simulate/jquery.simulate.js
+ - lib/jquery-simulate/bililiteRange.js
+ - lib/jquery-simulate/jquery.simulate.key-sequence.js
+ - lib/jquery-validation-1.11.0/dist/jquery.validate.min.js
+ - js/*.js
+
+test:
+ - test/*.js
+
+serve:
+ - css/*.css
+
+timeout: 90

@@ -1,5 +1,9 @@
 Release notes
 -------------
+##### v1.1.5 (unreleased yet)
+Dircectories restructured  
+`*` directories changed; please note: images are not in `img` dir  
+
 ##### v1.1.4 (2013-04-26)
 New locale  
 `+` #11: added pt locale (thanks to gimoteco)  
