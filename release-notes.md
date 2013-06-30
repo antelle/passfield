@@ -1,8 +1,9 @@
 Release notes
 -------------
-##### v1.1.5 (unreleased yet)
+##### v1.1.5 (2013-06-30)
 Dircectories restructured  
-`*` directories changed; please note: images are not in `img` dir  
+`*` directories changed; please note: images are now in `img` dir  
+`-` #12: backspace or delete doesn't invalidate password  
 
 ##### v1.1.4 (2013-04-26)
 New locale  

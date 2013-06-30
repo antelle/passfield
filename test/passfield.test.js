@@ -258,12 +258,25 @@ $(function() {
         ok(passInput.setPass("a@3!").validatePass(), "short pass with extra symbols is valid");
         equal(passFieldObj.getPassStrength(), 1, "short pass with extra symbols is valid");
     });
-    test("character repetitions wtrength", function () {
+    test("character repetitions strength", function () {
         prepare({ pattern: "abcd", acceptRate: 0.1 });
         runBasicWorkFlow();
         ok(!passInput.setPass("aaaaaaaaaaaaaaa").validatePass(), "pass is not valid");
         equal(passFieldObj.getPassStrength(), 0, "pass is weak");
         equal(getWarnMsg(), "This password is weak: password consists of repeating characters.", "pass msg is assigned");
+    });
+    test("immediate validation on char deleting", function () {
+        prepare({ pattern: "abcd", acceptRate: 1 });
+        runBasicWorkFlow();
+        var delKeys = ["{backspace}", "{del}"];
+        for (var ix in delKeys) {
+            var delKey = delKeys[ix];
+            ok(passInput.setPass("abcd").validatePass(), "pass is valid");
+            getMainInput().simulate("key-sequence", { sequence: delKey });
+            equal(passInput.val(), "abc", "last symbol is deleted");
+            equal(getWarnMsg(), "This password is weak: password is too short (min. length: 4).", "pass msg is assigned after " + delKey + " key");
+            ok(!passInput.validatePass(), "pass is not valid");
+        }
     });
     test("custom validation", function() {
         var valReturn = null;

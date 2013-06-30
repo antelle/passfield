@@ -141,6 +141,8 @@
         var ELEMENTS_PREFIX = "a_pf-";
         var JQUERY_EVENT_PREFIX = "pass:";
         var BUTTONS_PADDING_RIGHT = 5;
+        var KEY_DELETE = 46;
+        var KEY_BACKSPACE = 8;
 
         // exports
         this.toggleMasking = function(isMasked) { toggleMasking(isMasked); };
@@ -618,8 +620,11 @@
 
         /**
          * Input received keyup
+         * @param {Event} [e] - event
          */
-        function handleInputKeyup() {
+        function handleInputKeyup(e) {
+            var keyCode = e ? e.which || e.keyCode : null;
+            var isDelete = keyCode === KEY_BACKSPACE || keyCode === KEY_DELETE;
             var val;
             if (_dom.clearInput) {
                 if (_isMasked) {
@@ -630,7 +635,7 @@
             } else {
                 val = _dom.mainInput.value;
             }
-            if (_opts.strengthCheckTimeout > 0 && !_warningShown) {
+            if (_opts.strengthCheckTimeout > 0 && !_warningShown && !isDelete) {
                 if (_validateTimer) {
                     clearTimeout(_validateTimer);
                 }
