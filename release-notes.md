@@ -1,5 +1,9 @@
 Release notes
 -------------
+##### v1.1.6 (2013-07-14)
+Bugfix release  
+`-` #13: JQuery validation extension does not work correctly  
+
 ##### v1.1.5 (2013-06-30)
 Dircectories restructured  
 `*` directories changed; please note: images are now in `img` dir  

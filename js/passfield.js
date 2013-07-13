@@ -1745,7 +1745,7 @@
 
     if ($ && $.validator) {
         jQuery.validator.addMethod("passfield", function(val, el) {
-            $(el).validatePass(); // this will set validation message
+            return $(el).validatePass(); // this will set validation message
         }, function(val, el) { return $(el).getPassValidationMessage(); });
     }
 })(window.jQuery, document, window);
