@@ -1,5 +1,10 @@
 Release notes
 -------------
+##### v1.1.7 (2013-08-30)
+New Bootstrap version support  
+`-` #14: Bootstrap 3.0 support  
+
+-------------
 ##### v1.1.6 (2013-07-14)
 Bugfix release  
 `-` #13: JQuery validation extension does not work correctly  

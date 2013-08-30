@@ -478,7 +478,7 @@
             } else {
                 if (_warningShown && _isInputFocused) {
                     if (!_bootstrapPopoverShownText || (_tipHtml != _bootstrapPopoverShownText)) {
-                        var data = $(_dom.mainInput).data("popover");
+                        var data = $(_dom.mainInput).data("popover") || $(_dom.mainInput).data("bs.popover");
                         var opts = data.options;
                         var animationBackup = opts.animation;
                         if (_bootstrapPopoverShownText)
