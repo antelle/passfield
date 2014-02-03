@@ -138,7 +138,8 @@ function recreatePasswordField(settings) {
 function toJs(settings) {
     var settingsText = "";
     if (settings) {
-        settingsText += "{\n";
+        settingsText += "{";
+        var isFirst = true;
         $.each(settings, function (k, v) {
             var hasValue = true;
             if ($.isArray(v)) {
@@ -154,10 +155,11 @@ function toJs(settings) {
                 hasValue = false;
             }
             if (hasValue) {
-                settingsText += "    " + k + ": " + v + "\n";
+                settingsText += (isFirst ? "" : ",") + "\n    " + k + ": " + v;
+                isFirst = false;
             }
         });
-        settingsText += "}";
+        settingsText += "\n}";
         if (settingsText == "{\n}")
             settingsText = "";
     }
