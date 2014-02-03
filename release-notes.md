@@ -3,6 +3,7 @@ Release notes
 ##### v1.1.8 (2014-02-03)
 Bugfix release  
 `-` isMasked is ignored if showToggle is on  
+`+` API to set minimum and maximum length: `length` property  
 
 -------------
 ##### v1.1.7 (2013-08-30)

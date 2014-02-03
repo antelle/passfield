@@ -91,7 +91,11 @@
                 generated: null,
                 switched: null
             },
-            nonMatchField: null // login field (to compare password with - should not be equal)
+            nonMatchField: null, // login field (to compare password with - should not be equal)
+            length: { // strict length checking rules
+                min: null,
+                max: null
+            }
         },
 
         locales: PassField.Config ? PassField.Config.locales : {}, // locales are defined in locales.js
@@ -245,6 +249,7 @@
             mainInputRect.top += cssFloat(_dom.mainInput, "marginTop");
 
             setupWrapper();
+            setInputAttrs();
             createClearInput();
             createWarnLabel();
             createMaskBtn();
@@ -268,6 +273,14 @@
             if (css(_dom.wrapper, "position") == "static") {
                 _dom.wrapper.style.position = "relative";
             }
+        }
+
+        /**
+         * Assigns attributes (from options) to the input field
+         */
+        function setInputAttrs() {
+            if (_opts.length && _opts.length.max)
+                _dom.mainInput.setAttribute("maxLength", _opts.length.max.toString());
         }
 
         /**
@@ -990,10 +1003,16 @@
                 strength += extraCharTypesCount / charTypesPatternCount;
             }
 
-            var lengthRatio = pass.length / _opts.pattern.length - 1;
+            var minPassLength = _opts.pattern.length;
+            var lengthRatio = pass.length / minPassLength - 1;
+            if (_opts.length && _opts.length.min && pass.length < _opts.length.min) {
+                lengthRatio = -10;
+                if (_opts.length.min > minPassLength)
+                    minPassLength = _opts.length.min;
+            }
             if (lengthRatio < 0) {
                 strength += lengthRatio;
-                messages.push(_locale.msg.passTooShort.replace("{}", _opts.pattern.length.toString()));
+                messages.push(_locale.msg.passTooShort.replace("{}", minPassLength.toString()));
             } else {
                 if (_opts.checkMode == PassField.CheckModes.MODERATE) {
                     strength += lengthRatio / charTypesPatternCount;

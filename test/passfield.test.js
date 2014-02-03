@@ -258,6 +258,21 @@ $(function() {
         ok(passInput.setPass("a@3!").validatePass(), "short pass with extra symbols is valid");
         equal(passFieldObj.getPassStrength(), 1, "short pass with extra symbols is valid");
     });
+    test("long pass with strict min length checking in moderate mode", function () {
+        prepare({ pattern: "abcd1234", acceptRate: 0.5, length: { min: 7 } });
+        runBasicWorkFlow();
+        ok(!passInput.setPass("a@3!").validatePass(), "short pass with extra symbols is not valid");
+        equal(passFieldObj.getPassStrength(), 0, "short pass with extra symbols is not valid");
+        ok(!passInput.setPass("aBc12#").validatePass(), "short pass is not valid");
+        equal(passFieldObj.getPassStrength(), 0, "short pass is not valid");
+        equal(getWarnMsg(), "This password is weak: password is too short (min. length: 8).", "correct length is generated in error");
+        ok(passInput.setPass("abcd123").validatePass(), "minlength pass is valid");
+        equal(passFieldObj.getPassStrength(), 0.875, "minlength pass is valid");
+        ok(passInput.setPass("abcd1234").validatePass(), "long pass is valid");
+        equal(passFieldObj.getPassStrength(), 1, "long pass is valid");
+        ok(passInput.setPass("abcdefghijklmnop").validatePass(), "longer pass is valid");
+        equal(passFieldObj.getPassStrength(), 1, "longer pass is valid");
+    });
     test("character repetitions strength", function () {
         prepare({ pattern: "abcd", acceptRate: 0.1 });
         runBasicWorkFlow();
@@ -447,6 +462,10 @@ $(function() {
         ok(btnMask.is(":visible"), "mask btn is visible");
         runBasicWorkFlow();
     });
+    test("max length is set", function() {
+        prepare({ length: { max: 10 } });
+        runBasicWorkFlow();
+    });
     test("buttons are hidden when the pass is long", function() {
         prepare();
         passInput.setPass("***");
@@ -549,8 +568,8 @@ $(function() {
         ok(passFieldObj, "PassField object created");
 
         checkWrap(testOptions.wrapAttr, testOptions.inputAttr);
-        checkPassInput(testOptions.inputAttr);
-        checkClearInput(testOptions.inputAttr);
+        checkPassInput(testOptions.inputAttr, options && options.length && options.length.max || null);
+        checkClearInput(testOptions.inputAttr, options && options.length && options.length.max || null);
         checkBtnGen(options, testOptions.inputAttr);
         checkBtnMask(options, testOptions.inputAttr);
         checkMsgWarn(options);
@@ -567,17 +586,17 @@ $(function() {
             ok(!wrap.attr("id"), "wrap has not been assigned any id");
     }
 
-    function checkPassInput(inputAttr) {
+    function checkPassInput(inputAttr, maxlength) {
         ok(passInput, "password input found");
         equal(passInput.attr("class"), addPrefix("txt-pass"), "class assigned to pass input");
         if (inputAttr.placeholder && supportsPlaceholders)
             equal(passInput.attr("placeholder"), inputAttr.placeholder, "placeholder assigned to pass input");
         if (inputAttr.maxlength)
-            equal(passInput.attr("maxlength"), inputAttr.maxlength, "maxlength assigned to pass input");
+            equal(passInput.attr("maxlength"), maxlength || inputAttr.maxlength, "maxlength assigned to pass input");
         ok(passInput.attr("id"), "pass input has id");
     }
 
-    function checkClearInput(inputAttr) {
+    function checkClearInput(inputAttr, maxlength) {
         clearInput = $("input[type=text]", wrap);
         if (!clearInput.length || clearInput.attr("id") == passInput.attr("id")) {
             clearInput = null;
@@ -588,7 +607,7 @@ $(function() {
         if (inputAttr.placeholder && supportsPlaceholders)
             equal(clearInput.attr("placeholder"), inputAttr.placeholder, "placeholder assigned to clear input");
         if (inputAttr.maxlength)
-            equal(clearInput.attr("maxlength"), inputAttr.maxlength, "maxlength assigned to clear input");
+            equal(clearInput.attr("maxlength"), maxlength || inputAttr.maxlength, "maxlength assigned to clear input");
         ok(clearInput.attr("id"), "clear input has id");
     }
 
