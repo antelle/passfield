@@ -187,6 +187,11 @@ $("#mypass").passField({ validationCallback: validatePassword });</pre>
                     <h5><code id="nonMatchField">nonMatchField</code></h5>
                     <p>If you have a login field on your page, you can specify it here; if the password is equal to login, error will be shown. You can pass either element id, or element itself, or jQuery selector here.</p>
 
+
+                    <h5><code id="length">length</code></h5>
+                    <p>Enables strict password length checks. Even in moderate validation mode, password length must be between <code>length.min</code> and <code>length.max</code> (input field maxlength will be also changed if this option is set). You can specify either only min, or only max, or both.</p>
+                    <pre class="prettyprint language-js">length: { min: 8, max: 16 }</pre>
+
                     <h4 id="events">Events</h4>
                     <p>The following events are available:</p>
                     <h5><code id="events.generated">generated</code></h5>
