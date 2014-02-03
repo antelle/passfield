@@ -177,8 +177,6 @@
          * Fills blackList
          */
         function fixErrorsAndFillOptions() {
-            if (_opts.showGenerate && !_opts.showToggle)
-                _opts.isMasked = false; // cannot generate hidden passwords
             _opts.blackList = (_opts.blackList || []).concat(PassField.Config.blackList);
         }
 

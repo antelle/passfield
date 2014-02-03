@@ -1,5 +1,10 @@
 Release notes
 -------------
+##### v1.1.8 (2014-02-03)
+Bugfix release  
+`-` isMasked is ignored if showToggle is on  
+
+-------------
 ##### v1.1.7 (2013-08-30)
 New Bootstrap version support  
 `-` #14: Bootstrap 3.0 support  

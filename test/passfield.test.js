@@ -396,7 +396,7 @@ $(function() {
     test("disable mask btn but enable rand btn", function() {
         prepare({ showGenerate: true, showToggle: false });
         triggerEvent(passInput[0], "focus");
-        isMasked = false;
+        isMasked = true;
         ok(getMainInput(), "mode switched to clear input");
         ok(!btnMask, "mask btn is not visible");
         ok(btnGen && btnGen.is(":visible"), "rand btn is visible");
