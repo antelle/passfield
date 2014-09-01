@@ -95,7 +95,15 @@
             length: { // strict length checking rules
                 min: null,
                 max: null
+            },
+            maskBtn : {
+                textMasked : "abc",
+                textUnmasked: "&bull;&bull;&bull;",
+                className: false,
+                classMasked: false,
+                classUnmasked: false
             }
+
         },
 
         locales: PassField.Config ? PassField.Config.locales : {}, // locales are defined in locales.js
@@ -331,7 +339,13 @@
                 _dom.maskBtn = newEl("div", { id: "btn-mask", className: "btn-mask", title: _locale.msg.showPass },
                     { position: "absolute", margin: "0", padding: "0" });
                 addClass(_dom.maskBtn, "btn");
-                setHtml(_dom.maskBtn, "abc");
+                if (_opts.maskBtn.className) {
+                    addClass(_dom.maskBtn, _opts.maskBtn.className, true);
+                }
+                if (_opts.maskBtn.classMasked) {
+                    addClass(_dom.maskBtn, _opts.maskBtn.classMasked, true);
+                }
+                setHtml(_dom.maskBtn, _opts.maskBtn.textMasked);
                 insertAfter(_dom.mainInput, _dom.maskBtn);
             }
         }
@@ -804,7 +818,18 @@
                 }
             }
             if (_dom.maskBtn) {
-                setHtml(_dom.maskBtn, isMasked ? "abc" : "&bull;&bull;&bull;");
+                setHtml(_dom.maskBtn, isMasked ? _opts.maskBtn.textMasked : _opts.maskBtn.textUnmasked);
+                if (isMasked) {
+                    if (_opts.maskBtn.classUnmasked)
+                        removeClass(_dom.maskBtn, _opts.maskBtn.classUnmasked, true);
+                    if (_opts.maskBtn.classMasked)
+                        addClass(_dom.maskBtn, _opts.maskBtn.classMasked, true);
+                } else {
+                    if (_opts.maskBtn.classMasked)
+                        removeClass(_dom.maskBtn, _opts.maskBtn.classMasked, true);
+                    if (_opts.maskBtn.classUnmasked)
+                        addClass(_dom.maskBtn, _opts.maskBtn.classUnmasked, true);
+                }
                 _dom.maskBtn.title = isMasked ? _locale.msg.showPass : _locale.msg.hidePass;
             }
 
