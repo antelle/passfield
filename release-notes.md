@@ -1,5 +1,10 @@
 Release notes
 -------------
+##### v1.1.9 (2014-09-01)
+New feature  
+`+` ability to customize mask button (thanks to siberex)  
+
+-------------
 ##### v1.1.8 (2014-02-03)
 Bugfix release  
 `-` isMasked is ignored if showToggle is on  
