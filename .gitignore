@@ -1,3 +1,5 @@
 .idea/workspace.xml
 .DS_Store
+.site/
 node_modules/
+dist/

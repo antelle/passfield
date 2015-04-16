@@ -1,0 +1,30 @@
+{
+  "name": "passfield",
+  "version": "1.1.9",
+  "homepage": "https://github.com/antelle/passfield",
+  "authors": [
+    "Antelle <dmitryvit@gmail.com>"
+  ],
+  "description": "Advanced javascript password field",
+  "main": "dist/js/passfield.min.js",
+  "moduleType": [
+    "amd"
+  ],
+  "keywords": [
+    "password",
+    "input",
+    "form"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "lib",
+    "tests",
+    "Gruntfile.js",
+    "jsTestDriver.jstd",
+    "package.jquery.json"
+  ]
+}
