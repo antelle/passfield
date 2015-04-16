@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### v1.1.10 (2015-04-16)
+Bower package
+
 ##### v1.1.9 (2014-09-01)
 New feature  
 `+` ability to customize mask button (thanks to siberex)  
