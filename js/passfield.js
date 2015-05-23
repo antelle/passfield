@@ -1,129 +1,4 @@
-/**
- * @license Pass*Field | (c) 2013 Antelle | https://github.com/antelle/passfield/blob/master/MIT-LICENSE.txt
- */
-
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-/**
- * Entry point
- * Initializes PassField
- * If jQuery is present, sets jQuery plugin ($.passField)
- */
-(function($, document, window, undefined) {
-    "use strict";
-
-    // ========================== definitions ==========================
-
-    var PassField = window.PassField = window.PassField || {};
-
-    /**
-     * Password char types
-     * @readonly
-     * @enum {string}
-     */
-    PassField.CharTypes = {
-        DIGIT: "digits",
-        LETTER: "letters",
-        LETTER_UP: "letters_up",
-        SYMBOL: "symbols",
-        UNKNOWN: "unknown"
-    };
-
-    /**
-     * Password checking mode
-     * @readonly
-     * @enum {number}
-     */
-    PassField.CheckModes = {
-        /** more user friendly: if a password is better than the pattern (e.g. longer), its strength is increased and it could match even not containing all char types */
-        MODERATE: 0,
-        /** more strict: it a password is longer than expected length, this makes no difference; all rules must be satisfied */
-        STRICT: 1
-    };
-
-    // ========================== defaults ==========================
-
-    PassField.Config = {
-        defaults: {
-            pattern: "abcdef12", // pattern for password (for strength calculation)
-            acceptRate: 0.8, // threshold (of strength conformity with pattern) under which the password is considered weak
-            allowEmpty: true, // allow empty password (will show validation errors if not)
-            isMasked: true, // is the password masked by default 
-            showToggle: true, // show toggle password masking button
-            showGenerate: true, // show generation button
-            showWarn: true, // show short password validation warning
-            showTip: true, // show password validation tooltips
-            tipPopoverStyle: {}, // if tooltip is shown and Twitter Bootstrap is present, this style will be used. null = use own tips, {} = bootstrap tip options
-            strengthCheckTimeout: 500, // timeout before automatic strength checking if no key is pressed (in ms; 0 = disable this feature)
-            validationCallback: null, // function which will be called when password strength is validated
-            blackList: [], // well-known bad passwords (very weak), e.g. qwerty or 12345
-            locale: "", // selected locale (null to auto-detect)
-            localeMsg: {}, // overriden locale messages
-            warnMsgClassName: "help-inline", // class name added to the waring control (empty or null to disable the feature)
-            errorWrapClassName: "error", // class name added to wrapping control when validation fails (empty or null to disable the feature)
-            allowAnyChars: true, // suppress validation errors if password contains characters not from list (chars param)
-            checkMode: PassField.CheckModes.MODERATE, // password checking mode (how the strength is calculated)
-            chars: {
-                // symbol sequences for generation and checking
-                digits: "1234567890",
-                letters: "abcdefghijklmnopqrstuvwxyzßабвгедёжзийклмнопрстуфхцчшщъыьэюяґєåäâáàãéèêëíìîїóòôõöüúùûýñçøåæþðαβγδεζηθικλμνξοπρσςτυφχψω",
-                letters_up: "ABCDEFGHIJKLMNOPQRSTUVWXYZАБВГЕДЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯҐЄÅÄÂÁÀÃÉÈÊËÍÌÎЇÓÒÔÕÖÜÚÙÛÝÑÇØÅÆÞÐΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ",
-                symbols: "@#$%^&*()-_=+[]{};:<>/?!"
-            },
-            events: {
-                generated: null,
-                switched: null
-            },
-            nonMatchField: null, // login field (to compare password with - should not be equal)
-            length: { // strict length checking rules
-                min: null,
-                max: null
-            },
-            maskBtn : {
-                textMasked : "abc",
-                textUnmasked: "&bull;&bull;&bull;",
-                className: false,
-                classMasked: false,
-                classUnmasked: false
-            }
-
-        },
-
-        locales: PassField.Config ? PassField.Config.locales : {}, // locales are defined in locales.js
-
-        blackList: [
-            "password", "123456", "12345678", "abc123", "qwerty", "monkey", "letmein", "dragon", "111111", "baseball",
-            "iloveyou", "trustno1", "1234567", "sunshine", "master", "123123", "welcome", "shadow", "ashley", "football",
-            "jesus", "michael", "ninja", "mustang", "password1", "p@ssw0rd", "miss", "root", "secret"
-        ],
-
-        generationChars: {
-            digits: "1234567890",
-            letters: "abcdefghijklmnopqrstuvwxyz",
-            letters_up: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        },
-
-        dataAttr: "PassField.Field"
-    };
-
-    // ========================== initialization ==========================
+// ========================== initialization ==========================
 
     /**
      * Encapsulates PassField logic
@@ -131,6 +6,7 @@
      * @param {object} [opts] - options to override defaults
      */
     PassField.Field = function(el, opts) {
+        "use strict";
         var _conf = PassField.Config;
         var _dom = {};
         var _opts = utils.extend({}, _conf.defaults, opts);
@@ -155,6 +31,11 @@
         var BUTTONS_PADDING_RIGHT = 5;
         var KEY_DELETE = 46;
         var KEY_BACKSPACE = 8;
+
+        // added for bootstrap 3 compatibility with input-groups
+
+        var _is_input_group = false;
+        var BOOTSTRAP_INPUT_GROUP_CLASS = "input-group";
 
         // exports
         this.toggleMasking = function(isMasked) { toggleMasking(isMasked); };
@@ -201,11 +82,14 @@
                 el = document.getElementById(el);
             }
             _dom.mainInput = el;
+            if(hasClass(el.parentNode, BOOTSTRAP_INPUT_GROUP_CLASS, true)) {
+                _is_input_group = true;
+            }
             return !!_dom.mainInput;
         }
 
         /**
-         * Fills _locale from setting defined in _opts 
+         * Fills _locale from setting defined in _opts
          * Locale will be merged from default locale and user-defined messages
          */
         function setLocale() {
@@ -313,7 +197,7 @@
                         _dom.clearInput.setAttribute(attr, value);
                     }
                 });
-                insertAfter(_dom.mainInput, _dom.clearInput);
+                insertBefore(_dom.mainInput, _dom.clearInput);
             }
             addClass(_dom.mainInput, "txt-pass");
         }
@@ -323,11 +207,14 @@
          */
         function createWarnLabel() {
             if (_opts.showWarn) {
-                _dom.warnMsg = newEl("div", { id: "warn", className: "warn" },
-                    { margin: "0 0 0 3px" });
+                _dom.warnMsg = newEl("p", { id: "warn", className: "warn" }, "");
                 if (_opts.warnMsgClassName)
                     addClass(_dom.warnMsg, _opts.warnMsgClassName, true);
-                insertAfter(_dom.clearInput || _dom.mainInput, _dom.warnMsg);
+                if(_is_input_group === true) {
+                    insertAfterParent(_dom.clearInput || _dom.mainInput, _dom.warnMsg);
+                } else {
+                    insertAfter(_dom.clearInput || _dom.mainInput, _dom.warnMsg);
+                }
             }
         }
 
@@ -346,7 +233,7 @@
                     addClass(_dom.maskBtn, _opts.maskBtn.classMasked, true);
                 }
                 setHtml(_dom.maskBtn, _opts.maskBtn.textMasked);
-                insertAfter(_dom.mainInput, _dom.maskBtn);
+                insertBefore(_dom.mainInput, _dom.maskBtn);
             }
         }
 
@@ -358,7 +245,7 @@
                 _dom.genBtn = newEl("div", { id: "btn-gen", className: "btn-gen", title: _locale.msg.genPass },
                     { position: "absolute", margin: "0", padding: "0" });
                 addClass(_dom.genBtn, "btn");
-                insertAfter(_dom.mainInput, _dom.genBtn);
+                insertBefore(_dom.mainInput, _dom.genBtn);
 
                 _dom.genBtnInner = newEl("div", { id: "btn-gen-i", className: "btn-gen-i", title: _locale.msg.genPass });
                 _dom.genBtn.appendChild(_dom.genBtnInner);
@@ -394,7 +281,7 @@
                     // not using Twitter Bootstrap
                     _dom.tip = newEl("div", { id: "tip", className: "tip" },
                         { position: "absolute", margin: "0", padding: "0", width: mainInputRect.width + "px" });
-                    insertAfter(_dom.mainInput, _dom.tip);
+                    insertBefore(_dom.mainInput, _dom.tip);
 
                     var arrWrap = newEl("div", { id: "tip-arr-wrap", className: "tip-arr-wrap" });
                     _dom.tip.appendChild(arrWrap);
@@ -418,7 +305,7 @@
                     _dom.placeholder = newEl("div", { id: "placeholder", className: "placeholder" },
                         { position: "absolute", margin: "0", padding: "0", height: mainInputRect.height + "px", lineHeight: mainInputRect.height + "px" });
                     setHtml(_dom.placeholder, placeholderText);
-                    insertAfter(_dom.mainInput, _dom.placeholder);
+                    insertBefore(_dom.mainInput, _dom.placeholder);
                 }
             } else if (!_dom.mainInput.getAttribute("placeholder") && _dom.mainInput.getAttribute("data-placeholder")) {
                 _dom.mainInput.setAttribute("placeholder", _dom.mainInput.getAttribute("data-placeholder"));
@@ -433,7 +320,7 @@
                 _dom.passLengthChecker = newEl("div", { id: "len" },
                     { position: "absolute", height: css(_dom.mainInput, "height"),
                         top: "-10000px", left: "-10000px", display: "block", color: "transparent", border: "none" });
-                insertAfter(_dom.mainInput, _dom.passLengthChecker);
+                insertBefore(_dom.mainInput, _dom.passLengthChecker);
                 setTimeout(function() {
                     utils.each(["marginLeft", "fontFamily", "fontSize", "fontWeight", "fontStyle", "fontVariant"], function(attr) {
                         var value = css(_dom.mainInput, attr);
@@ -872,8 +759,7 @@
          * If the element has autofocus attribute, we'll check it and focus if necessary
          */
         function doAutofocus() {
-            if (typeof _dom.mainInput.hasAttribute === "function" && _dom.mainInput.hasAttribute("autofocus")
-                || _dom.mainInput.getAttribute("autofocus")) {
+            if (typeof _dom.mainInput.hasAttribute === "function" && _dom.mainInput.hasAttribute("autofocus") || _dom.mainInput.getAttribute("autofocus")) {
                 _dom.mainInput.focus();
                 handleInputFocus();
             }
@@ -914,7 +800,7 @@
             var pass = getActiveInput().value;
             var checkResult = calculateStrength(pass);
 
-            if (pass.length == 0) {
+            if (pass.length === 0) {
                 checkResult = { strength: _opts.allowEmpty ? 0 : null, messages: [_locale.msg.passRequired] };
             } else {
                 // check: contains bad chars
@@ -1448,6 +1334,26 @@
         }
 
         /**
+         * Inserts DOM node before another
+         * @param {Object} target - target node
+         * @param {Node} el - new node
+         */
+        function insertBefore(target, el) {
+            if (target.parentNode)
+                target.parentNode.insertBefore(el, target);
+        }
+
+        /**
+         * Inserts DOM node after another
+         * @param {Object} target - target node
+         * @param {Node} el - new node
+         */
+        function insertAfterParent(target, el) {
+            if (target.parentNode)
+                insertAfter(target.parentNode, el);
+        }
+
+        /**
          * Sets innerHTML in element
          * @param {Object} el - DOM element
          * @param {String} html - HTML to set
@@ -1708,7 +1614,7 @@
             });
         };
 
-        
+
         /**
          * Toggles masking state
          * @param  {Boolean} [isMasked] - should we display the password masked (undefined or null = change masking)
