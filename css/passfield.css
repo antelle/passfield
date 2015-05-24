@@ -72,6 +72,9 @@ only screen and (                min-resolution: 2dppx) {
     display: inline-block;
     margin: 0;
 }
+.a_pf-warn.a_pf-empty {
+    display: none;
+}
 .a_pf-wrap.a_pf-wrap-no-ib .a_pf-warn { display: inline; padding-bottom: 2px; }
 
 /* tooltip */

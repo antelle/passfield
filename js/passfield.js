@@ -76,7 +76,7 @@
             blackList: [], // well-known bad passwords (very weak), e.g. qwerty or 12345
             locale: "", // selected locale (null to auto-detect)
             localeMsg: {}, // overriden locale messages
-            warnMsgClassName: "help-inline", // class name added to the waring control (empty or null to disable the feature)
+            warnMsgClassName: "help-inline form-control-static", // class name added to the waring control (empty or null to disable the feature)
             errorWrapClassName: "error", // class name added to wrapping control when validation fails (empty or null to disable the feature)
             allowAnyChars: true, // suppress validation errors if password contains characters not from list (chars param)
             checkMode: PassField.CheckModes.MODERATE, // password checking mode (how the strength is calculated)
@@ -155,6 +155,7 @@
         var BUTTONS_PADDING_RIGHT = 5;
         var KEY_DELETE = 46;
         var KEY_BACKSPACE = 8;
+        var BOOTSTRAP_INPUT_GROUP_CLASS = "input-group";
 
         // exports
         this.toggleMasking = function(isMasked) { toggleMasking(isMasked); };
@@ -325,9 +326,14 @@
             if (_opts.showWarn) {
                 _dom.warnMsg = newEl("div", { id: "warn", className: "warn" },
                     { margin: "0 0 0 3px" });
+                addClass(_dom.warnMsg, "empty");
                 if (_opts.warnMsgClassName)
                     addClass(_dom.warnMsg, _opts.warnMsgClassName, true);
-                insertAfter(_dom.clearInput || _dom.mainInput, _dom.warnMsg);
+                var insertAfterNode = _dom.clearInput || _dom.mainInput;
+                if (hasClass(el.parentNode, BOOTSTRAP_INPUT_GROUP_CLASS, true)) {
+                    insertAfterNode = insertAfterNode.parentNode;
+                }
+                insertAfter(insertAfterNode, _dom.warnMsg);
             }
         }
 
@@ -336,8 +342,9 @@
          */
         function createMaskBtn() {
             if (_opts.showToggle) {
+                var zIndex = css(_dom.mainInput, 'z-index');
                 _dom.maskBtn = newEl("div", { id: "btn-mask", className: "btn-mask", title: _locale.msg.showPass },
-                    { position: "absolute", margin: "0", padding: "0" });
+                    { position: "absolute", margin: "0", padding: "0", 'z-index': zIndex ? zIndex + 1 : null });
                 addClass(_dom.maskBtn, "btn");
                 if (_opts.maskBtn.className) {
                     addClass(_dom.maskBtn, _opts.maskBtn.className, true);
@@ -355,8 +362,9 @@
          */
         function createGenBtn() {
             if (_opts.showGenerate) {
+                var zIndex = css(_dom.mainInput, 'z-index');
                 _dom.genBtn = newEl("div", { id: "btn-gen", className: "btn-gen", title: _locale.msg.genPass },
-                    { position: "absolute", margin: "0", padding: "0" });
+                    { position: "absolute", margin: "0", padding: "0", 'z-index': zIndex ? zIndex + 1 : null });
                 addClass(_dom.genBtn, "btn");
                 insertAfter(_dom.mainInput, _dom.genBtn);
 
@@ -1130,6 +1138,10 @@
                 if (_opts.errorWrapClassName) {
                     addClass(_dom.wrapper, _opts.errorWrapClassName, true);
                 }
+                if (shortErrorText)
+                    removeClass(_dom.warnMsg, "empty");
+                else
+                    addClass(_dom.warnMsg, "empty");
             }
             if (_opts.showTip) {
                 var html = errorText;
@@ -1156,6 +1168,7 @@
                 if (_opts.errorWrapClassName) {
                     removeClass(_dom.wrapper, _opts.errorWrapClassName, true);
                 }
+                addClass(_dom.warnMsg, "empty");
             }
             _tipHtml = null;
             _warningShown = false;

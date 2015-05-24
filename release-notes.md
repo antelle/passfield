@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### v1.1.11 (2015-04-21)
+`+` Bootstrap 3 input-groups support (thanks to migliori)
+
 ##### v1.1.10 (2015-04-16)
 Bower package
 
