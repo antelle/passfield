@@ -2,6 +2,11 @@ module.exports = function(grunt) {
 
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
+        jshint: {
+            options: { jshintrc: true },
+            code: ["js/**/*.js"],
+            tests: ["test/**/*.js"]
+        },
         qunit: {
             all: ["test/**/unit-tests.html"]
         },
@@ -41,6 +46,7 @@ module.exports = function(grunt) {
         }
     });
 
+    grunt.loadNpmTasks("grunt-contrib-jshint");
     grunt.loadNpmTasks("grunt-contrib-qunit");
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-uglify");
@@ -48,6 +54,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks("grunt-contrib-copy");
 
-    grunt.registerTask("default", ["qunit", "clean", "uglify", "cssmin", "copy"]);
+    grunt.registerTask("default", ["jshint", "qunit", "clean", "uglify", "cssmin", "copy"]);
 
 };

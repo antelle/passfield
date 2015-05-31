@@ -41,7 +41,7 @@
     PassField.CharTypes = {
         DIGIT: "digits",
         LETTER: "letters",
-        LETTER_UP: "letters_up",
+        LETTER_UP: "lettersUp",
         SYMBOL: "symbols",
         UNKNOWN: "unknown"
     };
@@ -52,7 +52,8 @@
      * @enum {number}
      */
     PassField.CheckModes = {
-        /** more user friendly: if a password is better than the pattern (e.g. longer), its strength is increased and it could match even not containing all char types */
+        /** more user friendly: if a password is better than the pattern (e.g. longer),
+         * its strength is increased and it could match even not containing all char types */
         MODERATE: 0,
         /** more strict: it a password is longer than expected length, this makes no difference; all rules must be satisfied */
         STRICT: 1
@@ -84,7 +85,7 @@
                 // symbol sequences for generation and checking
                 digits: "1234567890",
                 letters: "abcdefghijklmnopqrstuvwxyzßабвгедёжзийклмнопрстуфхцчшщъыьэюяґєåäâáàãéèêëíìîїóòôõöüúùûýñçøåæþðαβγδεζηθικλμνξοπρσςτυφχψω",
-                letters_up: "ABCDEFGHIJKLMNOPQRSTUVWXYZАБВГЕДЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯҐЄÅÄÂÁÀÃÉÈÊËÍÌÎЇÓÒÔÕÖÜÚÙÛÝÑÇØÅÆÞÐΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ",
+                lettersUp: "ABCDEFGHIJKLMNOPQRSTUVWXYZАБВГЕДЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯҐЄÅÄÂÁÀÃÉÈÊËÍÌÎЇÓÒÔÕÖÜÚÙÛÝÑÇØÅÆÞÐΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ",
                 symbols: "@#$%^&*()-_=+[]{};:<>/?!"
             },
             events: {
@@ -117,7 +118,7 @@
         generationChars: {
             digits: "1234567890",
             letters: "abcdefghijklmnopqrstuvwxyz",
-            letters_up: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            lettersUp: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         },
 
         dataAttr: "PassField.Field"
@@ -164,12 +165,13 @@
         this.getPassValidationMessage = getPassValidationMessage;
         this.getPassStrength = getPassStrength;
 
-        init.call(this);
+        init(this);
 
         /**
          * Initizlizes the password field
+         * @param {PassField.Field} _this
          */
-        function init() {
+        function init(_this) {
             fixErrorsAndFillOptions();
             if (!setMainEl())
                 return;
@@ -180,7 +182,7 @@
             bindEvents();
             toggleMasking(_opts.isMasked, false);
             doAutofocus();
-            assignDataObject(PassField.Config.dataAttr, this);
+            assignDataObject(PassField.Config.dataAttr, _this);
         }
 
         // ========================== logic ==========================
@@ -197,7 +199,7 @@
          * Sets mainEl to the actual element (it can be string)
          */
         function setMainEl() {
-            if (typeof el == "string") {
+            if (typeof el === "string") {
                 //noinspection JSValidateTypes
                 el = document.getElementById(el);
             }
@@ -279,7 +281,7 @@
             if (!_features.hasInlineBlock) {
                 addClass(_dom.wrapper, "wrap-no-ib");
             }
-            if (css(_dom.wrapper, "position") == "static") {
+            if (css(_dom.wrapper, "position") === "static") {
                 _dom.wrapper.style.position = "relative";
             }
         }
@@ -342,9 +344,9 @@
          */
         function createMaskBtn() {
             if (_opts.showToggle) {
-                var zIndex = css(_dom.mainInput, 'z-index');
+                var zIndex = css(_dom.mainInput, "z-index");
                 _dom.maskBtn = newEl("div", { id: "btn-mask", className: "btn-mask", title: _locale.msg.showPass },
-                    { position: "absolute", margin: "0", padding: "0", 'z-index': zIndex ? zIndex + 1 : null });
+                    { position: "absolute", margin: "0", padding: "0", "z-index": zIndex ? zIndex + 1 : null });
                 addClass(_dom.maskBtn, "btn");
                 if (_opts.maskBtn.className) {
                     addClass(_dom.maskBtn, _opts.maskBtn.className, true);
@@ -461,19 +463,19 @@
             toggleTip();
             var rect = getRect(getActiveInput());
             var left = getRightBtnPadding();
-            if (_dom.maskBtn && _dom.maskBtn.style.display != "none") {
+            if (_dom.maskBtn && _dom.maskBtn.style.display !== "none") {
                 left += cssFloat(_dom.maskBtn, "width");
                 setRect(_dom.maskBtn, { top: rect.top, left: rect.left + rect.width - left, height: rect.height });
             }
-            if (_dom.genBtn && _dom.genBtn.style.display != "none") {
+            if (_dom.genBtn && _dom.genBtn.style.display !== "none") {
                 left += cssFloat(_dom.genBtn, "width");
                 setRect(_dom.genBtn, { top: rect.top, left: rect.left + rect.width - left, height: rect.height });
                 _dom.genBtnInner.style.marginTop = Math.max(0, Math.round((rect.height - 19) / 2)) + "px";
             }
-            if (_dom.placeholder && _dom.placeholder.style.display != "none") {
+            if (_dom.placeholder && _dom.placeholder.style.display !== "none") {
                 setRect(_dom.placeholder, { top: rect.top, left: rect.left + 7, height: rect.height });
             }
-            if (_dom.tip && _dom.tip.style.display != "none") {
+            if (_dom.tip && _dom.tip.style.display !== "none") {
                 setRect(_dom.tip, { left: rect.left, top: rect.top + rect.height, width: rect.width });
             }
         }
@@ -510,7 +512,7 @@
                 _dom.tip.style.display = (_warningShown && _isInputFocused) ? "block" : "none";
             } else {
                 if (_warningShown && _isInputFocused) {
-                    if (!_bootstrapPopoverShownText || (_tipHtml != _bootstrapPopoverShownText)) {
+                    if (!_bootstrapPopoverShownText || (_tipHtml !== _bootstrapPopoverShownText)) {
                         var data = $(_dom.mainInput).data("popover") || $(_dom.mainInput).data("bs.popover");
                         var opts = data.options;
                         var animationBackup = opts.animation;
@@ -564,13 +566,13 @@
             box.setAttribute("style", "display:inline-block");
             box.style.paddingLeft = box.style.width = "1px";
             document.body.appendChild(box);
-            var isBoxModel = box.offsetWidth == 2;
+            var isBoxModel = box.offsetWidth === 2;
             var hasInlineBlock = css(box, "display") === "inline-block";
             document.body.removeChild(box);
 
-            var passSymbol = navigator.userAgent.indexOf("AppleWebKit") >= 0 || navigator.userAgent.indexOf("Opera") >= 0
-                || navigator.userAgent.indexOf("Firefox") >= 0 && navigator.platform.indexOf("Mac") >= 0
-                ? /*BULLET*/"\u2022" : /*BLACK CIRCLE*/"\u25cf";
+            var passSymbol = navigator.userAgent.indexOf("AppleWebKit") >= 0 || navigator.userAgent.indexOf("Opera") >= 0 ||
+                navigator.userAgent.indexOf("Firefox") >= 0 && navigator.platform.indexOf("Mac") >= 0 ?
+                /*BULLET*/"\u2022" : /*BLACK CIRCLE*/"\u25cf";
 
             _features = {
                 placeholders: supportsPlaceholder,
@@ -703,7 +705,7 @@
                 maskBtnWidth = cssFloat(_dom.maskBtn, "width");
                 var maskBtnLeft = fieldWidth - maskBtnWidth - btnPadding;
                 var passHidesMaskBtn = passWidth > maskBtnLeft;
-                if (_passHidesMaskBtn != passHidesMaskBtn) {
+                if (_passHidesMaskBtn !== passHidesMaskBtn) {
                     changed = true;
                     _passHidesMaskBtn = passHidesMaskBtn;
                 }
@@ -712,7 +714,7 @@
                 genBtnWidth = cssFloat(_dom.genBtn, "width");
                 var genBtnLeft = fieldWidth - maskBtnWidth - genBtnWidth - btnPadding;
                 var passHidesGenBtn = passWidth > genBtnLeft;
-                if (_passHidesGenBtn != passHidesGenBtn) {
+                if (_passHidesGenBtn !== passHidesGenBtn) {
                     changed = true;
                     _passHidesGenBtn = passHidesGenBtn;
                 }
@@ -784,7 +786,7 @@
             if (needFocus === undefined)
                 needFocus = true;
 
-            var eventHappened = isMasked != _isMasked;
+            var eventHappened = isMasked !== _isMasked;
             if (isMasked === undefined)
                 isMasked = !_isMasked;
             else
@@ -802,7 +804,7 @@
                 var currentDisplayMode = css(getActiveInput(), "display") || "block";
                 var currentInput = isMasked ? _dom.clearInput : _dom.mainInput;
                 var nextInput = isMasked ? _dom.mainInput : _dom.clearInput;
-                if (_isMasked != isMasked) {
+                if (_isMasked !== isMasked) {
                     // LastPass could insert style attributes here: we'll copy them to clear input (if any)
                     utils.each(["paddingRight", "width", "backgroundImage", "backgroundPosition", "backgroundRepeat", "backgroundAttachment", "border"], function (prop) {
                         var cur = currentInput.style[prop];
@@ -821,7 +823,7 @@
                 }
 
                 // jQuery.validation can insert error label right after our input, so we'll handle it here
-                if (_dom.mainInput.nextSibling != _dom.clearInput) {
+                if (_dom.mainInput.nextSibling !== _dom.clearInput) {
                     insertAfter(_dom.mainInput, _dom.clearInput);
                 }
             }
@@ -880,8 +882,7 @@
          * If the element has autofocus attribute, we'll check it and focus if necessary
          */
         function doAutofocus() {
-            if (typeof _dom.mainInput.hasAttribute === "function" && _dom.mainInput.hasAttribute("autofocus")
-                || _dom.mainInput.getAttribute("autofocus")) {
+            if (typeof _dom.mainInput.hasAttribute === "function" && _dom.mainInput.hasAttribute("autofocus") || _dom.mainInput.getAttribute("autofocus")) {
                 _dom.mainInput.focus();
                 handleInputFocus();
             }
@@ -934,7 +935,7 @@
                 // check: blacklist
                 var isInBlackList = false;
                 utils.each(_opts.blackList, function(el) {
-                    if (el == pass) {
+                    if (el === pass) {
                         isInBlackList = true;
                         return false;
                     }
@@ -957,8 +958,8 @@
                 if (externalResult && externalResult.messages && utils.isArray(externalResult.messages)) {
                     returnedMessages = externalResult.messages;
                 }
-                if (externalResult && Object.prototype.hasOwnProperty.call(externalResult, "strength")
-                        && ((typeof externalResult.strength === "number") || (externalResult.strength === null))) {
+                if (externalResult && Object.prototype.hasOwnProperty.call(externalResult, "strength") &&
+                    ((typeof externalResult.strength === "number") || (externalResult.strength === null))) {
                     returnedStrength = externalResult.strength;
                 }
                 if (returnedMessages && returnedMessages.length) {
@@ -1009,7 +1010,7 @@
                 charTypesPatternCount++;
                 if (!charTypesPass[charType]) {
                     var msg = _locale.msg[charType];
-                    if (charType == PassField.CharTypes.SYMBOL) {
+                    if (charType === PassField.CharTypes.SYMBOL) {
                         // we should give example of symbols; for other types this is not required
                         var symbolsCount = 4;
                         var charsExample = _opts.chars[charType];
@@ -1025,7 +1026,7 @@
                 messages = [joinMessagesForCharTypes(messages)];
             }
 
-            if (_opts.checkMode == PassField.CheckModes.MODERATE) {
+            if (_opts.checkMode === PassField.CheckModes.MODERATE) {
                 var extraCharTypesCount = 0;
                 utils.each(charTypesPass, function(charType) {
                     if (!charTypesPattern[charType]) {
@@ -1047,7 +1048,7 @@
                 strength += lengthRatio;
                 messages.push(_locale.msg.passTooShort.replace("{}", minPassLength.toString()));
             } else {
-                if (_opts.checkMode == PassField.CheckModes.MODERATE) {
+                if (_opts.checkMode === PassField.CheckModes.MODERATE) {
                     strength += lengthRatio / charTypesPatternCount;
                 }
             }
@@ -1056,7 +1057,7 @@
                 var firstChar = pass.charAt(0);
                 var allEqual = true;
                 for (var i = 0; i < pass.length; i++) {
-                    if (pass.charAt(i) != firstChar) {
+                    if (pass.charAt(i) !== firstChar) {
                         allEqual = false;
                         break;
                     }
@@ -1087,7 +1088,7 @@
         function joinMessagesForCharTypes(messages) {
             var replacement = messages[0];
             for (var i = 1; i < messages.length; i++) {
-                if (i == messages.length - 1)
+                if (i === messages.length - 1)
                     replacement += " " + _locale.msg.and + " ";
                 else
                     replacement += ", ";
@@ -1123,12 +1124,12 @@
                             firstLetter = firstLetter.toUpperCase();
                         }
                         errorText += firstLetter + messages[i].substring(1);
-                        if (errorText && (errorText.charAt(errorText.length - 1) != "."))
+                        if (errorText && (errorText.charAt(errorText.length - 1) !== "."))
                             errorText += ".";
                     }
                 }
             }
-            if (errorText && (errorText.charAt(errorText.length - 1) != "."))
+            if (errorText && (errorText.charAt(errorText.length - 1) !== "."))
                 errorText += ".";
             _validationResult = { strength: strength, message: errorText };
 
@@ -1334,7 +1335,7 @@
             catch (e) { }
             if (!op)
                 op = document.documentElement;
-            while (op && (op.nodeName.toLowerCase() != "html") && css(op, "position") === "static") {
+            while (op && (op.nodeName.toLowerCase() !== "html") && css(op, "position") === "static") {
                 op = op.offsetParent;
             }
             return op || document.documentElement;
@@ -1352,7 +1353,7 @@
             } else {
                 var op = offsetParent(el);
                 offs = offset(el);
-                if (op.nodeName.toLowerCase() != "html") {
+                if (op.nodeName.toLowerCase() !== "html") {
                     parentOffset = offset(op);
                 }
                 parentOffset.top += cssFloat(op, "borderTopWidth");
@@ -1396,7 +1397,7 @@
                 el.style.width = rect.width + "px";
             }
             if (rect.top || rect.left) {
-                if (css(el, "display") == "none") {
+                if (css(el, "display") === "none") {
                     el.style.top = rect.top + "px";
                     el.style.left = rect.left + "px";
                     return;
@@ -1680,7 +1681,7 @@
         if (!obj)
             return false;
         try {
-            return obj instanceof HTMLElement || $ && obj instanceof jQuery;
+            return obj instanceof HTMLElement || $ && obj instanceof $;
         }
         catch (err) {
             return typeof obj === "object" && obj.nodeType || obj.jquery;
@@ -1808,7 +1809,7 @@
     // ========================== jQuery.Validation plugin ==========================
 
     if ($ && $.validator) {
-        jQuery.validator.addMethod("passfield", function(val, el) {
+        $.validator.addMethod("passfield", function(val, el) {
             return $(el).validatePass(); // this will set validation message
         }, function(val, el) { return $(el).getPassValidationMessage(); });
     }

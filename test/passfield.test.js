@@ -4,6 +4,8 @@
 $(function() {
     "use strict";
 
+    /* global PassField */
+
     module("Main tests", {
         setup: function() {
             if (!$("#qunit-fixture").length)
@@ -41,7 +43,7 @@ $(function() {
         prepare(null, {
             isJquery: false
         });
-        runBasicWorkFlow()
+        runBasicWorkFlow();
     });
     test("init with jQuery without id", function() {
         prepare(null, {
@@ -72,15 +74,15 @@ $(function() {
 
         equal(Math.round(parseFloat(passInput.css("height"))) + "px", height, "height assigned to pass input");
         equal(Math.round(parseFloat(passInput.css("width"))) + "px", width, "width assigned to pass input");
-        equal(Math.round(parseFloat(passInput.css("border-top-width"))) + "px " + passInput.css("border-left-style") + " " + passInput.css("border-right-color").replace(/\s/g, ''),
-            border, "border assigned to pass input");
+        equal(Math.round(parseFloat(passInput.css("border-top-width"))) + "px " + passInput.css("border-left-style") + " " +
+            passInput.css("border-right-color").replace(/\s/g, ""), border, "border assigned to pass input");
         equal(passInput.css("font-size"), fontSize, "font-size assigned to pass input");
 
         if (clearInput) {
             equal(Math.round(parseFloat(clearInput.css("height"))) + "px", height, "height assigned to clear input");
             equal(Math.round(parseFloat(clearInput.css("width"))) + "px", width, "width assigned to clear input");
-            equal(Math.round(parseFloat(clearInput.css("border-top-width"))) + "px " + clearInput.css("border-left-style") + " " + clearInput.css("border-right-color").replace(/\s/g, ''),
-                border, "border assigned clear input");
+            equal(Math.round(parseFloat(clearInput.css("border-top-width"))) + "px " + clearInput.css("border-left-style") + " " +
+                clearInput.css("border-right-color").replace(/\s/g, ""), border, "border assigned clear input");
             equal(clearInput.css("font-size"), fontSize, "font-size assigned clear input");
         }
     });
@@ -119,11 +121,14 @@ $(function() {
         ok(!passInput.validatePass(), "pass is not valid");
         equal(getWarnMsg(), "Password is required.", "empty password error is generated");
         ok(!passInput.setPass("ab").validatePass(), "pass is not valid");
-        equal(getWarnMsg(), "This password is weak: password must contain letters in UPPER case, digits and symbols (@#$%).<br/>Password is too short (min. length: 8).", "password uppercase error is generated");
+        equal(getWarnMsg(), "This password is weak: password must contain letters in UPPER case, digits and symbols (@#$%).<br/>" +
+            "Password is too short (min. length: 8).", "password uppercase error is generated");
         ok(!passInput.setPass("abCD").validatePass(), "pass is not valid");
-        equal(getWarnMsg(), "This password is weak: password must contain digits and symbols (@#$%).<br/>Password is too short (min. length: 8).", "password digits error is generated");
+        equal(getWarnMsg(), "This password is weak: password must contain digits and symbols (@#$%).<br/>Password is too short (min. length: 8).",
+            "password digits error is generated");
         ok(!passInput.setPass("abCD12").validatePass(), "pass is not valid");
-        equal(getWarnMsg(), "This password is weak: password must contain symbols (@#$%).<br/>Password is too short (min. length: 8).", "password digits error is generated");
+        equal(getWarnMsg(), "This password is weak: password must contain symbols (@#$%).<br/>Password is too short (min. length: 8).",
+            "password digits error is generated");
         ok(!passInput.setPass("abCD12!").validatePass(), "pass is not valid");
         equal(getWarnMsg(), "This password is weak: password is too short (min. length: 8).", "password length is generated");
         ok(passInput.setPass(STRONG_PASS).validatePass(), "pass is valid");
@@ -156,7 +161,7 @@ $(function() {
         equal(passInput.getPassStrength(), 1, "pass strength is full");
     });
     test("override char types", function() {
-        prepare({ allowAnyChars: false, pattern: "dslu", acceptRate: 1, chars: { digits: "dD", symbols: "sS", letters: "lL", letters_up: "uU" } });
+        prepare({ allowAnyChars: false, pattern: "dslu", acceptRate: 1, chars: { digits: "dD", symbols: "sS", letters: "lL", lettersUp: "uU" } });
         runBasicWorkFlow();
         ok(!passInput.setPass("1234").validatePass(), "pass is not valid");
         equal(getWarnMsg(), "Password contains bad characters: “1234”.", "bad chars error is generated");
@@ -285,12 +290,14 @@ $(function() {
         runBasicWorkFlow();
         var delKeys = ["{backspace}", "{del}"];
         for (var ix in delKeys) {
-            var delKey = delKeys[ix];
-            ok(passInput.setPass("abcd").validatePass(), "pass is valid");
-            getMainInput().simulate("key-sequence", { sequence: delKey });
-            equal(passInput.val(), "abc", "last symbol is deleted");
-            equal(getWarnMsg(), "This password is weak: password is too short (min. length: 4).", "pass msg is assigned after " + delKey + " key");
-            ok(!passInput.validatePass(), "pass is not valid");
+            if (delKeys.hasOwnProperty(ix)) {
+                var delKey = delKeys[ix];
+                ok(passInput.setPass("abcd").validatePass(), "pass is valid");
+                getMainInput().simulate("key-sequence", {sequence: delKey});
+                equal(passInput.val(), "abc", "last symbol is deleted");
+                equal(getWarnMsg(), "This password is weak: password is too short (min. length: 4).", "pass msg is assigned after " + delKey + " key");
+                ok(!passInput.validatePass(), "pass is not valid");
+            }
         }
     });
     test("custom validation", function() {
@@ -337,7 +344,7 @@ $(function() {
         ok(!getWarnMsg(), "pass msg not assigned");
     });
     test("with login field by id", function() {
-        $('<input type="text" id="my-login" />').val(STRONG_PASS).appendTo("#qunit-fixture");
+        $("<input type=\"text\" id=\"my-login\" />").val(STRONG_PASS).appendTo("#qunit-fixture");
         prepare({
             nonMatchField: "my-login"
         });
@@ -346,7 +353,7 @@ $(function() {
         equal(getWarnMsg(), "This password is weak: password is equal to login.", "pass msg assigned");
     });
     test("with login field by element", function() {
-        var loginEl = $('<input type="text" id="my-login" />').val(STRONG_PASS).appendTo("#qunit-fixture")[0];
+        var loginEl = $("<input type=\"text\" id=\"my-login\" />").val(STRONG_PASS).appendTo("#qunit-fixture")[0];
         prepare({
             nonMatchField: loginEl
         });
@@ -355,7 +362,7 @@ $(function() {
         equal(getWarnMsg(), "This password is weak: password is equal to login.", "pass msg assigned");
     });
     test("with login field by jQuery selector", function() {
-        var loginEl = $('<input type="text" id="my-login" />').val(STRONG_PASS).appendTo("#qunit-fixture");
+        var loginEl = $("<input type=\"text\" id=\"my-login\" />").val(STRONG_PASS).appendTo("#qunit-fixture");
         prepare({
             nonMatchField: loginEl
         });
@@ -434,7 +441,7 @@ $(function() {
         });
         isMasked = false;
         ok(getMainInput(), "mode switched to clear input");
-        equal(getMainInput().val(), pass, "pass written to clear input")
+        equal(getMainInput().val(), pass, "pass written to clear input");
     });
     test("locale override", function() {
         prepare({ locale: "de", localeMsg: { passTooShort: "bla-bla-bla" }, checkMode: PassField.CheckModes.STRICT });
@@ -581,7 +588,7 @@ $(function() {
 
     function checkWrap(wrapAttr) {
         equal(wrap.attr("class"), addPrefix("wrap") +
-            (ieVersion == 6 || ieVersion == 7 ? " a_pf-wrap-no-ib" : ""), "wrap class assigned to wrap");
+            (ieVersion === 6 || ieVersion === 7 ? " a_pf-wrap-no-ib" : ""), "wrap class assigned to wrap");
         if (!wrapAttr.id)
             ok(!wrap.attr("id"), "wrap has not been assigned any id");
     }
@@ -598,7 +605,7 @@ $(function() {
 
     function checkClearInput(inputAttr, maxlength) {
         clearInput = $("input[type=text]", wrap);
-        if (!clearInput.length || clearInput.attr("id") == passInput.attr("id")) {
+        if (!clearInput.length || clearInput.attr("id") === passInput.attr("id")) {
             clearInput = null;
             return;
         }
@@ -673,7 +680,7 @@ $(function() {
         if (fakePlaceholder)
             ok(!supportsPlaceholders, "fake placeholder if no placeholder support detected");
         if (inputAttr.placeholder && !supportsPlaceholders)
-            ok(fakePlaceholder && fakePlaceholder.is(":visible"), "fake placeholder is present and visible")
+            ok(fakePlaceholder && fakePlaceholder.is(":visible"), "fake placeholder is present and visible");
     }
 
     // ========================== simple workflow for all cases ==========================
@@ -702,11 +709,11 @@ $(function() {
             var oldInputType = getMainInput().attr("type");
             isMasked = !isMasked;
             btnMask.simulate("click");
-            ok(getMainInput().attr("type") != oldInputType, "input switched");
+            ok(getMainInput().attr("type") !== oldInputType, "input switched");
 
             isMasked = !isMasked;
             btnMask.simulate("click");
-            ok(getMainInput().attr("type") == oldInputType, "input switched back");
+            ok(getMainInput().attr("type") === oldInputType, "input switched back");
         }
 
         if (btnGen) {
@@ -718,7 +725,7 @@ $(function() {
             equal(passInput.getPassValidationMessage(), null, "generated valid password");
             equal(passInput.getPassStrength(), 1, "generated valid password strength");
 
-            if (wasMasked != isMasked) {
+            if (wasMasked !== isMasked) {
                 isMasked = wasMasked;
                 passInput.togglePassMasking();
                 equal(getMainInput().attr("id"), input.attr("id"), "switched back as before generation");
@@ -773,10 +780,10 @@ $(function() {
 
     function getVersionIE() {
         var rv = -1;
-        if (navigator.appName == "Microsoft Internet Explorer") {
+        if (navigator.appName === "Microsoft Internet Explorer") {
             var re = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
             var match = re.exec(navigator.userAgent);
-            if (match != null) {
+            if (match !== null) {
                 rv = parseFloat(match[1]);
             }
         }
