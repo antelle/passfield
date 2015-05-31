@@ -324,7 +324,7 @@
          */
         function createWarnLabel() {
             if (_opts.showWarn) {
-                _dom.warnMsg = newEl("div", { id: "warn", className: "warn" },
+                _dom.warnMsg = newEl("p", { id: "warn", className: "warn" },
                     { margin: "0 0 0 3px" });
                 addClass(_dom.warnMsg, "empty");
                 if (_opts.warnMsgClassName)
@@ -353,7 +353,7 @@
                     addClass(_dom.maskBtn, _opts.maskBtn.classMasked, true);
                 }
                 setHtml(_dom.maskBtn, _opts.maskBtn.textMasked);
-                insertAfter(_dom.mainInput, _dom.maskBtn);
+                insertBefore(_dom.mainInput, _dom.maskBtn);
             }
         }
 
@@ -362,11 +362,11 @@
          */
         function createGenBtn() {
             if (_opts.showGenerate) {
-                var zIndex = css(_dom.mainInput, 'z-index');
+                var zIndex = css(_dom.mainInput, "z-index");
                 _dom.genBtn = newEl("div", { id: "btn-gen", className: "btn-gen", title: _locale.msg.genPass },
-                    { position: "absolute", margin: "0", padding: "0", 'z-index': zIndex ? zIndex + 1 : null });
+                    { position: "absolute", margin: "0", padding: "0", "z-index": zIndex ? zIndex + 1 : null });
                 addClass(_dom.genBtn, "btn");
-                insertAfter(_dom.mainInput, _dom.genBtn);
+                insertBefore(_dom.mainInput, _dom.genBtn);
 
                 _dom.genBtnInner = newEl("div", { id: "btn-gen-i", className: "btn-gen-i", title: _locale.msg.genPass });
                 _dom.genBtn.appendChild(_dom.genBtnInner);
@@ -402,7 +402,7 @@
                     // not using Twitter Bootstrap
                     _dom.tip = newEl("div", { id: "tip", className: "tip" },
                         { position: "absolute", margin: "0", padding: "0", width: mainInputRect.width + "px" });
-                    insertAfter(_dom.mainInput, _dom.tip);
+                    insertBefore(_dom.mainInput, _dom.tip);
 
                     var arrWrap = newEl("div", { id: "tip-arr-wrap", className: "tip-arr-wrap" });
                     _dom.tip.appendChild(arrWrap);
@@ -426,7 +426,7 @@
                     _dom.placeholder = newEl("div", { id: "placeholder", className: "placeholder" },
                         { position: "absolute", margin: "0", padding: "0", height: mainInputRect.height + "px", lineHeight: mainInputRect.height + "px" });
                     setHtml(_dom.placeholder, placeholderText);
-                    insertAfter(_dom.mainInput, _dom.placeholder);
+                    insertBefore(_dom.mainInput, _dom.placeholder);
                 }
             } else if (!_dom.mainInput.getAttribute("placeholder") && _dom.mainInput.getAttribute("data-placeholder")) {
                 _dom.mainInput.setAttribute("placeholder", _dom.mainInput.getAttribute("data-placeholder"));
@@ -441,7 +441,7 @@
                 _dom.passLengthChecker = newEl("div", { id: "len" },
                     { position: "absolute", height: css(_dom.mainInput, "height"),
                         top: "-10000px", left: "-10000px", display: "block", color: "transparent", border: "none" });
-                insertAfter(_dom.mainInput, _dom.passLengthChecker);
+                insertBefore(_dom.mainInput, _dom.passLengthChecker);
                 setTimeout(function() {
                     utils.each(["marginLeft", "fontFamily", "fontSize", "fontWeight", "fontStyle", "fontVariant"], function(attr) {
                         var value = css(_dom.mainInput, attr);
@@ -522,7 +522,7 @@
                         if (el) {
                             el.width(width);
                         } else if (data.options.template) {
-                            data.options.template = data.options.template.replace('class="popover"', 'class="popover" style="width: ' + width + 'px"');
+                            data.options.template = data.options.template.replace("class=\"popover\"", "class=\"popover\" style=\"width: " + width + "px\"");
                         }
                         if (_dom.clearInput) {
                             data.$element = $(getActiveInput());
@@ -645,7 +645,7 @@
         function handleMouseEvent(e) {
             var isInside = e.type === "mouseover";
             var el = e.relatedTarget ? e.relatedTarget : isInside ? e.fromElement : e.toElement;
-            if (el && el.id && (el.id.indexOf(ELEMENTS_PREFIX + "btn") == 0 || el === _dom.mainInput || el === _dom.clearInput))
+            if (el && el.id && (el.id.indexOf(ELEMENTS_PREFIX + "btn") === 0 || el === _dom.mainInput || el === _dom.clearInput))
                 return;
             _isInputHover = isInside;
             resizeControls();
@@ -922,7 +922,7 @@
             var pass = getActiveInput().value;
             var checkResult = calculateStrength(pass);
 
-            if (pass.length == 0) {
+            if (pass.length === 0) {
                 checkResult = { strength: _opts.allowEmpty ? 0 : null, messages: [_locale.msg.passRequired] };
             } else {
                 // check: contains bad chars
@@ -977,7 +977,7 @@
                 }
             }
 
-            if (pass.length == 0 && _opts.allowEmpty) {
+            if (pass.length === 0 && _opts.allowEmpty) {
                 // empty but ok
                 hidePasswordWarning();
                 _validationResult = { strength: 0 };
@@ -1114,7 +1114,7 @@
                 if (messages) {
                     for (var i = 0; i < messages.length; i++) {
                         var firstLetter = messages[i].charAt(0);
-                        if (i == 0) {
+                        if (i === 0) {
                             errorText += _locale.msg.weakTitle + ": ";
                             if (_locale.lower)
                                 firstLetter = firstLetter.toLowerCase();
@@ -1146,7 +1146,7 @@
             if (_opts.showTip) {
                 var html = errorText;
                 if (_dom.genBtn) {
-                    html += "<br/>" + _locale.msg.generateMsg.replace("{}", '<div class="' + formatClass("btn-gen-help") + '"></div>');
+                    html += "<br/>" + _locale.msg.generateMsg.replace("{}", "<div class=\"" + formatClass("btn-gen-help") + "\"></div>");
                 }
                 _tipHtml = html;
                 if (_dom.tipBody) {
@@ -1302,7 +1302,7 @@
             try {
                 return el.getBoundingClientRect();
             } catch (err) {
-                return { top: 0, left: 0 }
+                return { top: 0, left: 0 };
             }
         }
 
@@ -1458,6 +1458,16 @@
         function insertAfter(target, el) {
             if (target.parentNode)
                 target.parentNode.insertBefore(el, target.nextSibling);
+        }
+
+        /**
+         * Inserts DOM node before another
+         * @param {Object} target - target node
+         * @param {Node} el - new node
+         */
+        function insertBefore(target, el) {
+            if (target.parentNode)
+                target.parentNode.insertBefore(el, target);
         }
 
         /**
@@ -1658,7 +1668,7 @@
      * @return {Boolean} - array or not.
      */
     utils.isArray = function(obj) {
-        return Object.prototype.toString.call(obj) === '[object Array]';
+        return Object.prototype.toString.call(obj) === "[object Array]";
     };
 
     /**
@@ -1721,7 +1731,6 @@
             });
         };
 
-        
         /**
          * Toggles masking state
          * @param  {Boolean} [isMasked] - should we display the password masked (undefined or null = change masking)
