@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### v1.1.13 (2015-08-09)
+`+` Translation to Dutch/Nederlands (thanks to VincentNikkelen)
+
 ##### v1.1.12 (2015-05-31)
 `-` fixed Bootstrap 3 input-groups bug
 
