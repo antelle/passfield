@@ -145,7 +145,7 @@
                     noCharType: "wachtwoord moet {} bevatten",
                     digits: "cijfers",
                     letters: "letters",
-                    letters_up: "letters als HOOFDletters",
+                    letters_up: "hoofdletters",
                     symbols: "symbolen",
                     inBlackList: "wachtwoord is in de lijst meest gebruikte wachtwoorden",
                     passRequired: "wachtwoord is verplicht",
