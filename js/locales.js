@@ -133,6 +133,31 @@
                     generateMsg: "Per generare una password forte, clicca sul tasto {}."
             }
         },
+        nl: {
+            lower: true,
+                msg: {
+                pass: "wachtwoord",
+                    and: "en",
+                    showPass: "Toon wachtwoord",
+                    hidePass: "Verberg wachtwoord",
+                    genPass: "Willekeurig wachtwoord",
+                    passTooShort: "Wachtwoord is te kort (min. lengte: {})",
+                    noCharType: "wachtwoord moet {} bevatten",
+                    digits: "cijfers",
+                    letters: "letters",
+                    letters_up: "hoofdletters",
+                    symbols: "symbolen",
+                    inBlackList: "wachtwoord is in de lijst meest gebruikte wachtwoorden",
+                    passRequired: "wachtwoord is verplicht",
+                    equalTo: "wachtwoord is hetzelfde als login",
+                    repeat: "wachtwoord bestaat uit herhaalde karakters",
+                    badChars: "wachtwoord bevat verboden karakters: “{}”",
+                    weakWarn: "zwak",
+                    invalidPassWarn: "*",
+                    weakTitle: "Dit wachtwoord is zwak",
+                    generateMsg: "Klik {} om een sterk wachtwoord te genereren."
+            }
+        },
         ru: {
             lower: true,
                 msg: {
