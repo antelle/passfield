@@ -116,10 +116,13 @@
             "jesus", "michael", "ninja", "mustang", "password1", "p@ssw0rd", "miss", "root", "secret"
         ],
 
+		// The following characters are to be avoided in generated passwords.
+		// They look similar in certain lettertypes (especially sans-serif).
+		// I,l  0,o,O
         generationChars: {
-            digits: "1234567890",
-            letters: "abcdefghijklmnopqrstuvwxyz",
-            lettersUp: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            digits: "123456789",
+            letters: "abcdefghijkmnpqrstuvwxyz",
+            lettersUp: "ABCDEFGHJKLMNPQRSTUVWXYZ"
         },
 
         dataAttr: "PassField.Field"
