@@ -183,6 +183,31 @@
                     generateMsg: "Чтобы сгенерировать пароль, нажмите кнопку {}."
             }
         },
+        sv: {
+            lower: true,
+                msg: {
+                pass: "lösenord",
+                    and: "och",
+                    showPass: "Visa lösenord",
+                    hidePass: "Göm lösenord",
+                    genPass: "Slumpad lösenord",
+                    passTooShort: "lösenordet är för kort (min. längd: {})",
+                    noCharType: "lösenordet måste innehålla {}",
+                    digits: "nummer",
+                    letters: "bokstäver",
+                    lettersUp: "kapital bokstäver",
+                    symbols: "symboler",
+                    inBlackList: "lösenordet är med i dem mest använda lösenord",
+                    passRequired: "lösenord är nödvändigt",
+                    equalTo: "lösenordet är desamma som användarnamnet",
+                    repeat: "lösenordet innehåller samma tecken",
+                    badChars: "lösenordet innehåller förbjudna symboler: “{}”",
+                    weakWarn: "svag",
+                    invalidPassWarn: "*",
+                    weakTitle: "Detta lösenord ät för svag",
+                    generateMsg: "För ett starkare lösenord klicka {}."
+            }
+        },
         ua: {
             lower: true,
                 msg: {
