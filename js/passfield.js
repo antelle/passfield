@@ -109,6 +109,7 @@
 
         locales: PassField.Config ? PassField.Config.locales : {}, // locales are defined in locales.js
 
+		// Passwords in the blacklist shall be lowercase, but the check will be done case insensitive.
         blackList: [
             "password", "123456", "12345678", "abc123", "qwerty", "monkey", "letmein", "dragon", "111111", "baseball",
             "iloveyou", "trustno1", "1234567", "sunshine", "master", "123123", "welcome", "shadow", "ashley", "football",
@@ -935,7 +936,7 @@
                 // check: blacklist
                 var isInBlackList = false;
                 utils.each(_opts.blackList, function(el) {
-                    if (el === pass) {
+                    if (el === pass.toLowerCase()) {
                         isInBlackList = true;
                         return false;
                     }
