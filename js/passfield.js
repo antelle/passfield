@@ -66,7 +66,7 @@
             pattern: "abcdef12", // pattern for password (for strength calculation)
             acceptRate: 0.8, // threshold (of strength conformity with pattern) under which the password is considered weak
             allowEmpty: true, // allow empty password (will show validation errors if not)
-            isMasked: true, // is the password masked by default 
+            isMasked: true, // is the password masked by default
             showToggle: true, // show toggle password masking button
             showGenerate: true, // show generation button
             showWarn: true, // show short password validation warning
@@ -212,7 +212,7 @@
         }
 
         /**
-         * Fills _locale from setting defined in _opts 
+         * Fills _locale from setting defined in _opts
          * Locale will be merged from default locale and user-defined messages
          */
         function setLocale() {
@@ -229,6 +229,8 @@
                 _locale = utils.extend({}, _conf.locales[neutralLocale]);
             if (_opts.localeMsg)
                 utils.extend(_locale.msg, _opts.localeMsg);
+            if (_locale.blackList)
+                _opts.blackList = _opts.blackList.concat(_locale.blackList);
         }
 
         /**

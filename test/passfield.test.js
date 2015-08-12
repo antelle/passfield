@@ -1,4 +1,4 @@
-/** 
+/**
  * Unit tests for Pass*Field
  */
 $(function() {
@@ -453,6 +453,12 @@ $(function() {
         equal(getWarnMsg(), "Dieses Passwort ist schwach: Passwort muss Buchstaben enthalten.<br/>Bla-bla-bla.", "localized error is generated");
         ok(!passInput.setPass("1aA!").validatePass(), "pass is not valid");
         equal(getWarnMsg(), "Dieses Passwort ist schwach: bla-bla-bla.", "custom error is generated");
+        ok(!passInput.setPass("qwerty").validatePass(), "pass is not valid");
+        equal(getWarnMsg(), "Dieses Passwort ist schwach: Passwort steht auf der Liste der beliebtesten Passwörter.",
+            "common blacklist is applied");
+        ok(!passInput.setPass("passwort").validatePass(), "pass is not valid");
+        equal(getWarnMsg(), "Dieses Passwort ist schwach: Passwort steht auf der Liste der beliebtesten Passwörter.",
+            "locale blacklist is applied");
     });
     test("neutral locale when locale not found", function() {
         prepare({ locale: "xx", localeMsg: { passTooShort: "bla-bla-bla" }, checkMode: PassField.CheckModes.STRICT });

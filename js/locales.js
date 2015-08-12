@@ -81,7 +81,8 @@
                     invalidPassWarn: "*",
                     weakTitle: "Dieses Passwort ist schwach",
                     generateMsg: "Klicken Sie auf den {}-Button, um ein starkes Passwort zu generieren."
-            }
+            },
+            blackList: ["passwort"]
         },
         fr: {
             lower: true,
@@ -181,7 +182,8 @@
                     invalidPassWarn: "*",
                     weakTitle: "Пароль слабый, его легко взломать",
                     generateMsg: "Чтобы сгенерировать пароль, нажмите кнопку {}."
-            }
+            },
+            blackList: ['пароль', 'секрет']
         },
         sv: {
             lower: true,
