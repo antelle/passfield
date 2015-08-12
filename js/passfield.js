@@ -940,8 +940,9 @@
 
                 // check: blacklist
                 var isInBlackList = false;
+                var passLower = pass.toLowerCase();
                 utils.each(_opts.blackList, function(el) {
-                    if (el === pass.toLowerCase()) {
+                    if (el === passLower) {
                         isInBlackList = true;
                         return false;
                     }
