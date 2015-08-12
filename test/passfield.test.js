@@ -222,6 +222,9 @@ $(function() {
         ok(!passInput.setPass("qwerty").validatePass(), "pass is not valid");
         equal(getWarnMsg(), "This password is weak: password is in list of top used passwords.", "builtin blacklist is working");
         equal(valResult.strength, 0, "strength is 0");
+        ok(!passInput.setPass("qWeRtY").validatePass(), "pass is not valid");
+        equal(getWarnMsg(), "This password is weak: password is in list of top used passwords.", "builtin blacklist is working");
+        equal(valResult.strength, 0, "strength is 0");
         ok(!passInput.setPass("bla-bla-bla").validatePass(), "pass is not valid");
         equal(getWarnMsg(), "This password is weak: password is in list of top used passwords.", "custom blacklist is working");
         equal(valResult.strength, 0, "strength is 0");
