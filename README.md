@@ -7,5 +7,5 @@ Screenshot:
 <img src="http://antelle.github.io/passfield/img/scr/weak.png" width="280px" valign="top" />
 
 Project state
-=============
+-------------
 I do not actively support the project now. However feel free to submit pull requests.
