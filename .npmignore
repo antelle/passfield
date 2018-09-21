@@ -1,0 +1,11 @@
+.idea/
+test/
+css/
+img/
+lib/
+Gruntfile.js
+jsTestDriver.jstd
+passfield.jquery.json
+.editorconfig
+.jshintrc
+
