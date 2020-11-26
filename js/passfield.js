@@ -520,7 +520,7 @@
                 if (_warningShown && _isInputFocused) {
                     if (!_bootstrapPopoverShownText || (_tipHtml !== _bootstrapPopoverShownText)) {
                         var data = $(_dom.mainInput).data("popover") || $(_dom.mainInput).data("bs.popover");
-                        var opts = data.options;
+                        var opts = data.config;
                         var animationBackup = opts.animation;
                         if (_bootstrapPopoverShownText)
                             opts.animation = false;
@@ -529,8 +529,8 @@
                         var el = data.$tip;
                         if (el) {
                             el.width(width);
-                        } else if (data.options.template) {
-                            data.options.template = data.options.template.replace("class=\"popover\"", "class=\"popover\" style=\"width: " + width + "px\"");
+                        } else if (data.config.template) {
+                            data.config.template = data.config.template.replace("class=\"popover\"", "class=\"popover\" style=\"width: " + width + "px\"");
                         }
                         if (_dom.clearInput) {
                             data.$element = $(getActiveInput());
