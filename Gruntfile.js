@@ -17,7 +17,7 @@ module.exports = function(grunt) {
             options: {
                 banner: "/*! <%= pkg.name %> v<%= pkg.version %>  | (c) <%= grunt.template.today('yyyy') %> Antelle | https://github.com/antelle/passfield/blob/master/MIT-LICENSE.txt */\n"
             },
-            color_picker: {
+            passfield: {
                 files: {
                     "dist/js/passfield.min.js": ["js/*.js"]
                 }
