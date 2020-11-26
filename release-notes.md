@@ -1,10 +1,12 @@
 Release notes
 -------------
-##### v1.1.14 (2015-08-?)
+##### v1.1.14 (2020-11-26)
 New features and new locale (thanks to VincentNikkelen)  
 `+` Translation to Swedish  
 `+` Case-insensitive blacklist checking  
 `+` Avoid confusing letters in password generation  
+`-` fixed a Bootstrap popovers issue  
+`*` updated dependencies  
 
 ##### v1.1.13 (2015-08-09)
 `+` Translation to Dutch/Nederlands (thanks to VincentNikkelen)
