@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### v1.1.15 (2021-01-08)
+`-` fixed Bootstrap popovers  
+
 ##### v1.1.14 (2020-11-26)
 New features and new locale (thanks to VincentNikkelen)  
 `+` Translation to Swedish  
