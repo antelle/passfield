@@ -392,7 +392,7 @@
                     // using Twitter Bootstrap
                     $(_dom.mainInput).popover(utils.extend({
                         // popover defaults (overridable)
-                        title: null,
+                        title: '',
                         placement: _opts.tipPopoverStyle.placement || function(pop, el) {
                             //noinspection JSValidateTypes
                             var top = $(el).position().top - $(window).scrollTop();
