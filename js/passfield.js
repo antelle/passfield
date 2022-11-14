@@ -388,38 +388,18 @@
          */
         function createTip(mainInputRect) {
             if (_opts.showTip) {
-                if (_opts.tipPopoverStyle && $ && typeof $.fn.popover === "function") {
-                    // using Twitter Bootstrap
-                    $(_dom.mainInput).popover(utils.extend({
-                        // popover defaults (overridable)
-                        title: "",
-                        placement: _opts.tipPopoverStyle.placement || function(pop, el) {
-                            //noinspection JSValidateTypes
-                            var top = $(el).position().top - $(window).scrollTop();
-                            var spaceBelow = $(window).height() - top;
-                            return spaceBelow > 300 || spaceBelow > top ? "bottom" : "top";
-                        },
-                        animation: false
-                    }, _opts.tipPopoverStyle, {
-                        // popovers properties (non-overridable)
-                        trigger: "manual",
-                        html: true,
-                        content: function() { return _tipHtml; }
-                    }));
-                } else {
-                    // not using Twitter Bootstrap
-                    _dom.tip = newEl("div", { id: "tip", className: "tip" },
-                        { position: "absolute", margin: "0", padding: "0", width: mainInputRect.width + "px" });
-                    insertBefore(_dom.mainInput, _dom.tip);
+                // not using Twitter Bootstrap
+                _dom.tip = newEl("div", { id: "tip", className: "tip" },
+                    { position: "absolute", margin: "0", padding: "0", width: mainInputRect.width + "px" });
+                insertBefore(_dom.mainInput, _dom.tip);
 
-                    var arrWrap = newEl("div", { id: "tip-arr-wrap", className: "tip-arr-wrap" });
-                    _dom.tip.appendChild(arrWrap);
-                    arrWrap.appendChild(newEl("div", { id: "tip-arr", className: "tip-arr" }));
-                    arrWrap.appendChild(newEl("div", { id: "tip-arr-in", className: "tip-arr-in" }));
+                var arrWrap = newEl("div", { id: "tip-arr-wrap", className: "tip-arr-wrap" });
+                _dom.tip.appendChild(arrWrap);
+                arrWrap.appendChild(newEl("div", { id: "tip-arr", className: "tip-arr" }));
+                arrWrap.appendChild(newEl("div", { id: "tip-arr-in", className: "tip-arr-in" }));
 
-                    _dom.tipBody = newEl("div", { id: "tip-body", className: "tip-body" });
-                    _dom.tip.appendChild(_dom.tipBody);
-                }
+                _dom.tipBody = newEl("div", { id: "tip-body", className: "tip-body" });
+                _dom.tip.appendChild(_dom.tipBody);
             }
         }
 
